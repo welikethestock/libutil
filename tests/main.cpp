@@ -1,3 +1,4 @@
+#include "libutil/common/memory/heap.h"
 #include "libutil/containers/doubly_linked_list.h"
 #include "libutil/code/patch.h"
 #include "libutil/platform/syscall.h"

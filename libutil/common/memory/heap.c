@@ -1,27 +1,31 @@
 #include "heap.h"
 
-#define LIBUTIL_HEAP_STATIC
-
 #ifdef LIBUTIL_HEAP_STATIC
-#ifndef LIBUTIL_HEAP_STATIC_ALIGN
-    #define LIBUTIL_HEAP_STATIC_ALIGN (sizeof(libutil_size))
-#endif
+    #ifndef LIBUTIL_HEAP_STATIC_ALIGN
+        #define LIBUTIL_HEAP_STATIC_ALIGN (sizeof(libutil_size))
+    #endif
 
-#ifndef LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES // Must be divideable by LIBUTIL_HEAP_STATIC_ALIGN
-    #define LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES   4096
-#endif
+    #ifndef LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES // Must be divideable by LIBUTIL_HEAP_STATIC_ALIGN
+        #define LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES   4096
+    #endif
 
-typedef struct _LIBUTIL_HEAP_BLOCK
-{
-    libutil_bool    Used;
-    libutil_u32     DeltaToEndBlock;
-} LIBUTIL_HEAP_BLOCK;
+    typedef struct _LIBUTIL_HEAP_BLOCK
+    {
+        libutil_bool    Used;
+        libutil_u32     DeltaToEndBlock;
+    } LIBUTIL_HEAP_BLOCK;
 
-static
-LIBUTIL_HEAP_BLOCK s_HeapBlocks[LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES / LIBUTIL_HEAP_STATIC_ALIGN];
+    static
+    LIBUTIL_HEAP_BLOCK s_HeapBlocks[LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES / LIBUTIL_HEAP_STATIC_ALIGN];
 
-static
-libutil_u8 s_HeapData[LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES];
+    static
+    libutil_u8 s_HeapData[LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES];
+#elif defined(LIBUTIL_HEAP_CALLBACKS)
+    static
+    LIBUTIL_HEAP_MALLOC s_MallocCallback;
+
+    static
+    LIBUTIL_HEAP_FREE   s_FreeCallback;
 #endif
 
 LIBUTIL_API
@@ -78,6 +82,8 @@ void *LibUtil_Heap_Allocate(libutil_size Size)
 
         break;
     }
+#elif defined(LIBUTIL_HEAP_CALLBACKS)
+    Address = s_MallocCallback(Size);
 #else
     LIBUTIL_DEBUGBREAK();
 #endif
@@ -93,7 +99,23 @@ void LibUtil_Heap_Free(void *Address)
 
     Block->Used = FALSE;
     Block->DeltaToEndBlock = 0;
+#elif defined(LIBUTIL_HEAP_CALLBACKS)
+    s_FreeCallback(Address);
 #else
     LIBUTIL_DEBUGBREAK();
 #endif
 }
+
+#ifdef LIBUTIL_HEAP_CALLBACKS
+LIBUTIL_API
+void LibUtil_Heap_SetMalloc(LIBUTIL_HEAP_MALLOC Callback)
+{
+    s_MallocCallback = Callback;
+}
+
+LIBUTIL_API
+void LibUtil_Heap_SetFree(LIBUTIL_HEAP_FREE Callback)
+{
+    s_FreeCallback = Callback;
+}
+#endif

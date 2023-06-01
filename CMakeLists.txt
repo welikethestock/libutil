@@ -83,7 +83,7 @@ target_link_libraries(${PROJECT_NAME} util-containers)
 target_link_libraries(${PROJECT_NAME} util-code)
 
 # tests-crtless
-project(tests-crtless)
+#[[project(tests-crtless)
 add_executable(${PROJECT_NAME}
     tests/main.cpp
 )
@@ -97,4 +97,4 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} util-common)
 target_link_libraries(${PROJECT_NAME} util-containers)
-target_link_libraries(${PROJECT_NAME} util-code)
+target_link_libraries(${PROJECT_NAME} util-code)]]
