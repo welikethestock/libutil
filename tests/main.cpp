@@ -1,6 +1,12 @@
-#include <iostream>
+#include "libutil/containers/doubly_linked_list.h"
+#include "libutil/code/patch.h"
+#include "libutil/platform/syscall.h"
 
-int main(int argc, char **argv) {
-    std::cout << "Hello, world!" << std::endl;
+#include <stdio.h>
+
+int main(int argc, const char **argv)
+{
+    LibUtil_Syscall3(1, 1, (libutil_size)"Hello!!", sizeof("Hello!!"));
+
     return 0;
 }
