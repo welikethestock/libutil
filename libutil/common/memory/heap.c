@@ -85,7 +85,7 @@ void *LibUtil_Heap_Allocate(libutil_size Size)
 #elif defined(LIBUTIL_HEAP_CALLBACKS)
     Address = s_MallocCallback(Size);
 #else
-    LIBUTIL_DEBUGBREAK();
+    #error "No heap method selected"
 #endif
 
     return Address;
@@ -102,7 +102,7 @@ void LibUtil_Heap_Free(void *Address)
 #elif defined(LIBUTIL_HEAP_CALLBACKS)
     s_FreeCallback(Address);
 #else
-    LIBUTIL_DEBUGBREAK();
+    #error "No heap method selected"
 #endif
 }
 

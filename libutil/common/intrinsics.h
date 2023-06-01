@@ -6,7 +6,7 @@
 LIBUTIL_EXTERN_C_BLOCK_START
 
 #ifdef __linux__
-    #ifdef __STDC_HOSTED__
+    #if defined(__STDC_HOSTED__) && (__clang__)
         #define _RESTORE_STDC_HOSTED
         #undef __STDC_HOSTED_
     #endif
@@ -35,7 +35,9 @@ LIBUTIL_EXTERN_C_BLOCK_START
         #define __readcr3   static __readcr3
         #define __writecr3  static __writecr3
 
-        #include <intrin.h>
+        #ifdef __clang__ // not available with GCC
+            #include <intrin.h>
+        #endif
 
         #undef _MSC_VER
         #undef __halt

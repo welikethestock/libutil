@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
-
 include_directories("./")
+
+add_definitions(
+    -DLIBUTIL_HEAP_STATIC
+)
 
 # libutil-common
 project(util-common)
@@ -74,6 +77,7 @@ target_link_libraries(${PROJECT_NAME} util-platform)
 
 # tests
 project(tests-crt)
+
 add_executable(${PROJECT_NAME}
     tests/main.cpp
 )

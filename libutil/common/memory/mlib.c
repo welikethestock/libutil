@@ -1,5 +1,6 @@
 #include "mlib.h"
 
+// TODO: vectorization
 LIBUTIL_API
 void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
 {
@@ -17,6 +18,7 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
     return Destination;
 }
 
+// TODO: vectorization
 LIBUTIL_API
 void *LibUtil_Memset(void *Destination, libutil_i32 Value, libutil_size Length)
 {
