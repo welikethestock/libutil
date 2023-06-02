@@ -26,6 +26,8 @@
     #endif
 #endif
 
+#include "features.h"
+
 LIBUTIL_EXTERN_C_BLOCK_START
 
 /* basic types */
