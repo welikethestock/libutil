@@ -1,9 +1,14 @@
 # libutil
 
 A cross-platform, architecture-independent and CRT-less utility library for reverse engineering, binary/memory hacking
+
 Currently very early WIP and only developed on Linux as of now, works with both GCC and Clang
+
 Windows and MSVC support will be added as the project continues on
+
 Features will also be added on an as-needed basis
+
+Feel free to request features aswell
 
 # Configuration
 
