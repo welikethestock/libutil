@@ -1,6 +1,6 @@
 # libutil
 
-A cross-platform, architecture-independent and CRT-less utility library for reverse engineering, binary/memory hacking
+A cross-platform, (mostly) architecture-independent [few exceptions, such as syscalls and on-chip random generators], CRT/Exception-less utility library with no dependencies (except for `intrin.h`, `x86intrin.h` and `sys/syscalls.h` as of right now) mainly for reverse engineering, binary/memory hacking, but my goal is it being able to be used instead of the entire C runtime/system libraries instead eventually
 
 Currently very early WIP and only developed on Linux as of now, works with both GCC and Clang
 
