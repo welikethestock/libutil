@@ -1,5 +1,5 @@
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
-#include "random.h"
+#include "../random.h"
 
 #ifdef LIBUTIL_HAS_HARDWARE_RNG
 libutil_i16 LibUtil_Random16_HW()

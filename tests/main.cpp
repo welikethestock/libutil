@@ -37,7 +37,7 @@ int main(int argc, const char **argv)
     Vector[2] = -1;
 
     printf("vector> ");
-    for(libutil_size Index = 0; Index < (sizeof(VectorTestInts) / sizeof(VectorTestInts[0])); ++Index)
+    for(libutil_size Index = 0; Index < Vector.Count; ++Index)
     {
         printf("%d ", Vector[Index]);
     }

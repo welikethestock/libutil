@@ -10,7 +10,8 @@ add_definitions(
 
 # libutil-common
 project(util-common)
-add_library(${PROJECT_NAME} STATIC
+
+set(PROJECT_SOURCES
     libutil/common/mathbits.c
 
     libutil/common/memheap.c
@@ -19,7 +20,16 @@ add_library(${PROJECT_NAME} STATIC
     libutil/common/random.c
 )
 
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+
 target_link_options(${PROJECT_NAME} PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
+
+target_link_options(${PROJECT_NAME}_shared PRIVATE
     -nodefaultlibs
     -nostdlib
     -nostartfiles
@@ -27,11 +37,15 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 # libutil-containers
 project(util-containers)
-add_library(${PROJECT_NAME} STATIC
+
+set(PROJECT_SOURCES
     libutil/containers/doubly_linked_list.c
     libutil/containers/stack.c
     libutil/containers/vector.c
 )
+
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
 
 target_link_options(${PROJECT_NAME} PRIVATE
     -nodefaultlibs
@@ -39,11 +53,19 @@ target_link_options(${PROJECT_NAME} PRIVATE
     -nostartfiles
 )
 
+target_link_options(${PROJECT_NAME}_shared PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
+
 target_link_libraries(${PROJECT_NAME} util-arch)
+target_link_libraries(${PROJECT_NAME}_shared util-arch)
 
 # libutil-platform
 project(util-platform)
-add_library(${PROJECT_NAME} STATIC
+
+set(PROJECT_SOURCES
     libutil/platform/sys/syscall_unix.c
     libutil/platform/sys/syscall_win.c
 
@@ -51,7 +73,14 @@ add_library(${PROJECT_NAME} STATIC
     libutil/platform/virtual_memory/page_win.c
 )
 
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+
 target_compile_options(${PROJECT_NAME} PRIVATE
+    -masm=intel
+)
+
+target_compile_options(${PROJECT_NAME}_shared PRIVATE
     -masm=intel
 )
 
@@ -61,15 +90,30 @@ target_link_options(${PROJECT_NAME} PRIVATE
     -nostartfiles
 )
 
+target_link_options(${PROJECT_NAME}_shared PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
+
 target_link_libraries(${PROJECT_NAME} util-common)
+target_link_libraries(${PROJECT_NAME}_shared util-common)
 
 # libutil-arch
 project(util-arch)
-add_library(${PROJECT_NAME} STATIC
-    libutil/arch/randomx86.c
+
+set(PROJECT_SOURCES
+    libutil/arch/random/x86.c
 )
 
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+
 target_compile_options(${PROJECT_NAME} PRIVATE
+    -masm=intel
+)
+
+target_compile_options(${PROJECT_NAME}_shared PRIVATE
     -masm=intel
 )
 
@@ -79,11 +123,16 @@ target_link_options(${PROJECT_NAME} PRIVATE
     -nostartfiles
 )
 
-target_link_libraries(${PROJECT_NAME} util-common)
+target_link_options(${PROJECT_NAME}_shared PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
 
 # libutil-code
 project(util-code)
-add_library(${PROJECT_NAME} STATIC
+
+set(PROJECT_SOURCES
     libutil/code/disasm/x86.c
 
     libutil/code/hook/jmp.c
@@ -95,7 +144,16 @@ add_library(${PROJECT_NAME} STATIC
     libutil/code/patch.c
 )
 
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+
 target_link_options(${PROJECT_NAME} PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
+
+target_link_options(${PROJECT_NAME}_shared PRIVATE
     -nodefaultlibs
     -nostdlib
     -nostartfiles
@@ -103,6 +161,9 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} util-common)
 target_link_libraries(${PROJECT_NAME} util-platform)
+
+target_link_libraries(${PROJECT_NAME}_shared util-common)
+target_link_libraries(${PROJECT_NAME}_shared util-platform)
 
 # tests
 project(tests-crt)
