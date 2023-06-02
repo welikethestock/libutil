@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
 
 add_definitions(
-    -DLIBUTIL_HEAP_STATIC
+    -DLIBUTIL_HEAP_CALLBACKS
 )
 
 # libutil-common
@@ -28,6 +28,7 @@ project(util-containers)
 add_library(${PROJECT_NAME} STATIC
     libutil/containers/doubly_linked_list.c
     libutil/containers/stack.c
+    libutil/containers/vector.c
 )
 
 target_link_options(${PROJECT_NAME} PRIVATE

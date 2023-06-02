@@ -22,10 +22,13 @@
     libutil_u8 s_HeapData[LIBUTIL_HEAP_STATIC_SIZE_IN_BYTES];
 #elif defined(LIBUTIL_HEAP_CALLBACKS)
     static
-    LIBUTIL_HEAP_MALLOC s_MallocCallback;
+    LIBUTIL_HEAP_MALLOC     s_MallocCallback;
 
     static
-    LIBUTIL_HEAP_FREE   s_FreeCallback;
+    LIBUTIL_HEAP_REALLOC    s_ReallocCallback;
+
+    static
+    LIBUTIL_HEAP_FREE       s_FreeCallback;
 #endif
 
 LIBUTIL_API
@@ -91,6 +94,18 @@ void *LibUtil_Heap_Allocate(libutil_size Size)
     return Address;
 }
 
+LIBUTIL_API LIBUTIL_IMPORT
+void *LibUtil_Heap_Reallocate(void *Address, libutil_size Size)
+{
+#ifdef LIBUTIL_HEAP_STATIC
+    #error "Implement me"
+#elif defined(LIBUTIL_HEAP_CALLBACKS)
+    return s_ReallocCallback(Address, Size);
+#else
+    #error "No heap method selected"
+#endif
+}
+
 void LibUtil_Heap_Free(void *Address)
 {
 #ifdef LIBUTIL_HEAP_STATIC
@@ -111,6 +126,12 @@ LIBUTIL_API
 void LibUtil_Heap_SetMalloc(LIBUTIL_HEAP_MALLOC Callback)
 {
     s_MallocCallback = Callback;
+}
+
+LIBUTIL_API
+void LibUtil_Heap_SetRealloc(LIBUTIL_HEAP_REALLOC Callback)
+{
+    s_ReallocCallback = Callback;
 }
 
 LIBUTIL_API

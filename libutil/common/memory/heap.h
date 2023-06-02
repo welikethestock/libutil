@@ -9,14 +9,21 @@ LIBUTIL_API LIBUTIL_IMPORT
 void *LibUtil_Heap_Allocate(libutil_size Size);
 
 LIBUTIL_API LIBUTIL_IMPORT
+void *LibUtil_Heap_Reallocate(void *Address, libutil_size Size);
+
+LIBUTIL_API LIBUTIL_IMPORT
 void LibUtil_Heap_Free(void *Address);
 
 #ifdef LIBUTIL_HEAP_CALLBACKS
 typedef void *(*LIBUTIL_HEAP_MALLOC)(libutil_size Size);
+typedef void *(*LIBUTIL_HEAP_REALLOC)(void *Address, libutil_size NewSize);
 typedef void (*LIBUTIL_HEAP_FREE)(void *Address);
 
 LIBUTIL_API LIBUTIL_IMPORT
 void LibUtil_Heap_SetMalloc(LIBUTIL_HEAP_MALLOC Callback);
+
+LIBUTIL_API LIBUTIL_IMPORT
+void LibUtil_Heap_SetRealloc(LIBUTIL_HEAP_REALLOC Callback);
 
 LIBUTIL_API LIBUTIL_IMPORT
 void LibUtil_Heap_SetFree(LIBUTIL_HEAP_FREE Callback);
@@ -46,6 +53,12 @@ extern "C++"
             void SetMalloc(LIBUTIL_HEAP_MALLOC Callback)
             {
                 LibUtil_Heap_SetMalloc(Callback);
+            }
+
+            LIBUTIL_FORCE_INLINE
+            void SetRealloc(LIBUTIL_HEAP_REALLOC Callback)
+            {
+                LibUtil_Heap_SetRealloc(Callback);
             }
 
             LIBUTIL_FORCE_INLINE
