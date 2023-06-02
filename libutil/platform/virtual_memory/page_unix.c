@@ -1,6 +1,6 @@
 #ifdef __linux__
 #include "page.h"
-#include "../syscall.h"
+#include "../sys/syscall.h"
 #include "../../common/math/bit.h"
 #include <sys/syscall.h>
 

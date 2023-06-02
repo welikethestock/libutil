@@ -2,7 +2,7 @@
 #include "libutil/containers/doubly_linked_list.h"
 #include "libutil/code/patch.h"
 #include "libutil/platform/virtual_memory/page.h"
-#include "libutil/platform/syscall.h"
+#include "libutil/platform/sys/syscall.h"
 #include "libutil/common/memory/mlib.h"
 
 #include <errno.h>

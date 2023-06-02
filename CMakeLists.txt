@@ -41,10 +41,11 @@ target_link_libraries(${PROJECT_NAME} util-common)
 # libutil-platform
 project(util-platform)
 add_library(${PROJECT_NAME} STATIC
+    libutil/platform/sys/syscall_unix.c
+    libutil/platform/sys/syscall_win.c
+
     libutil/platform/virtual_memory/page_unix.c
     libutil/platform/virtual_memory/page_win.c
-
-    libutil/platform/syscall_unix.c
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
