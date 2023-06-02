@@ -47,13 +47,13 @@ extern "C++"
     }
 
     template< typename _T >
-    struct LibUtil::Containers::Vector
+    struct LibUtil::Containers::Vector : public LIBUTIL_VECTOR
     {
         LIBUTIL_FORCE_INLINE
         Vector()
         {
             LibUtil_Vector_Setup(
-                (LIBUTIL_VECTOR *)(this),
+                this,
                 sizeof(_T)
             );
         }
@@ -69,7 +69,7 @@ extern "C++"
         void Reserve(LibUtil::Size Count)
         {
             LibUtil_Vector_Reserve(
-                (LIBUTIL_VECTOR *)(this),
+                this,
                 Count
             );
         }
@@ -79,7 +79,7 @@ extern "C++"
         {
             return *(_T *)(
                 LibUtil_Vector_GetElement(
-                    (LIBUTIL_VECTOR *)(this),
+                    this,
                     Index
                 )
             );
@@ -90,7 +90,7 @@ extern "C++"
         {
             return *(_T *)(
                 LibUtil_Vector_GetElement(
-                    (LIBUTIL_VECTOR *)(this),
+                    this,
                     Index
                 )
             );
@@ -112,7 +112,7 @@ extern "C++"
         void Set(LibUtil::Size Index, const _T Value)
         {
             LibUtil_Vector_SetElement(
-                (LIBUTIL_VECTOR *)(this),
+                this,
                 Index,
                 &Value
             );
@@ -122,7 +122,7 @@ extern "C++"
         void Set(LibUtil::Size Index, _T &Value)
         {
             LibUtil_Vector_SetElement(
-                (LIBUTIL_VECTOR *)(this),
+                this,
                 Index,
                 &Value
             );
@@ -132,17 +132,22 @@ extern "C++"
         void PushBack(_T &Value)
         {
             LibUtil_Vector_PushBack(
-                (LIBUTIL_VECTOR *)(this),
+                this,
                 &Value
             );
         }
 
+        LIBUTIL_FORCE_INLINE
         const LibUtil::Size GetCount() const
         {
-            return Data.Count;
+            return Count;
         }
 
-        LIBUTIL_VECTOR Data;
+        LIBUTIL_FORCE_INLINE
+        const LibUtil::Size GetReservexd() const
+        {
+            return Reserved;
+        }
     };
 }
 #endif

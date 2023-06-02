@@ -81,7 +81,11 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #endif
 
 /* compiler declarations */
-#define LIBUTIL_ATTRIBUTE(Attribute) __attribute__((Attribute))
+#ifndef LIBUTIL_ATTRIBUTE
+    #if defined(__GNUC__) || defined(__clang__)
+        #define LIBUTIL_ATTRIBUTE(Attribute) __attribute__((Attribute))
+    #endif
+#endif
 
 #ifndef LIBUTIL_API
     #define LIBUTIL_API

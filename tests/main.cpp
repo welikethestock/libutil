@@ -41,13 +41,15 @@ int main(int argc, const char **argv)
     {
         printf("%d ", Vector[Index]);
     }
-    printf("(%zu %zu)\n", Vector.GetCount(), Vector.Data.Reserved);
+    printf("(%zu %zu)\n", Vector.Count, Vector.Reserved);
 
     // random
-    printf("crnghw> %d %llu %d\n",
+    printf("crnghw> %d %llu %d %f %f\n",
         LibUtil::Random::Generate(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
         LibUtil::Random::Generate<libutil_u64>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
-        LibUtil::Random::Generate<libutil_i16>(NULL, LIBUTIL_RANDOM_GENERATOR_HW)
+        LibUtil::Random::Generate<libutil_i16>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
+        LibUtil::Random::Generate<float>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
+        LibUtil::Random::Generate<double>(NULL, LIBUTIL_RANDOM_GENERATOR_HW)
     );
 
     return 0;

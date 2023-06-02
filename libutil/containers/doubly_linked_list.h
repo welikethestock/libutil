@@ -35,13 +35,13 @@ extern "C++"
         }
     }
 
-    struct LibUtil::Containers::DoublyLinkedList
+    struct LibUtil::Containers::DoublyLinkedList : public LIBUTIL_DOUBLY_LINKED_LIST_NODE
     {
         LIBUTIL_FORCE_INLINE
         DoublyLinkedList()
         {
             LibUtil_DoublyLinkedList_Setup(
-                ((LIBUTIL_DOUBLY_LINKED_LIST_NODE *)this)
+                this
             );
         }
 
@@ -50,8 +50,6 @@ extern "C++"
         {
             return LibUtil_DoublyLinkedList_Create();
         }
-
-        LIBUTIL_DOUBLY_LINKED_LIST_NODE Root;
     };
 }
 #endif

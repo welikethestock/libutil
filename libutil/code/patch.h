@@ -31,21 +31,28 @@ extern "C++"
 {
     namespace LibUtil
     {
-        struct Patch
+        struct Patch : public LIBUTIL_CODE_PATCH
         {
             LIBUTIL_FORCE_INLINE
             Patch(void *Address, LibUtil::Size Size, LibUtil::U8 *Patch)
             {
-                LibUtil_Patch_Setup(&Info, Address, Size, Patch);
+                LibUtil_Patch_Setup(
+                    this,
+                    Address,
+                    Size,
+                    Patch
+                );
             }
 
             LIBUTIL_FORCE_INLINE
             void *operator new(LibUtil::Size Size)
             {
-                return LibUtil_Patch_Create(NULL, 0, NULL);
+                return LibUtil_Patch_Create(
+                    NULL,
+                    0,
+                    NULL
+                );
             }
-
-            LIBUTIL_CODE_PATCH Info;
         };
     }
 }

@@ -84,6 +84,8 @@ target_link_libraries(${PROJECT_NAME} util-common)
 # libutil-code
 project(util-code)
 add_library(${PROJECT_NAME} STATIC
+    libutil/code/disasm/x86.c
+
     libutil/code/hook/jmp.c
     libutil/code/hook/pe_eat.c
     libutil/code/hook/pe_iat.c

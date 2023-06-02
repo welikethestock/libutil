@@ -6,6 +6,7 @@ libutil_bool LibUtil_Random(libutil_size Size, LIBUTIL_RANDOM_STATE *State, LIBU
 {
     switch(Generator)
     {
+    #ifdef LIBUTIL_HAS_HARDWARE_RNG
         case LIBUTIL_RANDOM_GENERATOR_HW:
         {
             switch(Size)
@@ -37,6 +38,7 @@ libutil_bool LibUtil_Random(libutil_size Size, LIBUTIL_RANDOM_STATE *State, LIBU
                 }
             }
         }
+    #endif
 
         default:
         {
