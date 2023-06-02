@@ -17,6 +17,9 @@ LIBUTIL_API LIBUTIL_IMPORT
 LIBUTIL_VECTOR  *LibUtil_Vector_Create(libutil_size ElementSize);
 
 LIBUTIL_API LIBUTIL_IMPORT
+void            LibUtil_Vector_Setup(LIBUTIL_VECTOR *Vector, libutil_size ElementSize);
+
+LIBUTIL_API LIBUTIL_IMPORT
 void            LibUtil_Vector_Destroy(LIBUTIL_VECTOR *Vector);
 
 LIBUTIL_API LIBUTIL_IMPORT
@@ -47,6 +50,22 @@ extern "C++"
     struct LibUtil::Containers::Vector
     {
         LIBUTIL_FORCE_INLINE
+        Vector()
+        {
+            LibUtil_Vector_Setup(
+                (LIBUTIL_VECTOR *)(this),
+                sizeof(_T)
+            );
+        }
+
+
+        LIBUTIL_FORCE_INLINE
+        static void *operator new(LibUtil::Size Size)
+        {
+            return LibUtil_Vector_Create(-1);
+        }
+
+        LIBUTIL_FORCE_INLINE
         void Reserve(LibUtil::Size Count)
         {
             LibUtil_Vector_Reserve(
@@ -75,6 +94,18 @@ extern "C++"
                     Index
                 )
             );
+        }
+
+        LIBUTIL_FORCE_INLINE
+        _T &operator[](LibUtil::Size Index)
+        {
+            return Get(Index);
+        }
+
+        LIBUTIL_FORCE_INLINE
+        const _T operator[](LibUtil::Size Index) const
+        {
+            return Get(Index);
         }
 
         LIBUTIL_FORCE_INLINE
@@ -109,12 +140,6 @@ extern "C++"
         const LibUtil::Size GetCount() const
         {
             return Data.Count;
-        }
-
-        LIBUTIL_FORCE_INLINE
-        static void *operator new(LibUtil::Size Size)
-        {
-            return LibUtil_Vector_Create(sizeof(_T));
         }
 
         LIBUTIL_VECTOR Data;

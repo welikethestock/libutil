@@ -26,21 +26,21 @@ int main(int argc, const char **argv)
     LibUtil_Syscall3(1, 1, (libutil_size)("syscall>\n"), sizeof("syscall>\n"));
 
     // vector
-    LibUtil::Containers::Vector<int> *Vector = new LibUtil::Containers::Vector<int>;
+    LibUtil::Containers::Vector<int> Vector = LibUtil::Containers::Vector<int>();
     int VectorTestInts[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     for(libutil_size Index = 0; Index < (sizeof(VectorTestInts) / sizeof(VectorTestInts[0])); ++Index)
     {
-        Vector->PushBack(VectorTestInts[Index]);
+        Vector.PushBack(VectorTestInts[Index]);
     }
 
-    Vector->Set(2, -1);
+    Vector[2] = -1;
 
     printf("vector> ");
     for(libutil_size Index = 0; Index < (sizeof(VectorTestInts) / sizeof(VectorTestInts[0])); ++Index)
     {
-        printf("%d ", Vector->Get(Index));
+        printf("%d ", Vector[Index]);
     }
-    printf("(%zu %zu)\n", Vector->GetCount(), Vector->Data.Reserved);
+    printf("(%zu %zu)\n", Vector.GetCount(), Vector.Data.Reserved);
 
     return 0;
 }

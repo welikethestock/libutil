@@ -8,13 +8,22 @@ LIBUTIL_VECTOR *LibUtil_Vector_Create(libutil_size ElementSize)
     LIBUTIL_VECTOR *Vector = LibUtil_Heap_Allocate(sizeof(LIBUTIL_VECTOR));
     if(Vector != NULL)
     {
-        Vector->ElementSize = ElementSize;
-        Vector->Count       = 0;
-        Vector->Reserved    = 0;
-        Vector->Data        = NULL;
+        if(ElementSize != -1)
+        {
+            LibUtil_Vector_Setup(Vector, ElementSize);
+        }
     }
 
     return Vector;
+}
+
+LIBUTIL_API
+void LibUtil_Vector_Setup(LIBUTIL_VECTOR *Vector, libutil_size ElementSize)
+{
+    Vector->ElementSize = ElementSize;
+    Vector->Count       = 0;
+    Vector->Reserved    = 0;
+    Vector->Data        = NULL;
 }
 
 LIBUTIL_API

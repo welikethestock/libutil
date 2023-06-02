@@ -7,10 +7,17 @@ LIBUTIL_DOUBLY_LINKED_LIST_NODE *LibUtil_DoublyLinkedList_Create()
     LIBUTIL_DOUBLY_LINKED_LIST_NODE *Root = LibUtil_Heap_Allocate(sizeof(LIBUTIL_DOUBLY_LINKED_LIST_NODE));
     if(Root != NULL)
     {
-        Root->Next = Root->Previous = Root->Value = NULL;
+        LibUtil_DoublyLinkedList_Setup(Root);
     }
 
     return Root;
+}
+
+
+LIBUTIL_API
+void LibUtil_DoublyLinkedList_Setup(LIBUTIL_DOUBLY_LINKED_LIST_NODE *Root)
+{
+    Root->Next = Root->Previous = Root->Value = NULL;
 }
 
 LIBUTIL_API

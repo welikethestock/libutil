@@ -16,6 +16,9 @@ LIBUTIL_API LIBUTIL_IMPORT
 LIBUTIL_DOUBLY_LINKED_LIST_NODE *LibUtil_DoublyLinkedList_Create();
 
 LIBUTIL_API LIBUTIL_IMPORT
+void                            LibUtil_DoublyLinkedList_Setup(LIBUTIL_DOUBLY_LINKED_LIST_NODE *Root);
+
+LIBUTIL_API LIBUTIL_IMPORT
 void                            LibUtil_DoublyLinkedList_Destroy(LIBUTIL_DOUBLY_LINKED_LIST_NODE *Root);
 
 LIBUTIL_API LIBUTIL_IMPORT
@@ -34,6 +37,14 @@ extern "C++"
 
     struct LibUtil::Containers::DoublyLinkedList
     {
+        LIBUTIL_FORCE_INLINE
+        DoublyLinkedList()
+        {
+            LibUtil_DoublyLinkedList_Setup(
+                ((LIBUTIL_DOUBLY_LINKED_LIST_NODE *)this)
+            );
+        }
+
         LIBUTIL_FORCE_INLINE
         static void *operator new(LibUtil::Size Size)
         {
