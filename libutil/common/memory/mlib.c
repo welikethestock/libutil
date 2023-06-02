@@ -57,6 +57,7 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
     #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
         else {
     #endif
+        #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
             if(Length >= (16 + 1)) // align address
             {
                 libutil_size Align = (libutil_size)(_Destination) & (16 - 1);
@@ -101,6 +102,7 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
                 }
             }
             else
+        #endif
             {
                 while(Length != 0)
                 {
