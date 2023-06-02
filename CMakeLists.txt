@@ -8,6 +8,8 @@ add_definitions(
 # libutil-common
 project(util-common)
 add_library(${PROJECT_NAME} STATIC
+    libutil/common/math/bit.c
+
     libutil/common/memory/heap.c
     libutil/common/memory/mlib.c
 )
