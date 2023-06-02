@@ -5,6 +5,7 @@
 #include "libutil/platform/virtual_memory/page.h"
 #include "libutil/platform/sys/syscall.h"
 #include "libutil/common/memlib.h"
+#include "libutil/common/random.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -41,6 +42,13 @@ int main(int argc, const char **argv)
         printf("%d ", Vector[Index]);
     }
     printf("(%zu %zu)\n", Vector.GetCount(), Vector.Data.Reserved);
+
+    // random
+    printf("crnghw> %d %llu %d\n",
+        LibUtil::Random::Generate(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
+        LibUtil::Random::Generate<libutil_u64>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
+        LibUtil::Random::Generate<libutil_i16>(NULL, LIBUTIL_RANDOM_GENERATOR_HW)
+    );
 
     return 0;
 }

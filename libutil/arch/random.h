@@ -1,0 +1,21 @@
+#ifndef __LIBUTIL_ARCH_RANDOM__
+#define __LIBUTIL_ARCH_RANDOM__
+
+#include "../common/decl.h"
+
+LIBUTIL_EXTERN_C_BLOCK_START
+
+#ifdef LIBUTIL_HAS_HARDWARE_RNG
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_i16 LibUtil_Random16_HW();
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_i32 LibUtil_Random32_HW();
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_i64 LibUtil_Random64_HW();
+#endif
+
+LIBUTIL_EXTERN_C_BLOCK_END
+
+#endif

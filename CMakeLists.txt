@@ -15,6 +15,8 @@ add_library(${PROJECT_NAME} STATIC
 
     libutil/common/memheap.c
     libutil/common/memlib.c
+
+    libutil/common/random.c
 )
 
 target_link_options(${PROJECT_NAME} PRIVATE
@@ -37,7 +39,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
     -nostartfiles
 )
 
-target_link_libraries(${PROJECT_NAME} util-common)
+target_link_libraries(${PROJECT_NAME} util-arch)
 
 # libutil-platform
 project(util-platform)
@@ -47,6 +49,24 @@ add_library(${PROJECT_NAME} STATIC
 
     libutil/platform/virtual_memory/page_unix.c
     libutil/platform/virtual_memory/page_win.c
+)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+    -masm=intel
+)
+
+target_link_options(${PROJECT_NAME} PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
+
+target_link_libraries(${PROJECT_NAME} util-common)
+
+# libutil-arch
+project(util-arch)
+add_library(${PROJECT_NAME} STATIC
+    libutil/arch/randomx86.c
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -92,6 +112,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} util-common)
 target_link_libraries(${PROJECT_NAME} util-containers)
 target_link_libraries(${PROJECT_NAME} util-code)
+target_link_libraries(${PROJECT_NAME} util-arch)
 
 # tests-crtless
 #[[project(tests-crtless)

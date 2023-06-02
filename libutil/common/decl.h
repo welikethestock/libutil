@@ -40,8 +40,8 @@ LIBUTIL_EXTERN_C_BLOCK_START
     typedef unsigned short      libutil_u16;
     typedef int                 libutil_i32;
     typedef unsigned int        libutil_u32;
-    typedef long                libutil_i64;
-    typedef unsigned long       libutil_u64;
+    typedef long long           libutil_i64;
+    typedef unsigned long long  libutil_u64;
 
     typedef libutil_u8          libutil_bool;
     #ifndef TRUE
@@ -52,13 +52,7 @@ LIBUTIL_EXTERN_C_BLOCK_START
         #define FALSE               (0)
     #endif
 
-    #if defined(__x86_64__) || defined(_M_X64)
-        typedef libutil_u64         libutil_size;
-
-        //typedef libutil_u32         libutil_size;
-    #elif defined(__i386) || defined(_M_IX86)
-        typedef libutil_u32         libutil_size;
-    #endif
+    typedef unsigned long       libutil_size;
 
     #ifdef __cplusplus
     extern "C++"

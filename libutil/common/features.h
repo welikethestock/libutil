@@ -13,6 +13,10 @@
     #ifdef __AVX512F__
         #define LIBUTIL_FEATURE_AVX512F
     #endif
+
+    #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
+        #define LIBUTIL_HAS_HARDWARE_RNG
+    #endif
 #endif
 
 #endif
