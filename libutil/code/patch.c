@@ -1,6 +1,6 @@
 #include "patch.h"
-#include "../common/memory/heap.h"
-#include "../common/memory/mlib.h"
+#include "../common/memheap.h"
+#include "../common/memlib.h"
 #include "../platform/virtual_memory/page.h"
 
 LIBUTIL_API LIBUTIL_IMPORT

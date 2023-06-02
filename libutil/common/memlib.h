@@ -1,7 +1,7 @@
 #ifndef __LIBUTIL_COMMON_MEMORY_MLIB__
 #define __LIBUTIL_COMMON_MEMORY_MLIB__
 
-#include "../decl.h"
+#include "decl.h"
 
 LIBUTIL_EXTERN_C_BLOCK_START
 

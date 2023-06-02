@@ -1,6 +1,6 @@
 #include "vector.h"
-#include "../common/memory/heap.h"
-#include "../common/memory/mlib.h"
+#include "../common/memheap.h"
+#include "../common/memlib.h"
 
 LIBUTIL_API
 LIBUTIL_VECTOR *LibUtil_Vector_Create(libutil_size ElementSize)

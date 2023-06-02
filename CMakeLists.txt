@@ -11,10 +11,10 @@ add_definitions(
 # libutil-common
 project(util-common)
 add_library(${PROJECT_NAME} STATIC
-    libutil/common/math/bit.c
+    libutil/common/mathbits.c
 
-    libutil/common/memory/heap.c
-    libutil/common/memory/mlib.c
+    libutil/common/memheap.c
+    libutil/common/memlib.c
 )
 
 target_link_options(${PROJECT_NAME} PRIVATE

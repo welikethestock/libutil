@@ -1,10 +1,10 @@
-#include "libutil/common/memory/heap.h"
+#include "libutil/common/memheap.h"
 #include "libutil/containers/doubly_linked_list.h"
 #include "libutil/containers/vector.h"
 #include "libutil/code/patch.h"
 #include "libutil/platform/virtual_memory/page.h"
 #include "libutil/platform/sys/syscall.h"
-#include "libutil/common/memory/mlib.h"
+#include "libutil/common/memlib.h"
 
 #include <errno.h>
 #include <stdio.h>

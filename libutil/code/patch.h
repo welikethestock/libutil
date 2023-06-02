@@ -2,7 +2,7 @@
 #define __LIBUTIL_CODE_PATCH__
 
 #include "../common/decl.h"
-#include "../common/memory/heap.h"
+#include "../common/memheap.h"
 
 LIBUTIL_EXTERN_C_BLOCK_START
 

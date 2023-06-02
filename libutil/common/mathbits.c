@@ -1,4 +1,4 @@
-#include "bit.h"
+#include "mathbits.h"
 
 LIBUTIL_API LIBUTIL_IMPORT
 libutil_size LibUtil_AlignUp(libutil_size Value, libutil_size Alignment)

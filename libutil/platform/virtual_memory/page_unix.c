@@ -1,7 +1,7 @@
 #ifdef __linux__
 #include "page.h"
 #include "../sys/syscall.h"
-#include "../../common/math/bit.h"
+#include "../../common/mathbits.h"
 #include <sys/syscall.h>
 
 #define LIBUTIL_PAGE_ALIGN 0x1000

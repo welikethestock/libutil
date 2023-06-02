@@ -1,4 +1,4 @@
-#include "heap.h"
+#include "memheap.h"
 
 #ifdef LIBUTIL_HEAP_STATIC
     #ifndef LIBUTIL_HEAP_STATIC_ALIGN
