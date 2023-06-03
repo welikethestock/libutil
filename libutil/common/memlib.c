@@ -1,5 +1,13 @@
 #include "memlib.h"
 
+#if defined(LIBUTIL_FEATURE_SSE2)
+    #define INTRIN_MIN_LEN 16
+#elif defined(LIBUTIL_FEATURE_AVX)
+    #define INTRIN_MIN_LEN 32
+#elif defiend(LIBUTIL_FEATURE_AVX512F)
+    #define INTRIN_MIN_LEN 64
+#endif
+
 LIBUTIL_API
 void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
 {
@@ -10,7 +18,7 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
         libutil_size Copied;
 
     #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
-        if(Length >= 16 && ((libutil_size)(_Destination) & (16 - 1)) == 0) // 16 byte aligned
+        if(Length >= INTRIN_MIN_LEN && ((libutil_size)(_Destination) & (INTRIN_MIN_LEN - 1)) == 0)
         {
         #ifdef LIBUTIL_FEATURE_AVX512F
             if(Length >= 64 && ((libutil_size)(_Destination) & (64 - 1)) == 0) // 64 byte aligned
@@ -22,9 +30,9 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
 
                 Copied = 64;
             }
-        #endif
-        #ifdef LIBUTIL_FEATURE_AVX512F
+        #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX)
             else
+        #endif
         #endif
         #ifdef LIBUTIL_FEATURE_AVX
             if(Length >= 32 && ((libutil_size)(_Destination) & (32 - 1)) == 0) // 32 byte aligned
@@ -171,9 +179,28 @@ libutil_i32 LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Le
     while(Length != 0)
     {
     #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
-        if(Length >= 16)
+        if(Length >= INTRIN_MIN_LEN)
         {
-        #if defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
+        #if defined(LIBUTIL_FEATURE_AVX512F)
+            if(Length >= 64)
+            {
+                if(_mm512_movepi8_mask(_mm512_cmpeq_epi16(
+                    (((libutil_size)(_Block) & (32 - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Block)) : _mm512_loadu_si512((__m512i *)(_Block)),
+                    (((libutil_size)(_Other) & (32 - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Other)) : _mm512_loadu_si512((__m512i *)(_Other))
+                )) != 0xFFFFFFFFFFFFFFFFu)
+                {
+                    return /*FALSE*/1;
+                }
+
+                _Block += 64;
+                _Other += 64;
+                Length -= 64;
+            }
+        #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX)
+            else
+        #endif
+        #endif
+        #if defined(LIBUTIL_FEATURE_AVX)
             if(Length >= 32)
             { // avx
                 if(_mm256_movemask_epi8(_mm256_cmpeq_epi16(
