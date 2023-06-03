@@ -11,7 +11,6 @@
 #include <errno.h>
 #include <stdio.h>
 
-
 int main(int argc, const char **argv)
 {
     LibUtil::Heap::SetMalloc(malloc);
@@ -68,6 +67,26 @@ int main(int argc, const char **argv)
     static const char MemcmpTest1[] = "123456789abdefghijklmnopqrstuvwxyz";
     static const char MemcmpTest2[] = "123456789abdefghijklmnopqrstuvwxyz";
     printf("memcmp> %d\n", LibUtil_Memcmp(MemcmpTest1, MemcmpTest2, sizeof(MemcmpTest1)));
+
+    //memset
+    static char MemsetTest[64 + 16 + 8 + 7] = { 0 };
+    LibUtil_Memset(MemsetTest, 0xAF, sizeof(MemsetTest));
+    {
+        libutil_bool Success = TRUE;
+        for(libutil_size Index = 0; Index < sizeof(MemsetTest); ++Index)
+        {
+            if(MemsetTest[Index] != '\xAF')
+            {
+                printf("memset> %d %d %d %d\n", Index, sizeof(MemsetTest) - Index, MemsetTest[Index], 0xAF);
+
+                Success = FALSE;
+
+                break;
+            }
+        }
+
+        printf("memset> %s\n", (Success) ? "success" : "fail");
+    }
 
     return 0;
 }
