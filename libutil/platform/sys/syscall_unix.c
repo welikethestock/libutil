@@ -1,4 +1,9 @@
 #ifdef __linux__
+#if defined(__x86_64__) || defined(__i386) || defined(_M_X64) || defined(_M_IX86)
+#include "../../arch/syscall/x86.h"
+#else
+#error "Implement me"
+#endif
 #include "syscall.h"
 
 LIBUTIL_API

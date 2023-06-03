@@ -2,28 +2,19 @@
 #include "../random.h"
 
 #ifdef LIBUTIL_HAS_HARDWARE_RNG
-libutil_i16 LibUtil_Random16_HW()
+libutil_bool LibUtil_Random16_HW(libutil_u16 *Output)
 {
-    libutil_u16 Value;
-    while(!_rdrand16_step(&Value)) {}
-
-    return Value;
+    return _rdrand16_step(Output);
 }
 
-libutil_i32 LibUtil_Random32_HW()
+libutil_bool LibUtil_Random32_HW(libutil_u32 *Output)
 {
-    libutil_u32 Value;
-    while(!_rdrand32_step(&Value)) {}
-
-    return Value;
+    return _rdrand32_step(Output);
 }
 
-libutil_i64 LibUtil_Random64_HW()
+libutil_bool LibUtil_Random64_HW(libutil_u64 *Output)
 {
-    libutil_u64 Value;
-    while(!_rdrand64_step(&Value)) {}
-
-    return Value;
+    return _rdrand64_step(Output);
 }
 #endif
 

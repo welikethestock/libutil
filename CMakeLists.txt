@@ -18,6 +18,8 @@ set(PROJECT_SOURCES
     libutil/common/memlib.c
 
     libutil/common/random.c
+
+    libutil/common/strlib.c
 )
 
 add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})

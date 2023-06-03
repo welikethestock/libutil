@@ -6,10 +6,13 @@
 LIBUTIL_EXTERN_C_BLOCK_START
 
 LIBUTIL_API LIBUTIL_IMPORT
-void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length);
+void            *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length);
 
 LIBUTIL_API LIBUTIL_IMPORT
-void *LibUtil_Memset(void *Destination, libutil_i32 Value, libutil_size Length);
+void            *LibUtil_Memset(void *Destination, libutil_i32 Value, libutil_size Length);
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_i32     LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Length);
 
 #ifdef __cplusplus
 extern "C++"

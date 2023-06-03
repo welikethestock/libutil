@@ -6,11 +6,11 @@
 #include "libutil/platform/sys/syscall.h"
 #include "libutil/common/memlib.h"
 #include "libutil/common/random.h"
+#include "libutil/common/strlib.h"
 
 #include <errno.h>
 #include <stdio.h>
 
-char Test[512] = {};
 
 int main(int argc, const char **argv)
 {
@@ -19,9 +19,12 @@ int main(int argc, const char **argv)
     LibUtil::Heap::SetFree(free);
 
     // memcpy
-    LibUtil::Memcpy(Test, "123456789abcdef123456789abdef123456789abcdef123456789abdef123456789abcdef123456789abdef:)", sizeof("123456789abcdef123456789abdef123456789abcdef123456789abdef123456789abcdef123456789abdef:)"));
+    char MemcpyTestBuffer[512] = { 0 };
+    static const char MemcpyTestString[] = "123456789abcdef123456789abdef123456789abcdef123456789abdef123456789abcdef123456789abdef:)asfasf";
+    volatile const char *MemcpyTestPtr = MemcpyTestString;
+    LibUtil::Memcpy(&MemcpyTestBuffer, ((const char *)(MemcpyTestPtr)) + 1, sizeof(MemcpyTestString) - 5);
 
-    printf("memcpy> %s\n", Test);
+    printf("memcpy> %s %p %p\n", MemcpyTestBuffer, MemcpyTestBuffer, MemcpyTestString + 3);
 
     //syscall
     LibUtil_Syscall3(1, 1, (libutil_size)("syscall>\n"), sizeof("syscall>\n"));
@@ -51,6 +54,20 @@ int main(int argc, const char **argv)
         LibUtil::Random::Generate<float>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
         LibUtil::Random::Generate<double>(NULL, LIBUTIL_RANDOM_GENERATOR_HW)
     );
+
+    // string to number
+    libutil_i32 Number;
+    LibUtil_StringToNumber(16, "Ff", &Number);
+    printf("str2num> %d\n", Number);
+
+    // strstr
+    const char *Found = LibUtil_FindSubString("test string", "st");
+    printf("substr> %s %s\n", Found, LibUtil_FindSubString(Found + 1, "st"));
+
+    //memcmp
+    static const char MemcmpTest1[] = "123456789abdefghijklmnopqrstuvwxyz";
+    static const char MemcmpTest2[] = "123456789abdefghijklmnopqrstuvwxyz";
+    printf("memcmp> %d\n", LibUtil_Memcmp(MemcmpTest1, MemcmpTest2, sizeof(MemcmpTest1)));
 
     return 0;
 }
