@@ -7,6 +7,7 @@
 #include "libutil/common/memlib.h"
 #include "libutil/common/random.h"
 #include "libutil/common/strlib.h"
+#include "libutil/containers/string.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -26,7 +27,7 @@ int main(int argc, const char **argv)
     printf("memcpy> %s %p %p\n", MemcpyTestBuffer, MemcpyTestBuffer, MemcpyTestString + 3);
 
     //syscall
-    LibUtil_Syscall3(1, 1, (libutil_size)("syscall>\n"), sizeof("syscall>\n"));
+    lu_syscall3(1, 1, (libutil_size)("syscall>\n"), sizeof("syscall>\n"));
 
     // vector
     LibUtil::Containers::Vector<int> Vector = LibUtil::Containers::Vector<int>();
@@ -47,11 +48,11 @@ int main(int argc, const char **argv)
 
     // random
     printf("crnghw> %d %llu %d %f %f\n",
-        LibUtil::Random::Generate(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
-        LibUtil::Random::Generate<libutil_u64>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
-        LibUtil::Random::Generate<libutil_i16>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
-        LibUtil::Random::Generate<float>(NULL, LIBUTIL_RANDOM_GENERATOR_HW),
-        LibUtil::Random::Generate<double>(NULL, LIBUTIL_RANDOM_GENERATOR_HW)
+        LibUtil::Random::Generate(NULL, LIBUTIL_RANDOM_GENERATOR_CHIP),
+        LibUtil::Random::Generate<libutil_u64>(NULL, LIBUTIL_RANDOM_GENERATOR_CHIP),
+        LibUtil::Random::Generate<libutil_i16>(NULL, LIBUTIL_RANDOM_GENERATOR_CHIP),
+        LibUtil::Random::Generate<float>(NULL, LIBUTIL_RANDOM_GENERATOR_CHIP),
+        LibUtil::Random::Generate<double>(NULL, LIBUTIL_RANDOM_GENERATOR_CHIP)
     );
 
     // string to number
@@ -60,24 +61,24 @@ int main(int argc, const char **argv)
     printf("str2num> %d\n", Number);
 
     // strstr
-    const char *Found = LibUtil_FindSubString("test string", "st");
-    printf("substr> %s %s\n", Found, LibUtil_FindSubString(Found + 1, "st"));
+    const char *Found = lu_strstr("test string", "st");
+    printf("substr> %s %s\n", Found, lu_strstr(Found + 1, "st"));
 
     //memcmp
     static const char MemcmpTest1[] = "123456789abdefghijklmnopqrstuvwxyz";
     static const char MemcmpTest2[] = "123456789abdefghijklmnopqrstuvwxyz";
-    printf("memcmp> %d\n", LibUtil_Memcmp(MemcmpTest1, MemcmpTest2, sizeof(MemcmpTest1)));
+    printf("memcmp> %d\n", lu_memcmp(MemcmpTest1, MemcmpTest2, sizeof(MemcmpTest1)));
 
     //memset
     static char MemsetTest[64 + 16 + 8 + 7] = { 0 };
-    LibUtil_Memset(MemsetTest, 0xAF, sizeof(MemsetTest));
+    lu_memset(MemsetTest, 0xAF, sizeof(MemsetTest));
     {
         libutil_bool Success = TRUE;
         for(libutil_size Index = 0; Index < sizeof(MemsetTest); ++Index)
         {
             if(MemsetTest[Index] != '\xAF')
             {
-                printf("memset> %d %d %d %d\n", Index, sizeof(MemsetTest) - Index, MemsetTest[Index], 0xAF);
+                printf("memset> %zu %zu %d %d\n", Index, sizeof(MemsetTest) - Index, MemsetTest[Index], 0xAF);
 
                 Success = FALSE;
 
@@ -87,6 +88,11 @@ int main(int argc, const char **argv)
 
         printf("memset> %s\n", (Success) ? "success" : "fail");
     }
+
+    //string test
+    LIBUTIL_STRING  *StringTest = lu_stringcreatenarrowconst("test ");
+    libutil_bool StringAppendResult = lu_stringappendnarrow(StringTest, "test");
+    printf("string> %d %s %zu\n", StringAppendResult, (const char *)(StringTest->Vector.Data), StringTest->Vector.Count);
 
     return 0;
 }

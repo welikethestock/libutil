@@ -29,6 +29,20 @@ const char      *LibUtil_FindNSubStringN(const char *String, libutil_size String
 LIBUTIL_API LIBUTIL_IMPORT
 libutil_bool    LibUtil_StringToNumber(libutil_i32 Base, const char *String, libutil_i32 *Output);
 
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    #define lu_strlen   LibUtil_StringLength
+    #define lu_strnlen  LibUtil_StringNLength
+
+    #define lu_strcmp   LibUtil_StringCompare
+    #define lu_strncmp  LibUtil_StringNCompare
+
+    #define lu_strstr   LibUtil_FindSubString
+    #define lu_strnstr  LibUtil_FindNSubString
+    #define lu_strnstrn LibUtil_FindNSubStringN
+
+    #define lu_str2num  LibUtil_StringToNumber
+#endif
+
 LIBUTIL_EXTERN_C_BLOCK_END
 
 #endif

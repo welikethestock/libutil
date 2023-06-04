@@ -14,6 +14,12 @@ void            *LibUtil_Memset(void *Destination, libutil_i32 Value, libutil_si
 LIBUTIL_API LIBUTIL_IMPORT
 libutil_i32     LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Length);
 
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    #define lu_memcpy LibUtil_Memcpy
+    #define lu_memset LibUtil_Memset
+    #define lu_memcmp LibUtil_Memcmp
+#endif
+
 #ifdef __cplusplus
 extern "C++"
 {

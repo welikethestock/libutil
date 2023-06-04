@@ -24,6 +24,15 @@ void                            LibUtil_DoublyLinkedList_Destroy(LIBUTIL_DOUBLY_
 LIBUTIL_API LIBUTIL_IMPORT
 void                            LibUtil_DoublyLinkedList_AppendNode(LIBUTIL_DOUBLY_LINKED_LIST_NODE *RootNode, LIBUTIL_DOUBLY_LINKED_LIST_NODE *Node);
 
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    typedef LIBUTIL_DOUBLY_LINKED_LIST_NODE     lu_doublylinkedlist, lu_doublylinkedlist_node;
+
+    #define lu_doublylinkedlistcreate           LibUtil_DoublyLinkedList_Create
+    #define lu_doublylinkedlistsetup            LibUtil_DoublyLinkedList_Setup
+    #define lu_doublylinkedlistdestroy          LibUtil_DoublyLinkedList_Destroy
+    #define lu_doublylinkedlistappend           LibUtil_DoublyLinkedList_AppendNode
+#endif
+
 #ifdef __cplusplus
 extern "C++"
 {

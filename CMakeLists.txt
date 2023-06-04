@@ -43,6 +43,7 @@ project(util-containers)
 set(PROJECT_SOURCES
     libutil/containers/doubly_linked_list.c
     libutil/containers/stack.c
+    libutil/containers/string.c
     libutil/containers/vector.c
 )
 
@@ -63,6 +64,34 @@ target_link_options(${PROJECT_NAME}_shared PRIVATE
 
 target_link_libraries(${PROJECT_NAME} util-arch)
 target_link_libraries(${PROJECT_NAME}_shared util-arch)
+
+# libutil-analysis
+project(util-analysis)
+
+set(PROJECT_SOURCES
+    libutil/analysis/debug.c
+)
+
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+
+target_link_options(${PROJECT_NAME} PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
+
+target_link_options(${PROJECT_NAME}_shared PRIVATE
+    -nodefaultlibs
+    -nostdlib
+    -nostartfiles
+)
+
+target_link_libraries(${PROJECT_NAME} util-common)
+target_link_libraries(${PROJECT_NAME} util-containers)
+
+target_link_libraries(${PROJECT_NAME}_shared util-common)
+target_link_libraries(${PROJECT_NAME}_shared util-containers)
 
 # libutil-platform
 project(util-platform)

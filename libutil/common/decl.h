@@ -43,7 +43,23 @@ LIBUTIL_EXTERN_C_BLOCK_START
     typedef long long           libutil_i64;
     typedef unsigned long long  libutil_u64;
 
+    #ifndef LIBUTIL_DISABLE_SHORT_NAMES
+        typedef libutil_i8          lu_i8;
+        typedef libutil_u8          lu_u8;
+        typedef libutil_i16         lu_i16;
+        typedef libutil_u16         lu_u16;
+        typedef libutil_i32         lu_i32;
+        typedef libutil_u32         lu_u32;
+        typedef libutil_i64         lu_i64;
+        typedef libutil_u64         lu_u64;
+    #endif
+
     typedef libutil_u8          libutil_bool;
+
+    #ifndef LIBUTIL_DISABLE_SHORT_NAMES
+        typedef libutil_bool        lu_bool;
+    #endif
+
     #ifndef TRUE
         #define TRUE                (1)
     #endif
@@ -52,7 +68,21 @@ LIBUTIL_EXTERN_C_BLOCK_START
         #define FALSE               (0)
     #endif
 
-    typedef unsigned long       libutil_size;
+    #if defined(__GNUC__) || defined(__clang__)
+        typedef unsigned long       libutil_size;
+    #endif
+
+    #ifndef LIBUTIL_DISABLE_SHORT_NAMES
+        typedef libutil_size        lu_size;
+    #endif
+
+    #ifdef __WCHAR_TYPE__
+        typedef __WCHAR_TYPE__      libutil_wchar;
+    #endif
+
+    #ifndef LIBUTIL_DISABLE_SHORT_NAMES
+        typedef libutil_wchar       lu_wchar;
+    #endif
 
     #ifdef __cplusplus
     extern "C++"

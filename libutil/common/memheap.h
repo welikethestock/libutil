@@ -14,6 +14,12 @@ void *LibUtil_Heap_Reallocate(void *Address, libutil_size Size);
 LIBUTIL_API LIBUTIL_IMPORT
 void LibUtil_Heap_Free(void *Address);
 
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    #define lu_malloc   LibUtil_Heap_Allocate
+    #define lu_realloc  LibUtil_Heap_Reallocate
+    #define lu_free     LibUtil_Heap_Free
+#endif
+
 #ifdef LIBUTIL_HEAP_CALLBACKS
 typedef void *(*LIBUTIL_HEAP_MALLOC)(libutil_size Size);
 typedef void *(*LIBUTIL_HEAP_REALLOC)(void *Address, libutil_size NewSize);
@@ -27,6 +33,12 @@ void LibUtil_Heap_SetRealloc(LIBUTIL_HEAP_REALLOC Callback);
 
 LIBUTIL_API LIBUTIL_IMPORT
 void LibUtil_Heap_SetFree(LIBUTIL_HEAP_FREE Callback);
+
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    #define lu_setmalloc    LibUtil_Heap_Allocate
+    #define lu_setrealloc   LibUtil_Heap_Reallocate
+    #define lu_setfree      LibUtil_Heap_Free
+#endif
 #endif
 
 #ifdef __cplusplus

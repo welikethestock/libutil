@@ -23,7 +23,10 @@ LIBUTIL_API LIBUTIL_IMPORT
 void            LibUtil_Vector_Destroy(LIBUTIL_VECTOR *Vector);
 
 LIBUTIL_API LIBUTIL_IMPORT
-void            LibUtil_Vector_Reserve(LIBUTIL_VECTOR *Vector, libutil_size Count);
+void            LibUtil_Vector_DestroyData(LIBUTIL_VECTOR *Vector);
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_bool    LibUtil_Vector_Reserve(LIBUTIL_VECTOR *Vector, libutil_size Count);
 
 LIBUTIL_API LIBUTIL_IMPORT
 void            LibUtil_Vector_SetElement(LIBUTIL_VECTOR *Vector, libutil_size Index, const void *Data);
@@ -32,7 +35,20 @@ LIBUTIL_API LIBUTIL_IMPORT
 void            *LibUtil_Vector_GetElement(LIBUTIL_VECTOR *Vector, libutil_size Index);
 
 LIBUTIL_API LIBUTIL_IMPORT
-void            LibUtil_Vector_PushBack(LIBUTIL_VECTOR *Vector, const void *Data);
+libutil_bool    LibUtil_Vector_PushBack(LIBUTIL_VECTOR *Vector, const void *Data);
+
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    typedef LIBUTIL_VECTOR          lu_vector;
+
+    #define lu_vectorcreate         LibUtil_Vector_Create
+    #define lu_vectorsetup          LibUtil_Vector_Setup
+    #define lu_vectordestroy        LibUtil_Vector_Destroy
+    #define lu_vectordestroydata    LibUtil_Vector_DestroyData
+    #define lu_vectorreserve        LibUtil_Vector_Reserve
+    #define lu_vectorsetelement     LibUtil_Vector_SetElement
+    #define lu_vectorgetelement     LibUtil_Vector_GetElement
+    #define lu_vectorpushback       LibUtil_Vector_PushBack
+#endif
 
 #ifdef __cplusplus
 extern "C++"

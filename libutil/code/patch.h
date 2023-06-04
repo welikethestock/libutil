@@ -26,6 +26,15 @@ void                LibUtil_Patch_Apply(LIBUTIL_CODE_PATCH *Patch);
 LIBUTIL_API LIBUTIL_IMPORT
 void                LibUtil_Patch_Revert(LIBUTIL_CODE_PATCH *Patch);
 
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    typedef LIBUTIL_CODE_PATCH lu_codepatch;
+
+    #define lu_patchsetup LibUtil_Patch_Setup
+    #define lu_patchcreate LibUtil_Patch_Create
+    #define lu_patchapply LibUtil_Patch_Apply
+    #define lu_patchrevert LibUtil_Patch_Revert
+#endif
+
 #ifdef __cplusplus
 extern "C++"
 {

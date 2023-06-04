@@ -16,6 +16,12 @@ LIBUTIL_API LIBUTIL_IMPORT
 libutil_bool LibUtil_Random64_HW(libutil_u64 *Output);
 #endif
 
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    #define lu_random16hw LibUtil_Random16_HW
+    #define lu_random32hw LibUtil_Random32_HW
+    #define lu_random64hw LibUtil_Random64_HW
+#endif
+
 LIBUTIL_EXTERN_C_BLOCK_END
 
 #endif
