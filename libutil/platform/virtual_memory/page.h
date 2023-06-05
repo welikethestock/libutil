@@ -8,6 +8,31 @@ LIBUTIL_EXTERN_C_BLOCK_START
 enum
 {
 #ifdef __linux__
+    LIBUTIL_MAP_FILE = 0x0,
+    LIBUTIL_MAP_SHARED = 0x1,
+    LIBUTIL_MAP_PRIVATE = 0x2,
+    LIBUTIL_MAP_ANONYMOUS = 0x20,
+    LIBUTIL_MAP_32BIT = 0x40,
+    LIBUTIL_MAP_EXECUTABLE = 0x1000,
+    LIBUTIL_MAP_NORESERVE = 0x4000,
+    LIBUTIL_MAP_POPULATE = 0x8000,
+#endif
+
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    LU_MAP_FILE = LIBUTIL_MAP_FILE,
+    LU_MAP_SHARED = LIBUTIL_MAP_SHARED,
+    LU_MAP_PRIVATE = LIBUTIL_MAP_PRIVATE,
+    LU_MAP_ANONYMOUS = LIBUTIL_MAP_ANONYMOUS,
+    LU_MAP_32BIT = LIBUTIL_MAP_32BIT,
+    LU_MAP_EXECUTABLE = LIBUTIL_MAP_EXECUTABLE,
+    LU_MAP_NORESERVE = LIBUTIL_MAP_NORESERVE,
+    LU_MAP_POPULATE = LIBUTIL_MAP_POPULATE
+#endif
+};
+
+enum
+{
+#ifdef __linux__
     LIBUTIL_PAGE_R      = 0x1,
     LIBUTIL_PAGE_W      = 0x2,
     LIBUTIL_PAGE_X      = 0x4,
@@ -28,10 +53,18 @@ enum
 };
 
 LIBUTIL_API LIBUTIL_IMPORT
+libutil_bool LibUtil_Page_Allocate(void **BaseAddress, libutil_size Size, libutil_u32 Protection, libutil_u32 Flags);
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_bool LibUtil_Page_Free(void *BaseAddress);
+
+LIBUTIL_API LIBUTIL_IMPORT
 libutil_bool LibUtil_Page_Protect(void *Address, libutil_size Size, libutil_u32 Protection, libutil_u32 *OldProtection);
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
-    #define lu_pageprotect LibUtil_Page_Protect
+    #define lu_pageallocate LibUtil_Page_Allocate
+    #define lu_pagefree     LibUtil_Page_Free
+    #define lu_pageprotect  LibUtil_Page_Protect
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END

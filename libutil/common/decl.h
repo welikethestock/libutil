@@ -155,6 +155,14 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #endif
 #endif
 
+#ifndef LIBUTIL_NORETURN
+    #if defined(__GNUC__) || defined(__clang__)
+        #define LIBUTIL_NORETURN LIBUTIL_ATTRIBUTE(noreturn)
+    #else
+        #define LIBUTIL_NORETURN
+    #endif
+#endif
+
 LIBUTIL_EXTERN_C_BLOCK_END
 
 /* intrinsics */

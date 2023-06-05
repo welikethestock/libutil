@@ -2,11 +2,11 @@
 
 #if defined(__x86_64__) || defined(__i386) || defined(_M_X64) || defined(_M_IX86)
     #if defined(LIBUTIL_FEATURE_SSE2)
-        #define INTRIN_MIN_LEN 16
+        #define INTRIN_MIN_LEN (sizeof(__m128i))
     #elif defined(LIBUTIL_FEATURE_AVX)
-        #define INTRIN_MIN_LEN 32
+        #define INTRIN_MIN_LEN (sizeof(__m256i))
     #elif defiend(LIBUTIL_FEATURE_AVX512F)
-        #define INTRIN_MIN_LEN 64
+        #define INTRIN_MIN_LEN (sizeof(__m512i))
     #endif
 #endif
 
@@ -21,32 +21,32 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
         if(Length >= INTRIN_MIN_LEN && ((libutil_size)(_Destination) & (INTRIN_MIN_LEN - 1)) == 0)
         {
         #ifdef LIBUTIL_FEATURE_AVX512F
-            if(Length >= 64 && ((libutil_size)(_Destination) & (64 - 1)) == 0) // 64 byte aligned
+            if(Length >= sizeof(__m512i) && ((libutil_size)(_Destination) & (sizeof(__m512i) - 1)) == 0) // 64 byte aligned
             { // avx512
                 _mm512_store_si512(
                     (__m512i *)(_Destination),
-                    (((libutil_size)(_Source) & (64 - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Source)) : _mm512_loadu_si512((__m512i *)(_Source))
+                    (((libutil_size)(_Source) & (sizeof(__m512i) - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Source)) : _mm512_loadu_si512((__m512i *)(_Source))
                 );
 
-                _Destination += 64;
-                _Source += 64;
-                Length -= 64;
+                _Destination += sizeof(__m512i);
+                _Source += sizeof(__m512i);
+                Length -= sizeof(__m512i);
             }
         #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX)
             else
         #endif
         #endif
         #ifdef LIBUTIL_FEATURE_AVX
-            if(Length >= 32 && ((libutil_size)(_Destination) & (32 - 1)) == 0) // 32 byte aligned
+            if(Length >= sizeof(__m256i) && ((libutil_size)(_Destination) & (sizeof(__m256i) - 1)) == 0) // 32 byte aligned
             { // avx
                 _mm256_store_si256(
                     (__m256i *)(_Destination),
-                    (((libutil_size)(_Source) & (32 - 1)) == 0) ? _mm256_load_si256((__m256i *)(_Source)) : _mm256_loadu_si256((__m256i *)(_Source))
+                    (((libutil_size)(_Source) & (sizeof(__m256i) - 1)) == 0) ? _mm256_load_si256((__m256i *)(_Source)) : _mm256_loadu_si256((__m256i *)(_Source))
                 );
 
-                _Destination += 32;
-                _Source += 32;
-                Length -= 32;
+                _Destination += sizeof(__m256i);
+                _Source += sizeof(__m256i);
+                Length -= sizeof(__m256i);
             }
         #endif
         #if defined(LIBUTIL_FEATURE_SSE2) && (defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F))
@@ -56,12 +56,12 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
             { // sse2
                 _mm_store_si128(
                     (__m128i *)(_Destination),
-                    (((libutil_size)(_Source) & (16 - 1)) == 0) ? _mm_load_si128((__m128i *)(_Source)) : _mm_loadu_si128((__m128i *)(_Source))
+                    (((libutil_size)(_Source) & (sizeof(__m128i) - 1)) == 0) ? _mm_load_si128((__m128i *)(_Source)) : _mm_loadu_si128((__m128i *)(_Source))
                 );
 
-                _Destination += 16;
-                _Source += 16;
-                Length -= 16;
+                _Destination += sizeof(__m128i);
+                _Source += sizeof(__m128i);
+                Length -= sizeof(__m128i);
             }
         #endif
         }
@@ -72,8 +72,8 @@ void *LibUtil_Memcpy(void *Destination, const void *Source, libutil_size Length)
         #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
             if(Length >= (INTRIN_MIN_LEN + 1)) // align addresses, i really havent tested much faster it is reading from an aligned address vs an unaligned one
             {
-                libutil_size Align = (libutil_size)(_Destination) & (16 - 1);
-                Align = (Align == 0) ? 16 : Align;
+                libutil_size Align = (libutil_size)(_Destination) & (sizeof(__m128i) - 1);
+                Align = (Align == 0) ? sizeof(__m128i) : Align;
 
                 if(Align >= 8)
                 {
@@ -184,30 +184,30 @@ void *LibUtil_Memset(void *Destination, libutil_i32 Value, libutil_size Length)
         if(Length >= INTRIN_MIN_LEN)
         {
         #if defined(LIBUTIL_FEATURE_AVX512F)
-            if(Length >= 64)
+            if(Length >= sizeof(__m512i))
             {
                 _mm512_store_si512(
                     (__m512i *)(_Destination),
                     (Value == 0) ? _mm512_setzero_si512() : _mm512_set1_epi8(Value)
                 );
 
-                _Destination += 64;
-                Length -= 64;
+                _Destination += sizeof(__m512i);
+                Length -= sizeof(__m512i);
             }
         #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX)
             else
         #endif
         #endif
         #if defined(LIBUTIL_FEATURE_AVX)
-            if(Length >= 32)
+            if(Length >= sizeof(__m256i))
             {
                 _mm256_store_si256(
                     (__m256i *)(_Destination),
                     (Value == 0) ? _mm256_setzero_si256() : _mm256_set1_epi8(Value)
                 );
 
-                _Destination += 32;
-                Length -= 32;
+                _Destination += sizeof(__m256i);
+                Length -= sizeof(__m256i);
             }
         #if defined(LIBUTIL_FEATURE_SSE2)
             else
@@ -220,8 +220,8 @@ void *LibUtil_Memset(void *Destination, libutil_i32 Value, libutil_size Length)
                     (Value == 0) ? _mm_setzero_si128() : _mm_set1_epi8(Value)
                 );
 
-                _Destination += 16;
-                Length -= 16;
+                _Destination += sizeof(__m128i);
+                Length -= sizeof(__m128i);
             }
         #endif
         }
@@ -279,38 +279,38 @@ libutil_i32 LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Le
         if(Length >= INTRIN_MIN_LEN)
         {
         #if defined(LIBUTIL_FEATURE_AVX512F)
-            if(Length >= 64)
+            if(Length >= sizeof(__m512i))
             {
                 if(_mm512_movepi8_mask(_mm512_cmpeq_epi16(
-                    (((libutil_size)(_Block) & (64 - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Block)) : _mm512_loadu_si512((__m512i *)(_Block)),
-                    (((libutil_size)(_Other) & (64 - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Other)) : _mm512_loadu_si512((__m512i *)(_Other))
+                    (((libutil_size)(_Block) & (sizeof(__m512i) - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Block)) : _mm512_loadu_si512((__m512i *)(_Block)),
+                    (((libutil_size)(_Other) & (sizeof(__m512i) - 1)) == 0) ? _mm512_load_si512((__m512i *)(_Other)) : _mm512_loadu_si512((__m512i *)(_Other))
                 )) != 0xFFFFFFFFFFFFFFFFu)
                 {
                     return /*FALSE*/1;
                 }
 
-                _Block += 64;
-                _Other += 64;
-                Length -= 64;
+                _Block += sizeof(__m512i);
+                _Other += sizeof(__m512i);
+                Length -= sizeof(__m512i);
             }
         #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX)
             else
         #endif
         #endif
         #if defined(LIBUTIL_FEATURE_AVX)
-            if(Length >= 32)
+            if(Length >= sizeof(__m256i))
             { // avx
                 if(_mm256_movemask_epi8(_mm256_cmpeq_epi16(
-                    (((libutil_size)(_Block) & (32 - 1)) == 0) ? _mm256_load_si256((__m256i *)(_Block)) : _mm256_loadu_si256((__m256i *)(_Block)),
-                    (((libutil_size)(_Other) & (32 - 1)) == 0) ? _mm256_load_si256((__m256i *)(_Other)) : _mm256_loadu_si256((__m256i *)(_Other))
+                    (((libutil_size)(_Block) & (sizeof(__m256i) - 1)) == 0) ? _mm256_load_si256((__m256i *)(_Block)) : _mm256_loadu_si256((__m256i *)(_Block)),
+                    (((libutil_size)(_Other) & (sizeof(__m256i) - 1)) == 0) ? _mm256_load_si256((__m256i *)(_Other)) : _mm256_loadu_si256((__m256i *)(_Other))
                 )) != 0xFFFFFFFFu)
                 {
                     return /*FALSE*/1;
                 }
 
-                _Block += 32;
-                _Other += 32;
-                Length -= 32;
+                _Block += sizeof(__m256i);
+                _Other += sizeof(__m256i);
+                Length -= sizeof(__m256i);
             }
         #endif
         #if defined(LIBUTIL_FEATURE_SSE2) && (defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F))
@@ -319,16 +319,16 @@ libutil_i32 LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Le
         #if defined(LIBUTIL_FEATURE_SSE2)
             { // sse2
                 if(_mm_movemask_epi8(_mm_cmpeq_epi16(
-                    (((libutil_size)(_Block) & (16 - 1)) == 0) ? _mm_load_si128((__m128i *)(_Block)) : _mm_loadu_si128((__m128i *)(_Block)),
-                    (((libutil_size)(_Other) & (16 - 1)) == 0) ? _mm_load_si128((__m128i *)(_Other)) : _mm_loadu_si128((__m128i *)(_Other))
+                    (((libutil_size)(_Block) & (sizeof(__m128i) - 1)) == 0) ? _mm_load_si128((__m128i *)(_Block)) : _mm_loadu_si128((__m128i *)(_Block)),
+                    (((libutil_size)(_Other) & (sizeof(__m128i) - 1)) == 0) ? _mm_load_si128((__m128i *)(_Other)) : _mm_loadu_si128((__m128i *)(_Other))
                 )) != 0xFFFFu)
                 {
                     return /*FALSE*/1;
                 }
 
-                _Block += 16;
-                _Other += 16;
-                Length -= 16;
+                _Block += sizeof(__m128i);
+                _Other += sizeof(__m128i);
+                Length -= sizeof(__m128i);
             }
         #endif
         }

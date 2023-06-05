@@ -64,7 +64,9 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #endif
 
 #ifndef LIBUTIL_DEBUGBREAK
-    #define LIBUTIL_DEBUGBREAK() __builtin_debugtrap()
+    #if defined(__GNUC__) || defined(__clang__)
+        #define LIBUTIL_DEBUGBREAK() __asm("int3")
+    #endif
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END

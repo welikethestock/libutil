@@ -94,5 +94,16 @@ int main(int argc, const char **argv)
     libutil_bool StringAppendResult = lu_stringappendnarrow(StringTest, "test");
     printf("string> %d %s %zu\n", StringAppendResult, (const char *)(StringTest->Vector.Data), StringTest->Vector.Count);
 
+    // mmap/mprotect/munmap test
+    void *BaseAddress = NULL;
+    if(lu_pageallocate(&BaseAddress, 0x4000, LIBUTIL_PAGE_R, LIBUTIL_MAP_PRIVATE | LIBUTIL_MAP_ANONYMOUS))
+    {
+        printf("mmap> success %p %d\n", BaseAddress, errno);
+    }
+    else
+    {
+        printf("mmap> fail\n");
+    }
+
     return 0;
 }

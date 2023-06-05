@@ -196,6 +196,16 @@ target_link_libraries(${PROJECT_NAME} util-platform)
 target_link_libraries(${PROJECT_NAME}_shared util-common)
 target_link_libraries(${PROJECT_NAME}_shared util-platform)
 
+# libutil-internal
+project(util-internal)
+
+set(PROJECT_SOURCES
+    libutil/internal/stack_chk_fail.c
+)
+
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+
 # tests
 project(tests-crt)
 
@@ -207,6 +217,7 @@ target_link_libraries(${PROJECT_NAME} util-common)
 target_link_libraries(${PROJECT_NAME} util-containers)
 target_link_libraries(${PROJECT_NAME} util-code)
 target_link_libraries(${PROJECT_NAME} util-arch)
+target_link_libraries(${PROJECT_NAME} util-internal)
 
 # tests-crtless
 #[[project(tests-crtless)
