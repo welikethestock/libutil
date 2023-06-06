@@ -68,17 +68,23 @@ LIBUTIL_EXTERN_C_BLOCK_START
         #define FALSE               (0)
     #endif
 
-    #if defined(__GNUC__) || defined(__clang__)
+    #if defined(__GNUC__) || (defined(__clang__) && !defined(_WIN32))
         typedef unsigned long       libutil_size;
+    #else
+        typedef unsigned long long  libutil_size;
     #endif
 
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
         typedef libutil_size        lu_size;
     #endif
 
-    #ifdef __WCHAR_TYPE__
+    /*#ifdef __WCHAR_TYPE__
         typedef __WCHAR_TYPE__      libutil_wchar;
-    #endif
+    #else
+        typedef short               libutil_wchar;
+    #endif*/
+
+    typedef libutil_u16             libutil_wchar; // microsoft garbage
 
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
         typedef libutil_wchar       lu_wchar;
@@ -114,6 +120,8 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #ifndef LIBUTIL_ATTRIBUTE
     #if defined(__GNUC__) || defined(__clang__)
         #define LIBUTIL_ATTRIBUTE(Attribute) __attribute__((Attribute))
+    #else
+        #define LIBUTIL_ATTRIBUTE(Attribute) __declspec(Attribute)
     #endif
 #endif
 
@@ -152,6 +160,8 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #ifndef LIBUTIL_NAKED
     #if defined(__GNUC__) || defined(__clang__)
         #define LIBUTIL_NAKED LIBUTIL_ATTRIBUTE(naked)
+    #else
+        #define LIBUTIL_NAKED
     #endif
 #endif
 
@@ -160,6 +170,22 @@ LIBUTIL_EXTERN_C_BLOCK_START
         #define LIBUTIL_NORETURN LIBUTIL_ATTRIBUTE(noreturn)
     #else
         #define LIBUTIL_NORETURN
+    #endif
+#endif
+
+#ifndef LIBUTIL_ALIGN
+    #if defined(__GNUC__) || defined(__clang__)
+        #define LIBUTIL_ALIGN(Alignment) LIBUTIL_ATTRIBUTE(aligned(Alignment))
+    #else
+        #define LIBUTIL_ALIGN(Alignment) LIBUTIL_ATTRIBUTE(align(Alignment))
+    #endif
+#endif
+
+#ifndef LIBUTIL_PACKED
+    #if defined(__GNUC__) || defined(__clang__)
+        #define LIBUTIL_PACKED LIBUTIL_ATTRIBUTE(packed)
+    #else
+        #define LIBUTIL_PACKED
     #endif
 #endif
 

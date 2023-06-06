@@ -2,6 +2,7 @@
 #define __LIBUTIL_PLATFORM_SYSCALL__
 
 #include "../../common/decl.h"
+#include "../nt/peb.h"
 
 LIBUTIL_EXTERN_C_BLOCK_START
 

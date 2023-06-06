@@ -8,8 +8,8 @@
 #include "libutil/common/random.h"
 #include "libutil/common/strlib.h"
 #include "libutil/containers/string.h"
+#include "libutil/platform/nt/peb.h"
 
-#include <errno.h>
 #include <stdio.h>
 
 int main(int argc, const char **argv)
@@ -98,7 +98,7 @@ int main(int argc, const char **argv)
     void *BaseAddress = NULL;
     if(lu_pageallocate(&BaseAddress, 0x4000, LIBUTIL_PAGE_R, LIBUTIL_MAP_PRIVATE | LIBUTIL_MAP_ANONYMOUS))
     {
-        printf("mmap> success %p %d\n", BaseAddress, errno);
+        printf("mmap> success %p\n", BaseAddress);
     }
     else
     {
