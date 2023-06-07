@@ -10,6 +10,122 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #pragma pack(push, 1)
 #endif
 
+typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB32
+{
+    libutil_u8                  InheritedAddressSpace;                                                                  /*+0x000*/
+    libutil_u8                  ReadImageFileExecOptions;                                                               /*+0x001*/
+    libutil_u8                  BeingDebugged;                                                                          /*+0x002*/
+    struct
+    {
+        libutil_bool                ImageUsesLargePages : 1;
+        libutil_bool                IsProtectedProcess : 1;
+        libutil_bool                IsImageDynamicallyRelocated : 1;
+        libutil_bool                SkipPatchingUser32Forwarders : 1;
+        libutil_bool                IsPackagedProcess : 1;
+        libutil_bool                IsAppContainer : 1;
+        libutil_bool                IsProtectedProcessLight : 1;
+        libutil_u8                  SpareBits : 1;
+    } BitField;                                                                                                         /*+0x003*/
+    libutil_u32                 Mutant;                                                                                 /*+0x004*/
+    libutil_u32                 ImageBaseAddress;                                                                       /*+0x008*/
+    libutil_u32                 Ldr;                                                /*_PEB_LDR_DATA* */                 /*+0x00C*/
+    libutil_u32                 ProcessParameters;                                  /*_RTL_USER_PROCESS_PARAMETERS* */  /*+0x010*/
+    libutil_u32                 SubSystemData;                                                                          /*+0x014*/
+    libutil_u32                 ProcessHeap;                                                                            /*+0x018*/
+    libutil_u32                 FastPebLock;                                        /* _RTL_CRITICAL_SESSION* */        /*+0x01C*/
+    libutil_u32                 AtlThunkSListPtr;                                                                       /*+0x020*/
+    libutil_u32                 IFEOKey;                                                                                /*+0x024*/
+    struct
+    {
+        libutil_bool                ProcessInJob : 1;
+        libutil_bool                ProcessInitializing : 1;
+        libutil_bool                ProcessUsingVEH : 1;
+        libutil_bool                ProcessUsingVCH : 1;
+        libutil_bool                ProcessUsingFTH : 1;
+        libutil_u8                  ReservedBits0 : 3;
+        libutil_u8                  ReservedBits1 : 8;
+        libutil_u8                  ReservedBits2 : 8;
+        libutil_u8                  ReservedBits3 : 8;
+    } CrossProcessFlags;                                                                                                /*+0x028*/
+    union
+    {
+        libutil_u32                 KernelCallbackTable;                                                                /*+0x02C*/
+        libutil_u32                 UserSharedInfoPtr;                                                                  /*+0x02C*/
+    };
+    libutil_u32                 SystemReserved[1];                                                                      /*+0x030*/
+    libutil_u32                 AtlThunkSListPtr32;                                                                     /*+0x034*/
+    libutil_u32                 ApiSetMap;                                                                              /*+0x038*/
+    libutil_u32                 TlsExpansionCounter;                                                                    /*+0x03C*/
+    libutil_u32                 TlsBitmap;                                                                              /*+0x040*/
+    libutil_u32                 TlsBitmapBits[2];                                                                       /*+0x044*/
+    libutil_u32                 ReadOnlySharedMemoryBase;                                                               /*+0x04C*/
+    libutil_u32                 SparePvoid0;                                                                            /*+0x050*/
+    libutil_u32                 ReadOnlyStaticServerData;                           /*void** */                         /*+0x054*/
+    libutil_u32                 AnsiCodePageData;                                                                       /*+0x058*/
+    libutil_u32                 OemCodePageData;                                                                        /*+0x05C*/
+    libutil_u32                 UnicodeCaseTableData;                                                                   /*+0x060*/
+    libutil_u32                 NumberOfProcessors;                                                                     /*+0x064*/
+    libutil_u32                 NtGlobalFlag;                                                                           /*+0x068*/
+    libutil_u8                  Padding1[4];                                                                            /*+0x06C*/
+    LIBUTIL_NT_LARGE_INTEGER    CriticalSectionTimeout;                                                                 /*+0x070*/
+    libutil_u32                 HeapSegmentReserve;                                                                     /*+0x078*/
+    libutil_u32                 HeapSegmentCommit;                                                                      /*+0x07C*/
+    libutil_u32                 HeapDeCommitTotalFreeThreshold;                                                         /*+0x080*/
+    libutil_u32                 HeapDeCommitFreeBlockThreshold;                                                         /*+0x084*/
+    libutil_u32                 NumberOfHeaps;                                                                          /*+0x088*/
+    libutil_u32                 MaximumNumberOfHeaps;                                                                   /*+0x08C*/
+    libutil_u32                 ProcessHeaps;                                       /*libutil_u32* */                   /*+0x090*/
+    libutil_u32                 GdiSharedHandleTable;                                                                   /*+0x094*/
+    libutil_u32                 ProcessStarterHelper;                                                                   /*+0x098*/
+    libutil_u32                 GdiDCAttributeList;                                                                     /*+0x09C*/
+    libutil_u32                 LoaderLock;                                         /*_RTL_CRITICAL_SESSION* */         /*+0x0A0*/
+    libutil_u32                 OSMajorVersion;                                                                         /*+0x0A4*/
+    libutil_u32                 OSMinorVersion;                                                                         /*+0x0A8*/
+    libutil_u16                 OSBuildNumber;                                                                          /*+0x0AC*/
+    libutil_u16                 OSCSDVersion;                                                                           /*+0x0AE*/
+    libutil_u32                 OSPlatformId;                                                                           /*+0x0B0*/
+    libutil_u32                 ImageSubsystem;                                                                         /*+0x0B4*/
+    libutil_u32                 ImageSubsystemMajorVersion;                                                             /*+0x0B8*/
+    libutil_u32                 ImageSubsystemMinorVersion;                                                             /*+0x0BC*/
+    libutil_u32                 ActiveProcessAffinityMask;                                                              /*+0x0C0*/
+    libutil_u32                 GdiHandleBuffer[34];                                                                    /*+0x0C4*/
+    libutil_u32                 PostProcessInitRoutine;                                                                 /*+0x14C*/
+    libutil_u32                 TlsExpansionBitmap;                                                                     /*+0x150*/
+    libutil_u32                 TlsExpansionBitmapBits[32];                                                             /*+0x154*/
+    libutil_u32                 SessionId;                                                                              /*+0x1D4*/
+    LIBUTIL_NT_ULARGE_INTEGER   AppCompatFlags;                                                                         /*+0x1D8*/
+    LIBUTIL_NT_ULARGE_INTEGER   AppCompatFlagsUser;                                                                     /*+0x1E0*/
+    libutil_u32                 ShimData;                                                                               /*+0x1E8*/
+    libutil_u32                 AppCompatInfo;                                                                          /*+0x1EC*/
+    LIBUTIL_NT_UNICODE_STRING32 CSDVersion;                                                                             /*+0x1F0*/
+    libutil_u32                 ActivationContextData;                              /*_ACTIVATION_CONTEXT_DATA* */      /*+0x1F8*/
+    libutil_u32                 ProcessAssemblyStorageMap;                          /*_ASSEMBLY_STORAGE_MAP* */         /*+0x1FC*/
+    libutil_u32                 SystemDefaultActivationContextData;                 /*_ACTIVATION_CONTEXT_DATA* */      /*+0x200*/
+    libutil_u32                 SystemAssemblyStorageMap;                           /*_ASSEMBLY_STORAGE_MAP* */         /*+0x204*/
+    libutil_u32                 MinimumStackCommit;                                                                     /*+0x208*/
+    libutil_u32                 FlsCallback;                                        /*_FLS_CALLBACK_INFO* */            /*+0x20C*/
+    LIBUTIL_NT_LIST_ENTRY32     FlsListHead;                                                                            /*+0x210*/
+    libutil_u32                 FlsBitmap;                                                                              /*+0x218*/
+    libutil_u32                 FlsBitmapBits[4];                                                                       /*+0x21C*/
+    libutil_u32                 FlsHighIndex;                                                                           /*+0x22C*/
+    libutil_u32                 WerRegistrationData;                                                                    /*+0x230*/
+    libutil_u32                 WerShipAssertPtr;                                                                       /*+0x234*/
+    libutil_u32                 pUnused;                                                                                /*+0x238*/
+    libutil_u32                 pImageHeaderHash;                                                                       /*+0x23C*/
+    struct
+    {
+        libutil_bool                HeapTracingEnabled : 1;
+        libutil_bool                CritSecTracingEnabled : 1;
+        libutil_bool                LibLoaderTracingEnabled : 1;
+        libutil_u8                  SpareTracingBits0 : 5;
+        libutil_u8                  SpareTracingBits1 : 8;
+        libutil_u8                  SpareTracingBits2 : 8;
+        libutil_u8                  SpareTracingBits3 : 8;
+    } TracingFlags;                                                                                                     /*+0x240*/
+    libutil_u8                  Padding2[4];                                                                            /*+0x244*/
+    libutil_u64                 CsrServerReadOnlySharedMemoryBase;                                                      /*+0x248*/
+} LIBUTIL_NT_PEB32;
+
 typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
 {
     libutil_u8                  InheritedAddressSpace;                                                                  /*+0x000*/
@@ -132,126 +248,20 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
     libutil_u64                 CsrServerReadOnlySharedMemoryBase;                                                      /*+0x380*/
 } LIBUTIL_NT_PEB64;
 
-typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB32
-{
-    libutil_u8                  InheritedAddressSpace;                                                                  /*+0x000*/
-    libutil_u8                  ReadImageFileExecOptions;                                                               /*+0x001*/
-    libutil_u8                  BeingDebugged;                                                                          /*+0x002*/
-    struct
-    {
-        libutil_bool                ImageUsesLargePages : 1;
-        libutil_bool                IsProtectedProcess : 1;
-        libutil_bool                IsImageDynamicallyRelocated : 1;
-        libutil_bool                SkipPatchingUser32Forwarders : 1;
-        libutil_bool                IsPackagedProcess : 1;
-        libutil_bool                IsAppContainer : 1;
-        libutil_bool                IsProtectedProcessLight : 1;
-        libutil_u8                  SpareBits : 1;
-    } BitField;                                                                                                         /*+0x003*/
-    libutil_u32                 Mutant;                                                                                 /*+0x004*/
-    libutil_u32                 ImageBaseAddress;                                                                       /*+0x008*/
-    libutil_u32                 Ldr;                                                /*_PEB_LDR_DATA* */                 /*+0x00C*/
-    libutil_u32                 ProcessParameters;                                  /*_RTL_USER_PROCESS_PARAMETERS* */  /*+0x010*/
-    libutil_u32                 SubSystemData;                                                                          /*+0x014*/
-    libutil_u32                 ProcessHeap;                                                                            /*+0x018*/
-    libutil_u32                 FastPebLock;                                        /* _RTL_CRITICAL_SESSION* */        /*+0x01C*/
-    libutil_u32                 AtlThunkSListPtr;                                                                       /*+0x020*/
-    libutil_u32                 IFEOKey;                                                                                /*+0x024*/
-    struct
-    {
-        libutil_bool                ProcessInJob : 1;
-        libutil_bool                ProcessInitializing : 1;
-        libutil_bool                ProcessUsingVEH : 1;
-        libutil_bool                ProcessUsingVCH : 1;
-        libutil_bool                ProcessUsingFTH : 1;
-        libutil_u8                  ReservedBits0 : 3;
-        libutil_u8                  ReservedBits1 : 8;
-        libutil_u8                  ReservedBits2 : 8;
-        libutil_u8                  ReservedBits3 : 8;
-    } CrossProcessFlags;                                                                                                /*+0x028*/
-    union
-    {
-        libutil_u32                 KernelCallbackTable;                                                                /*+0x02C*/
-        libutil_u32                 UserSharedInfoPtr;                                                                  /*+0x02C*/
-    };
-    libutil_u32                 SystemReserved[1];                                                                      /*+0x030*/
-    libutil_u32                 AtlThunkSListPtr32;                                                                     /*+0x034*/
-    libutil_u32                 ApiSetMap;                                                                              /*+0x038*/
-    libutil_u32                 TlsExpansionCounter;                                                                    /*+0x03C*/
-    libutil_u32                 TlsBitmap;                                                                              /*+0x040*/
-    libutil_u32                 TlsBitmapBits[2];                                                                       /*+0x044*/
-    libutil_u32                 ReadOnlySharedMemoryBase;                                                               /*+0x04C*/
-    libutil_u32                 SparePvoid0;                                                                            /*+0x050*/
-    libutil_u32                 ReadOnlyStaticServerData;                           /*void** */                         /*+0x054*/
-    libutil_u32                 AnsiCodePageData;                                                                       /*+0x058*/
-    libutil_u32                 OemCodePageData;                                                                        /*+0x05C*/
-    libutil_u32                 UnicodeCaseTableData;                                                                   /*+0x060*/
-    libutil_u32                 NumberOfProcessors;                                                                     /*+0x064*/
-    libutil_u32                 NtGlobalFlag;                                                                           /*+0x068*/
-    libutil_u8                  Padding1[4];                                                                            /*+0x06C*/
-    LIBUTIL_NT_LARGE_INTEGER    CriticalSectionTimeout;                                                                 /*+0x070*/
-    libutil_u32                 HeapSegmentReserve;                                                                     /*+0x078*/
-    libutil_u32                 HeapSegmentCommit;                                                                      /*+0x07C*/
-    libutil_u32                 HeapDeCommitTotalFreeThreshold;                                                         /*+0x080*/
-    libutil_u32                 HeapDeCommitFreeBlockThreshold;                                                         /*+0x084*/
-    libutil_u32                 NumberOfHeaps;                                                                          /*+0x088*/
-    libutil_u32                 MaximumNumberOfHeaps;                                                                   /*+0x08C*/
-    libutil_u32                 ProcessHeaps;                                       /*libutil_u32* */                   /*+0x090*/
-    libutil_u32                 GdiSharedHandleTable;                                                                   /*+0x094*/
-    libutil_u32                 ProcessStarterHelper;                                                                   /*+0x098*/
-    libutil_u32                 GdiDCAttributeList;                                                                     /*+0x09C*/
-    libutil_u32                 LoaderLock;                                         /*_RTL_CRITICAL_SESSION* */         /*+0x0A0*/
-    libutil_u32                 OSMajorVersion;                                                                         /*+0x0A4*/
-    libutil_u32                 OSMinorVersion;                                                                         /*+0x0A8*/
-    libutil_u16                 OSBuildNumber;                                                                          /*+0x0AC*/
-    libutil_u16                 OSCSDVersion;                                                                           /*+0x0AE*/
-    libutil_u32                 OSPlatformId;                                                                           /*+0x0B0*/
-    libutil_u32                 ImageSubsystem;                                                                         /*+0x0B4*/
-    libutil_u32                 ImageSubsystemMajorVersion;                                                             /*+0x0B8*/
-    libutil_u32                 ImageSubsystemMinorVersion;                                                             /*+0x0BC*/
-    libutil_u32                 ActiveProcessAffinityMask;                                                              /*+0x0C0*/
-    libutil_u32                 GdiHandleBuffer[34];                                                                    /*+0x0C4*/
-    libutil_u32                 PostProcessInitRoutine;                                                                 /*+0x14C*/
-    libutil_u32                 TlsExpansionBitmap;                                                                     /*+0x150*/
-    libutil_u32                 TlsExpansionBitmapBits[32];                                                             /*+0x154*/
-    libutil_u32                 SessionId;                                                                              /*+0x1D4*/
-    LIBUTIL_NT_ULARGE_INTEGER   AppCompatFlags;                                                                         /*+0x1D8*/
-    LIBUTIL_NT_ULARGE_INTEGER   AppCompatFlagsUser;                                                                     /*+0x1E0*/
-    libutil_u32                 ShimData;                                                                               /*+0x1E8*/
-    libutil_u32                 AppCompatInfo;                                                                          /*+0x1EC*/
-    LIBUTIL_NT_UNICODE_STRING32 CSDVersion;                                                                             /*+0x1F0*/
-    libutil_u32                 ActivationContextData;                              /*_ACTIVATION_CONTEXT_DATA* */      /*+0x1F8*/
-    libutil_u32                 ProcessAssemblyStorageMap;                          /*_ASSEMBLY_STORAGE_MAP* */         /*+0x1FC*/
-    libutil_u32                 SystemDefaultActivationContextData;                 /*_ACTIVATION_CONTEXT_DATA* */      /*+0x200*/
-    libutil_u32                 SystemAssemblyStorageMap;                           /*_ASSEMBLY_STORAGE_MAP* */         /*+0x204*/
-    libutil_u32                 MinimumStackCommit;                                                                     /*+0x208*/
-    libutil_u32                 FlsCallback;                                        /*_FLS_CALLBACK_INFO* */            /*+0x20C*/
-    LIBUTIL_NT_LIST_ENTRY32     FlsListHead;                                                                            /*+0x210*/
-    libutil_u32                 FlsBitmap;                                                                              /*+0x218*/
-    libutil_u32                 FlsBitmapBits[4];                                                                       /*+0x21C*/
-    libutil_u32                 FlsHighIndex;                                                                           /*+0x22C*/
-    libutil_u32                 WerRegistrationData;                                                                    /*+0x230*/
-    libutil_u32                 WerShipAssertPtr;                                                                       /*+0x234*/
-    libutil_u32                 pUnused;                                                                                /*+0x238*/
-    libutil_u32                 pImageHeaderHash;                                                                       /*+0x23C*/
-    struct
-    {
-        libutil_bool                HeapTracingEnabled : 1;
-        libutil_bool                CritSecTracingEnabled : 1;
-        libutil_bool                LibLoaderTracingEnabled : 1;
-        libutil_u8                  SpareTracingBits0 : 5;
-        libutil_u8                  SpareTracingBits1 : 8;
-        libutil_u8                  SpareTracingBits2 : 8;
-        libutil_u8                  SpareTracingBits3 : 8;
-    } TracingFlags;                                                                                                     /*+0x240*/
-    libutil_u8                  Padding2[4];                                                                            /*+0x244*/
-    libutil_u64                 CsrServerReadOnlySharedMemoryBase;                                                      /*+0x248*/
-} LIBUTIL_NT_PEB32;
-
 #ifdef _MSC_VER
 #pragma pack(pop)
 #endif
 
+#ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    typedef LIBUTIL_NT_PEB32 lu_nt_peb32;
+    typedef LIBUTIL_NT_PEB64 lu_nt_peb64;
+#endif
+
 LIBUTIL_EXTERN_C_BLOCK_END
+
+#ifdef __cplusplus
+    static_assert(sizeof(LIBUTIL_NT_PEB32) == 0x250, "sizeof(LIBUTIL_NT_PEB64) == 0x250");
+    static_assert(sizeof(LIBUTIL_NT_PEB64) == 0x388, "sizeof(LIBUTIL_NT_PEB64) == 0x388");
+#endif
 
 #endif

@@ -8,9 +8,12 @@
 #include "libutil/common/random.h"
 #include "libutil/common/strlib.h"
 #include "libutil/containers/string.h"
+#include "libutil/platform/nt/teb.h"
 #include "libutil/platform/nt/peb.h"
+#include "libutil/platform/nt/ldr.h"
 
 #include <stdio.h>
+#include <stddef.h>
 
 int main(int argc, const char **argv)
 {
@@ -106,6 +109,7 @@ int main(int argc, const char **argv)
     }*/
 
     //NtRaiseHardError test
+#if 0
     LIBUTIL_ALIGN(16) LIBUTIL_NT_UNICODE_STRING64 Caption, Text;
     LIBUTIL_ALIGN(16) void *Arguments[] =
     {
@@ -126,7 +130,9 @@ int main(int argc, const char **argv)
     printf("%p %p\n", Arguments, &Response);
     libutil_i64 Result = LibUtil_Syscall6(0x147, 0x40000018, 3, 0x3, (libutil_size)(Arguments), 0/*OptionOk*/, (libutil_size)(&Response));
     printf("%X %d\n", Result, Response);
+#endif
 
+    printf("%X %X", sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32), offsetof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32, BaseNameHashValue));
 
     return 0;
 }

@@ -110,11 +110,17 @@ project(util-platform C CXX ASM ASM_MASM)
 set(PROJECT_SOURCES
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_unix.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win.c
-    ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win_msvcx64.asm
 
     ${PROJECT_SOURCE_DIR}/libutil/platform/virtual_memory/page_unix.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/virtual_memory/page_win.c
 )
+
+if(${CMAKE_C_COMPILER_FRONTEND_VARIANT} STREQUAL "MSVC")
+    set(PROJECT_SOURCES
+        ${PROJECT_SOURCES}
+        ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win_msvcx64.asm
+    )
+endif()
 
 set_property(SOURCE ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win_msvc.s PROPERTY LANGUAGE ASM)
 
