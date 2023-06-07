@@ -1,10 +1,12 @@
-#ifdef __linux__
+#include "../../common/features.h"
+
+#ifdef LIBUTIL_LINUX
 #include "syscall.h"
 
+#if defined(LIBUTIL_X86_64)
 LIBUTIL_API
-libutil_i64 LibUtil_Syscall0(libutil_i32 ID)
+libutil_syscallresult LibUtil_Syscall0(libutil_i32 ID)
 {
-#if defined(__x86_64__) || defined(_M_X64)
     __asm __volatile__("and rsp, -010");
 
     register libutil_size rax __asm("rax") = ID;
@@ -16,13 +18,11 @@ libutil_i64 LibUtil_Syscall0(libutil_i32 ID)
     );
 
     return rax;
-#endif
 }
 
 LIBUTIL_API
-libutil_i64 LibUtil_Syscall1(libutil_i32 ID, libutil_size Arg1)
+libutil_syscallresult LibUtil_Syscall1(libutil_i32 ID, libutil_size Arg1)
 {
-#if defined(__x86_64__) || defined(_M_X64)
     __asm __volatile__("and rsp, -010");
 
     register libutil_size rax __asm("rax") = ID;
@@ -34,13 +34,11 @@ libutil_i64 LibUtil_Syscall1(libutil_i32 ID, libutil_size Arg1)
     );
 
     return rax;
-#endif
 }
 
 LIBUTIL_API
-libutil_i64 LibUtil_Syscall2(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2)
+libutil_syscallresult LibUtil_Syscall2(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2)
 {
-#if defined(__x86_64__) || defined(_M_X64)
     __asm __volatile__("and rsp, -010");
 
     register libutil_size rax __asm("rax") = ID;
@@ -52,13 +50,11 @@ libutil_i64 LibUtil_Syscall2(libutil_i32 ID, libutil_size Arg1, libutil_size Arg
     );
 
     return rax;
-#endif
 }
 
 LIBUTIL_API
-libutil_i64 LibUtil_Syscall3(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3)
+libutil_syscallresult LibUtil_Syscall3(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3)
 {
-#if defined(__x86_64__) || defined(_M_X64)
     __asm __volatile__("and rsp, -010");
 
     register libutil_size rax __asm("rax") = ID;
@@ -70,13 +66,11 @@ libutil_i64 LibUtil_Syscall3(libutil_i32 ID, libutil_size Arg1, libutil_size Arg
     );
 
     return rax;
-#endif
 }
 
 LIBUTIL_API
-libutil_i64 LibUtil_Syscall4(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4)
+libutil_syscallresult LibUtil_Syscall4(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4)
 {
-#if defined(__x86_64__) || defined(_M_X64)
     __asm __volatile__("and rsp, -010");
 
     register libutil_size rax __asm("rax") = ID;
@@ -89,13 +83,11 @@ libutil_i64 LibUtil_Syscall4(libutil_i32 ID, libutil_size Arg1, libutil_size Arg
     );
 
     return rax;
-#endif
 }
 
 LIBUTIL_API
-libutil_i64 LibUtil_Syscall5(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5)
+libutil_syscallresult LibUtil_Syscall5(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5)
 {
-#if defined(__x86_64__) || defined(_M_X64)
     __asm __volatile__("and rsp, -010");
 
     register libutil_size rax __asm("rax") = ID;
@@ -110,13 +102,11 @@ libutil_i64 LibUtil_Syscall5(libutil_i32 ID, libutil_size Arg1, libutil_size Arg
     );
 
     return rax;
-#endif
 }
 
 LIBUTIL_API
-libutil_i64 LibUtil_Syscall6(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5, libutil_size Arg6)
+libutil_syscallresult LibUtil_Syscall6(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5, libutil_size Arg6)
 {
-#if defined(__x86_64__) || defined(_M_X64)
     __asm __volatile__("and rsp, -010");
 
     register libutil_size rax __asm("rax") = ID;
@@ -131,6 +121,7 @@ libutil_i64 LibUtil_Syscall6(libutil_i32 ID, libutil_size Arg1, libutil_size Arg
     );
 
     return rax;
-#endif
 }
+#endif
+
 #endif

@@ -11,11 +11,14 @@ libutil_bool LibUtil_Patch_Setup(LIBUTIL_CODE_PATCH *PatchInfo, void *Address, l
 
     if((PatchInfo->Backup = (libutil_u8 *)(LibUtil_Heap_Allocate(Size))) == NULL)
     {
+        PatchInfo->Address = NULL;
+
         return FALSE;
     }
 
     if((PatchInfo->Patch = (libutil_u8 *)(LibUtil_Heap_Allocate(Size))) == NULL)
     {
+        PatchInfo->Address = NULL;
         LibUtil_Heap_Free(PatchInfo->Backup);
 
         return FALSE;
@@ -38,7 +41,7 @@ LIBUTIL_CODE_PATCH *LibUtil_Patch_Create(void *Address, libutil_size Size, libut
 
     if(Address != NULL)
     {
-        if(LibUtil_Patch_Setup(PatchInfo, Address, Size, Patch))
+        if(!LibUtil_Patch_Setup(PatchInfo, Address, Size, Patch))
         {
             LibUtil_Heap_Free(PatchInfo);
 
@@ -47,6 +50,22 @@ LIBUTIL_CODE_PATCH *LibUtil_Patch_Create(void *Address, libutil_size Size, libut
     }
 
     return PatchInfo;
+}
+
+LIBUTIL_API
+void LibUtil_Patch_Destroy(LIBUTIL_CODE_PATCH *Patch)
+{
+    if(Patch->Backup != NULL)
+    {
+        LibUtil_Heap_Free(Patch->Backup);
+    }
+
+    if(Patch->Patch != NULL)
+    {
+        LibUtil_Heap_Free(Patch->Patch);
+    }
+
+    LibUtil_Heap_Free(Patch);
 }
 
 LIBUTIL_API

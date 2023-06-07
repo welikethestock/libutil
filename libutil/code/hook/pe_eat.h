@@ -1,11 +1,11 @@
 #ifndef __LIBUTIL_CODE_HOOK_PE_EAT__
 #define __LIBUTIL_CODE_HOOK_PE_EAT__
 
-#ifndef _WIN32
+#include "../../common/decl.h"
+
+#ifndef LIBUTIL_WINDOWS
 #error "Only usable on Windows."
 #endif
-
-#include "../../common/decl.h"
 
 LIBUTIL_EXTERN_C_BLOCK_START
 

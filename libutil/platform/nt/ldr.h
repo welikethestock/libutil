@@ -6,7 +6,7 @@
 
 LIBUTIL_EXTERN_C_BLOCK_START
 
-#ifdef _MSC_VER
+#ifdef LIBUTIL_MSVC
 #pragma pack(push, 1)
 #endif
 
@@ -183,9 +183,10 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
     libutil_u32                             BaseNameHashValue;                                              /*+0x108*/
     LIBUTIL_NT_LDR_DLL_LOAD_REASON          LoadReason;                                                     /*+0x10C*/
     libutil_u32                             ImplicitPathOptions;                                            /*+0x110*/
+    libutil_u8                              Padding2[4];                                                    /*+0x114*/ // MSVC hack
 } LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64;
 
-#ifdef _MSC_VER
+#ifdef LIBUTIL_MSVC
 #pragma pack(pop)
 #endif
 
@@ -204,7 +205,7 @@ LIBUTIL_EXTERN_C_BLOCK_END
     static_assert(sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32) == 0x09C, "sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32) == 0x09C");
 
     static_assert(sizeof(LIBUTIL_NT_PEB_LDR_DATA64) == 0x58, "sizeof(LIBUTIL_NT_PEB_LDR_DATA64) == 0x58");
-    static_assert(sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x114, "sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x114");
+    static_assert(sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x118, "sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x118");
 #endif
 
 #endif

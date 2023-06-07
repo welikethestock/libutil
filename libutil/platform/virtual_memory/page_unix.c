@@ -1,4 +1,7 @@
-#ifdef __linux__
+#include "../../common/features.h"
+
+#ifdef LIBUTIL_LINUX
+
 #include "page.h"
 #include "../sys/syscall.h"
 #include "../../common/mathbits.h"

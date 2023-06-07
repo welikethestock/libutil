@@ -1,13 +1,11 @@
 #include "memlib.h"
 
-#if defined(__x86_64__) || defined(__i386) || defined(_M_X64) || defined(_M_IX86)
-    #if defined(LIBUTIL_FEATURE_SSE2)
-        #define INTRIN_MIN_LEN (sizeof(__m128i))
-    #elif defined(LIBUTIL_FEATURE_AVX)
-        #define INTRIN_MIN_LEN (sizeof(__m256i))
-    #elif defiend(LIBUTIL_FEATURE_AVX512F)
-        #define INTRIN_MIN_LEN (sizeof(__m512i))
-    #endif
+#if defined(LIBUTIL_FEATURE_SSE2)
+    #define INTRIN_MIN_LEN (sizeof(__m128i))
+#elif defined(LIBUTIL_FEATURE_AVX)
+    #define INTRIN_MIN_LEN (sizeof(__m256i))
+#elif defiend(LIBUTIL_FEATURE_AVX512F)
+    #define INTRIN_MIN_LEN (sizeof(__m512i))
 #endif
 
 LIBUTIL_API
@@ -230,7 +228,11 @@ void *LibUtil_Memset(void *Destination, libutil_i32 Value, libutil_size Length)
         else
     #endif
         { // maybe align the pointer here so its faster
+            #ifdef LIBUTIL_LITTLE_ENDIAN
             libutil_i32 _Value = ((Value) | (Value << 8) | (Value << 16) | (Value << 24));
+            #else
+            #error "Implement me"
+            #endif
             if(Length >= 8)
             {
                 *(libutil_i64 *)(_Destination) = ((libutil_i64)(_Value)  & 0xFFFFFFFF) | ((libutil_i64)(_Value) << 32);

@@ -59,6 +59,12 @@ extern "C++"
         {
             return LibUtil_DoublyLinkedList_Create();
         }
+
+        LIBUTIL_FORCE_INLINE
+        static void operator delete(void *Address)
+        {
+            LibUtil_DoublyLinkedList_Destroy((LIBUTIL_DOUBLY_LINKED_LIST_NODE *)(Address));
+        }
     };
 }
 #endif

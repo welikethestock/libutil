@@ -74,11 +74,16 @@ extern "C++"
             );
         }
 
-
         LIBUTIL_FORCE_INLINE
         static void *operator new(LibUtil::Size Size)
         {
             return LibUtil_Vector_Create(-1);
+        }
+
+        LIBUTIL_FORCE_INLINE
+        static void operator delete(void *Address)
+        {
+            LibUtil_Vector_Destroy((LIBUTIL_VECTOR *)(Address));
         }
 
         LIBUTIL_FORCE_INLINE

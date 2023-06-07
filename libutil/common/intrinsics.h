@@ -2,10 +2,11 @@
 #define __LIBUTIL_COMMON_INTRINSICS__
 
 #include "decl.h"
+#include "features.h"
 
 LIBUTIL_EXTERN_C_BLOCK_START
 
-#if defined(__STDC_HOSTED__) && (__clang__)
+#if defined(__STDC_HOSTED__) && (LIBUTIL_CLANG)
     #define _RESTORE_STDC_HOSTED
     #undef __STDC_HOSTED_
 #endif
@@ -13,16 +14,20 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #define __int32 int
 #define __int64 long long
 
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
-    #ifdef __GNUC__
+#if defined(LIBUTIL_X86) || defined(LIBUTIL_X86_64)
+    #ifdef LIBUTIL_GNUC
         #include <x86intrin.h>
     #endif
 
     #ifndef _MSC_VER
+        #define _UNDEF_MSC_VER
         #define _MSC_VER
     #endif
 
-    #define _NATIVE_WCHAR_T_DEFINED 1
+    #ifndef _NATIVE_WCHAR_T_DEFINED
+        #define _NATIVE_WCHAR_T_DEFINED 1
+    #endif
+
     #define __halt      static __halt
     #define __movsb     static __movsb
     #define __movsd     static __movsd
@@ -36,11 +41,11 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #define __readcr3   static __readcr3
     #define __writecr3  static __writecr3
 
-    #if defined(__clang__) || defined(_WIN32) // not available with GCC
+    #if defined(LIBUTIL_CLANG) || defined(LIBUTIL_WINDOWS) // not available with GCC
         #include <intrin.h>
     #endif
 
-    #ifndef _WIN32
+    #ifdef _UNDEF_MSC_VER
         #undef _MSC_VER
     #endif
 
@@ -66,11 +71,13 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #undef __int32
 #undef __int64
 
-#ifndef LIBUTIL_DEBUGBREAK
-    #if defined(__GNUC__) || defined(__clang__)
-        #define LIBUTIL_DEBUGBREAK()    __asm("int3")
-    #else
-        #define LIBUTIL_DEBUGBREAK      __debugbreak
+#if defined(LIBUTIL_X86_64) || defined (LIBUTIL_X86)
+    #ifndef LIBUTIL_DEBUGBREAK
+        #if defined(LIBUTIL_GNUC) || defined(LIBUTIL_CLANG)
+            #define LIBUTIL_DEBUGBREAK()    __asm("int3")
+        #else
+            #define LIBUTIL_DEBUGBREAK      __debugbreak
+        #endif
     #endif
 #endif
 

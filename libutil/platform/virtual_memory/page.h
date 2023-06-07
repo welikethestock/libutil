@@ -7,7 +7,7 @@ LIBUTIL_EXTERN_C_BLOCK_START
 
 enum
 {
-#ifdef __linux__
+#ifdef LIBUTIL_LINUX
     LIBUTIL_MAP_FILE = 0x0,
     LIBUTIL_MAP_SHARED = 0x1,
     LIBUTIL_MAP_PRIVATE = 0x2,
@@ -16,7 +16,7 @@ enum
     LIBUTIL_MAP_EXECUTABLE = 0x1000,
     LIBUTIL_MAP_NORESERVE = 0x4000,
     LIBUTIL_MAP_POPULATE = 0x8000,
-#elif _WIN32
+#elif defined(LIBUTIL_WINDOWS)
     LIBUTIL_MAP_FILE = 0x0, // ignored
     LIBUTIL_MAP_EXECUTABLE = 0x0, // ignored
     LIBUTIL_MAP_SHARED = 0x0, // ignored
@@ -42,7 +42,7 @@ enum
 
 enum
 {
-#ifdef __linux__
+#ifdef LIBUTIL_LINUX
     LIBUTIL_PAGE_R      = 0x1,
     LIBUTIL_PAGE_W      = 0x2,
     LIBUTIL_PAGE_X      = 0x4,
@@ -50,7 +50,7 @@ enum
     LIBUTIL_PAGE_RW     = (LIBUTIL_PAGE_R | LIBUTIL_PAGE_W),
     LIBUTIL_PAGE_RX     = (LIBUTIL_PAGE_R | LIBUTIL_PAGE_X),
     LIBUTIL_PAGE_RWX    = (LIBUTIL_PAGE_R | LIBUTIL_PAGE_W | LIBUTIL_PAGE_X),
-#elif _WIN32
+#elif defined(LIBUTIL_WINDOWS)
     LIBUTIL_PAGE_R      = 0x2,
     LIBUTIL_PAGE_W      = 0x4,
     LIBUTIL_PAGE_X      = 0x10,

@@ -21,6 +21,9 @@ LIBUTIL_API LIBUTIL_IMPORT
 LIBUTIL_CODE_PATCH  *LibUtil_Patch_Create(void *Address, libutil_size Size, libutil_u8 *Patch);
 
 LIBUTIL_API LIBUTIL_IMPORT
+void                LibUtil_Patch_Destroy(LIBUTIL_CODE_PATCH *Patch);
+
+LIBUTIL_API LIBUTIL_IMPORT
 void                LibUtil_Patch_Apply(LIBUTIL_CODE_PATCH *Patch);
 
 LIBUTIL_API LIBUTIL_IMPORT
@@ -61,6 +64,12 @@ extern "C++"
                     0,
                     NULL
                 );
+            }
+
+            LIBUTIL_FORCE_INLINE
+            void operator delete(void *Address)
+            {
+                LibUtil_Patch_Destroy((LIBUTIL_CODE_PATCH *)(Address));
             }
         };
     }

@@ -6,7 +6,7 @@
 
 LIBUTIL_EXTERN_C_BLOCK_START
 
-#ifdef _MSC_VER
+#ifdef LIBUTIL_MSVC
 #pragma pack(push, 1)
 #endif
 
@@ -248,7 +248,7 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
     libutil_u64                 CsrServerReadOnlySharedMemoryBase;                                                      /*+0x380*/
 } LIBUTIL_NT_PEB64;
 
-#ifdef _MSC_VER
+#ifdef LIBUTIL_MSVC
 #pragma pack(pop)
 #endif
 

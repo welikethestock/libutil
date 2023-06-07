@@ -14,7 +14,33 @@
         #define LIBUTIL_FEATURE_AVX512F
     #endif
 
+    #if defined(__linux__)
+        #define LIBUTIL_LINUX
+    #elif defined(_WIN32)
+        #define LIBUTIL_WINDOWS
+    #endif
+
+    #if defined(_MSC_VER)
+        #define LIBUTIL_MSVC
+    #elif defined(__GNUC__)
+        #define LIBUTIL_GNUC
+    #endif
+
+    #ifdef __clang__
+        #define LIBUTIL_CLANG
+    #endif
+
     #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
+        #define LIBUTIL_LITTLE_ENDIAN
+
+        #if defined(__x86_64__) || defined(_M_X64)
+            #define LIBUTIL_64_BITS
+            #define LIBUTIL_X86_64
+        #else
+            #define LIBUTIL_32_BITS
+            #define LIBUTIL_X86
+        #endif
+
         #define LIBUTIL_HAS_HARDWARE_RNG
     #endif
 #endif

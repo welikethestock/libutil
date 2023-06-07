@@ -1,4 +1,6 @@
-#ifdef _WIN32
+#include "../../common/features.h"
+
+#ifdef LIBUTIL_WINDOWS
 #include "page.h"
 #include "../sys/syscall.h"
 #include "../../common/mathbits.h"

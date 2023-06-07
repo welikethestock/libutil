@@ -1,4 +1,6 @@
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
+#include "../../common/features.h"
+
+#if defined(LIBUTIL_X86) || defined(LIBUTIL_X86_64)
 #include "../random.h"
 
 #ifdef LIBUTIL_HAS_HARDWARE_RNG
