@@ -108,6 +108,9 @@ enable_language(C CXX ASM ASM_MASM)
 project(util-platform C CXX ASM ASM_MASM)
 
 set(PROJECT_SOURCES
+    ${PROJECT_SOURCE_DIR}/libutil/platform/nt/ldr.c
+    ${PROJECT_SOURCE_DIR}/libutil/platform/nt/teb.c
+
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_unix.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win.c
 

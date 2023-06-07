@@ -134,7 +134,29 @@ int main(int argc, const char **argv)
     printf("%X %d\n", Result, Response);
 #endif
 
-    printf("%X %X", sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64), offsetof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64, ImplicitPathOptions));
+#ifdef LIBUTIL_WINDOWS // works
+    lu_nt_teb           *TEB = lu_nt_getteb();
+    lu_nt_peb           *PEB = (lu_nt_peb *)(TEB->ProcessEnvironmentBlock);
+    lu_nt_ldrdata       *Ldr = (lu_nt_ldrdata *)(PEB->Ldr);
+    lu_nt_ldrdataentry  *Entry = (lu_nt_ldrdataentry *)(Ldr->InLoadOrderModuleList.Flink);
+    while(Entry)
+    {
+        if(Entry->BaseDllName.Buffer == NULL)
+        {
+            break;
+        }
+
+        printf("%S\n", Entry->BaseDllName.Buffer);
+
+        Entry = (lu_nt_ldrdataentry *)(Entry->InLoadOrderMemoryLinks.Flink);
+    }
+
+    printf("%p %p %p\n",
+        TEB,
+        PEB,
+        Ldr
+    );
+#endif
 
     return 0;
 }

@@ -14,9 +14,9 @@
         #define LIBUTIL_FEATURE_AVX512F
     #endif
 
-    #if defined(__linux__)
+    #if 0//defined(__linux__)
         #define LIBUTIL_LINUX
-    #elif defined(_WIN32)
+    #elif 1//defined(_WIN32)
         #define LIBUTIL_WINDOWS
     #endif
 

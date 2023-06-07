@@ -191,11 +191,21 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
 #endif
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
+    typedef LIBUTIL_NT_LDR_DLL_LOAD_REASON      lu_nt_ldrloadreason;
+
     typedef LIBUTIL_NT_PEB_LDR_DATA32           lu_nt_ldrdata32;
     typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32   lu_nt_ldrdataentry32;
 
     typedef LIBUTIL_NT_PEB_LDR_DATA64           lu_nt_ldrdata64;
     typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64   lu_nt_ldrdataentry64;
+#endif
+
+#ifdef LIBUTIL_32_BITS
+    typedef LIBUTIL_NT_PEB_LDR_DATA32           lu_nt_ldrdata;
+    typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32   lu_nt_ldrdataentry;
+#else
+    typedef LIBUTIL_NT_PEB_LDR_DATA64           lu_nt_ldrdata;
+    typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64   lu_nt_ldrdataentry;
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END

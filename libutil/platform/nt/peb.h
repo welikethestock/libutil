@@ -253,8 +253,14 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
 #endif
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
-    typedef LIBUTIL_NT_PEB32 lu_nt_peb32;
-    typedef LIBUTIL_NT_PEB64 lu_nt_peb64;
+    typedef LIBUTIL_NT_PEB32    lu_nt_peb32;
+    typedef LIBUTIL_NT_PEB64    lu_nt_peb64;
+#endif
+
+#ifdef LIBUTIL_32_BITS
+    typedef LIBUTIL_NT_PEB32    lu_nt_peb;
+#else
+    typedef LIBUTIL_NT_PEB64    lu_nt_peb;
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END
