@@ -7,8 +7,8 @@ include_directories("./")
 project(util-common)
 
 if(${CMAKE_C_COMPILER_FRONTEND_VARIANT} STREQUAL "MSVC")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /arch:AVX2 /Oi /Zc:tlsGuards-") # avx2, intrinsics, disable tls guard
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2 /Oi /Zc:tlsGuards-") # avx2, intrinsics, disable tls guard
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /arch:AVX /arch:AVX2 /Oi /Zc:tlsGuards-") # avx2, intrinsics, disable tls guard
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX /arch:AVX2 /Oi /Zc:tlsGuards-") # avx2, intrinsics, disable tls guard
 
     add_definitions(/DLIBUTIL_HEAP_CALLBACKS)
 
@@ -104,15 +104,19 @@ target_link_libraries(${PROJECT_NAME}_shared util-common)
 target_link_libraries(${PROJECT_NAME}_shared util-containers)
 
 # libutil-platform
-project(util-platform)
+enable_language(C CXX ASM ASM_MASM)
+project(util-platform C CXX ASM ASM_MASM)
 
 set(PROJECT_SOURCES
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_unix.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win.c
+    ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win_msvcx64.asm
 
     ${PROJECT_SOURCE_DIR}/libutil/platform/virtual_memory/page_unix.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/virtual_memory/page_win.c
 )
+
+set_property(SOURCE ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win_msvc.s PROPERTY LANGUAGE ASM)
 
 add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
 add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})

@@ -27,7 +27,7 @@ int main(int argc, const char **argv)
     printf("memcpy> %s %p %p\n", MemcpyTestBuffer, MemcpyTestBuffer, MemcpyTestString + 3);
 
     //syscall
-    lu_syscall3(1, 1, (libutil_size)("syscall>\n"), sizeof("syscall>\n"));
+    //lu_syscall3(1, 1, (libutil_size)("syscall>\n"), sizeof("syscall>\n"));
 
     // vector
     LibUtil::Containers::Vector<int> Vector = LibUtil::Containers::Vector<int>();
@@ -95,7 +95,7 @@ int main(int argc, const char **argv)
     printf("string> %d %s %zu\n", StringAppendResult, (const char *)(StringTest->Vector.Data), StringTest->Vector.Count);
 
     // mmap/mprotect/munmap test
-    void *BaseAddress = NULL;
+    /*void *BaseAddress = NULL;
     if(lu_pageallocate(&BaseAddress, 0x4000, LIBUTIL_PAGE_R, LIBUTIL_MAP_PRIVATE | LIBUTIL_MAP_ANONYMOUS))
     {
         printf("mmap> success %p\n", BaseAddress);
@@ -103,7 +103,30 @@ int main(int argc, const char **argv)
     else
     {
         printf("mmap> fail\n");
-    }
+    }*/
+
+    //NtRaiseHardError test
+    LIBUTIL_ALIGN(16) LIBUTIL_NT_UNICODE_STRING64 Caption, Text;
+    LIBUTIL_ALIGN(16) void *Arguments[] =
+    {
+        &Caption,
+        &Text,
+        (void *)(0x10) /*MB_OK | MB_ICONERROR*/
+    };
+
+    Caption.Buffer = (libutil_size)L"cool";
+    Caption.Length = sizeof(L"cool");
+    Caption.MaximumLength = sizeof(L"cool");
+
+    Text.Buffer = (libutil_size)L"cool";
+    Text.Length = sizeof(L"cool");
+    Text.MaximumLength = sizeof(L"cool");
+
+    LIBUTIL_ALIGN(16) libutil_u32 Response;
+    printf("%p %p\n", Arguments, &Response);
+    libutil_i64 Result = LibUtil_Syscall6(0x147, 0x40000018, 3, 0x3, (libutil_size)(Arguments), 0/*OptionOk*/, (libutil_size)(&Response));
+    printf("%X %d\n", Result, Response);
+
 
     return 0;
 }
