@@ -17,9 +17,9 @@
 
 int main(int argc, const char **argv)
 {
-    LibUtil::Heap::SetMalloc(malloc);
-    LibUtil::Heap::SetRealloc(realloc);
-    LibUtil::Heap::SetFree(free);
+    LibUtil::Heap::SetMalloc((LIBUTIL_HEAP_MALLOC)(malloc));
+    LibUtil::Heap::SetRealloc((LIBUTIL_HEAP_REALLOC)(realloc));
+    LibUtil::Heap::SetFree((LIBUTIL_HEAP_FREE)(free));
 
     // memcpy
     char MemcpyTestBuffer[512] = { 0 };
@@ -151,10 +151,13 @@ int main(int argc, const char **argv)
         Entry = (lu_nt_ldrdataentry *)(Entry->InLoadOrderMemoryLinks.Flink);
     }
 
-    printf("%p %p %p\n",
+    printf("%p %p %p %llX %llX %d\n",
         TEB,
         PEB,
-        Ldr
+        Ldr,
+        lu_nt_getteb64(),
+        ((lu_nt_teb64 *)(lu_nt_getteb64()))->ProcessEnvironmentBlock,
+        ((lu_nt_peb64 *)(((lu_nt_teb64 *)(lu_nt_getteb64()))->ProcessEnvironmentBlock))->OSMajorVersion
     );
 #endif
 

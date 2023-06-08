@@ -1,4 +1,5 @@
 [Bb]uild/
+[Bb]uild32/
 .vscode/
 .kdev4/
 *.kdev4

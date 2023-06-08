@@ -16,7 +16,21 @@ libutil_bool LibUtil_Random32_HW(libutil_u32 *Output)
 
 libutil_bool LibUtil_Random64_HW(libutil_u64 *Output)
 {
+#if defined(LIBUTIL_64_BITS)
     return _rdrand64_step(Output);
+#else
+    if(!LibUtil_Random32_HW((libutil_u32 *)(Output)))
+    {
+        return FALSE;
+    }
+
+    if(!LibUtil_Random32_HW((libutil_u32 *)((libutil_u8 *)(Output) + 4)))
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+#endif
 }
 #endif
 

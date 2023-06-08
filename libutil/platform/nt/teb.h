@@ -282,9 +282,17 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_TEB64
 #pragma pack(pop)
 #endif
 
-#ifdef LIBUTIL_64_BITS
-LIBUTIL_API LIBUTIL_IMPORT
-LIBUTIL_NT_TEB64 *LibUtil_Nt_GetTeb();
+#ifdef LIBUTIL_WINDOWS
+    #ifdef LIBUTIL_64_BITS
+        LIBUTIL_API LIBUTIL_IMPORT
+        LIBUTIL_NT_TEB64    *LibUtil_Nt_GetTeb64();
+    #else
+        LIBUTIL_API LIBUTIL_IMPORT
+        LIBUTIL_NT_TEB32    *LibUtil_Nt_GetTeb32();
+
+        LIBUTIL_API LIBUTIL_IMPORT
+        libutil_u64         LibUtil_Nt_GetTeb64();
+    #endif
 #endif
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
@@ -294,7 +302,19 @@ LIBUTIL_NT_TEB64 *LibUtil_Nt_GetTeb();
     typedef LIBUTIL_NT_GDI_TEB_BATCH64  lu_nt_gditebbatch64;
     typedef LIBUTIL_NT_TEB64            lu_nt_teb64;
 
-    #define lu_nt_getteb                LibUtil_Nt_GetTeb
+    #ifdef LIBUTIL_WINDOWS
+        #ifdef LIBUTIL_32_BITS
+            #define lu_nt_getteb                LibUtil_Nt_GetTeb32
+            #define lu_nt_getteb64              LibUtil_Nt_GetTeb64
+
+            #define LibUtil_Nt_GetTeb           LibUtil_Nt_GetTeb32
+        #else
+            #define lu_nt_getteb                LibUtil_Nt_GetTeb64
+            #define lu_nt_getteb64              LibUtil_Nt_GetTeb64
+
+            #define LibUtil_Nt_GetTeb           LibUtil_Nt_GetTeb64
+        #endif
+    #endif
 #endif
 
 #ifdef LIBUTIL_32_BITS

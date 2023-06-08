@@ -14,9 +14,9 @@
         #define LIBUTIL_FEATURE_AVX512F
     #endif
 
-    #if 0//defined(__linux__)
+    #if defined(__linux__)
         #define LIBUTIL_LINUX
-    #elif 1//defined(_WIN32)
+    #elif defined(_WIN32)
         #define LIBUTIL_WINDOWS
     #endif
 
@@ -44,5 +44,7 @@
         #define LIBUTIL_HAS_HARDWARE_RNG
     #endif
 #endif
+
+#include "warnings.h"
 
 #endif

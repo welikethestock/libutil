@@ -77,8 +77,13 @@ LIBUTIL_EXTERN_C_BLOCK_START
             typedef signed long long    libutil_ssize;
         #endif
     #else
-        typedef unsigned long           libutil_size;
-        typedef signed long             libutil_ssize;
+        #ifdef _MSC_VER
+            typedef unsigned int        libutil_size;
+            typedef signed int          libutil_ssize;
+        #else
+            typedef unsigned long       libutil_size;
+            typedef signed long         libutil_ssize;
+        #endif
     #endif
 
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
