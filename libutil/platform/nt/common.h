@@ -140,6 +140,10 @@ typedef struct _LIBUTIL_NT_RTL_BALANCED_NODE
     };
 } LIBUTIL_NT_RTL_BALANCED_NODE;
 
+typedef libutil_i32 LIBUTIL_NT_STATUS;
+
+#define LIBUTIL_NT_SUCCESS(Status) ((Status) >= 0)
+
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
     typedef LIBUTIL_NT_LARGE_INTEGER        lu_nt_largeinteger;
     typedef LIBUTIL_NT_ULARGE_INTEGER       lu_nt_ulargeinteger;
@@ -157,6 +161,8 @@ typedef struct _LIBUTIL_NT_RTL_BALANCED_NODE
     typedef LIBUTIL_NT_RTL_BALANCED_NODE32  lu_nt_rtl_balancednode32;
     typedef LIBUTIL_NT_RTL_BALANCED_NODE64  lu_nt_rtl_balancednode64;
     typedef LIBUTIL_NT_RTL_BALANCED_NODE    lu_nt_rtl_balancednode;
+
+    typedef LIBUTIL_NT_STATUS               lu_nt_status;
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END

@@ -6,12 +6,22 @@
 
 LIBUTIL_EXTERN_C_BLOCK_START
 
-#ifndef LIBUTIL_X86_PURE32
-    typedef libutil_u32     libutil_syscallresult;
-    typedef libutil_u32     libutil_syscallarg;
+#ifdef _WIN32
+    typedef libutil_i32     libutil_syscallresult;
+
+    #ifdef LIBUTIL_X86_PURE32
+        typedef libutil_u32     libutil_syscallarg;
+    #else
+        typedef libutil_u64     libutil_syscallarg;
+    #endif
 #else
-    typedef libutil_u64     libutil_syscallresult;
-    typedef libutil_u64     libutil_syscallarg;
+    #ifdef LIBUTIL_X86_PURE32
+        typedef libutil_u32     libutil_syscallresult;
+        typedef libutil_u32     libutil_syscallarg;
+    #else
+        typedef libutil_u64     libutil_syscallresult;
+        typedef libutil_u64     libutil_syscallarg;
+    #endif
 #endif
 
 LIBUTIL_API LIBUTIL_IMPORT

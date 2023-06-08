@@ -171,5 +171,15 @@ int main(int argc, const char **argv)
     printf("%d\n", lu_syscall0(0xE1));
 #endif
 
+    libutil_u64 Base = 0;
+    if(LibUtil_Page_Allocate((void **)(&Base), 0x1000, LIBUTIL_PAGE_RW, LIBUTIL_MAP_ANONYMOUS))
+    {
+        printf("valloc> success %llX\n", Base);
+    }
+    else
+    {
+        printf("valloc> fail\n");
+    }
+
     return 0;
 }

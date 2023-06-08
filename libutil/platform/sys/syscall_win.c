@@ -21,13 +21,13 @@
         __asm { push Argument }
 
     #define SET_SYSCALL_ID(ID) \
-        __asm { mov eax, ID } \
         LIBUTIL_X86_PUSHREG64(LIBUTIL_X86_RCX) \
-        LIBUTIL_X86_POPREG64(LIBUTIL_X86_R10)
+        LIBUTIL_X86_POPREG64(LIBUTIL_X86_R10) \
+        __asm { mov eax, ID }
 
     #define SYSCALL(ID, PopAmount) \
         SET_SYSCALL_ID(ID) \
-        __asm add esp, 028h \
+        __asm sub esp, 028h \
         __asm _emit 0x0F __asm _emit 0x05 \
         __asm add esp, 028h + PopAmount
 
