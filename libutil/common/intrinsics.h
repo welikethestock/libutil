@@ -6,7 +6,7 @@
 
 LIBUTIL_EXTERN_C_BLOCK_START
 
-#if defined(__STDC_HOSTED__) && (LIBUTIL_CLANG)
+#if defined(__STDC_HOSTED__) && defined(LIBUTIL_CLANG)
     #define _RESTORE_STDC_HOSTED
     #undef __STDC_HOSTED_
 #endif

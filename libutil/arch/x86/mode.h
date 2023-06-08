@@ -25,24 +25,23 @@
 
     #ifdef LIBUTIL_MSVC
         #define LIBUTIL_X86_ENTER_CS(Segment) \
-        { \
             __asm push Segment \
             __asm call $+5 \
             __asm add dword ptr [esp], 0x5 \
-            __asm retf \
-        }
+            __asm retf
 
         #define LIBUTIL_X86_EXIT_CS(Segment) \
-        __asm \
-        { \
             __asm call $+5 \
             __asm mov dword ptr [esp + 0x4], Segment \
             __asm add dword ptr [esp], 0xD \
-            __asm retf \
-        }
+            __asm retf
 
         #define LIBUTIL_X86_PUSHREG64(Register) __asm _emit (0x48 | (Register >> 3)) __asm _emit (0x50 | (Register & 7))
+        #define LIBUTIL_X86_POPREG64(Register)  __asm _emit (0x48 | (Register >> 3)) __asm _emit (0x58 | (Register & 7))
     #endif
+
+    LIBUTIL_API LIBUTIL_IMPORT
+    void LibUtil_x86_Memcpy64(libutil_u64 Destination, libutil_u64 Source, libutil_u64 Length);
 #endif
 
 #endif

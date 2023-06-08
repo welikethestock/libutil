@@ -22,32 +22,73 @@ LIBUTIL_API LIBUTIL_IMPORT
 libutil_u64 LibUtil_Nt_GetTeb64()
 {
     #ifdef LIBUTIL_MSVC
-    libutil_u32 _GS;
-    __asm
-    {
-        push    gs
-        pop     _GS
-    }
+        libutil_u32 _GS;
+        __asm
+        {
+            push    gs
+            pop     _GS
+        }
 
-    if(_GS == NULL) // not WoW
-    {
-        return 0;
-    }
+        if(_GS == NULL) // not WoW
+        {
+            return NULL;
+        }
 
-    LIBUTIL_NT_ULARGE_INTEGER R12;
+        LIBUTIL_NT_ULARGE_INTEGER R12;
 
-    LIBUTIL_X86_ENTER_CS(0x33);
-    __asm
-    {
-        LIBUTIL_X86_PUSHREG64(LIBUTIL_X86_R12)
-        pop R12.LowPart
-    }
-    LIBUTIL_X86_EXIT_CS(0x23);
+        LIBUTIL_X86_ENTER_CS(0x33);
+        __asm
+        {
+            LIBUTIL_X86_PUSHREG64(LIBUTIL_X86_R12)
+            pop R12.LowPart
+        }
+        LIBUTIL_X86_EXIT_CS(0x23);
 
-    return R12.QuadPart;
+        return R12.QuadPart;
     #else
-    return 0;
+        return NULL;
     #endif
+}
+
+void CopyMemory64(libutil_u64 Destination, libutil_u64 Source, libutil_u64 BufferLength)
+{
+    __asm
+    {
+        push    esi
+        push    edi
+
+        LIBUTIL_X86_ENTER_CS(0x33)
+
+        push    Destination
+        LIBUTIL_X86_POPREG64(LIBUTIL_X86_RDI)
+
+        push    Source
+        LIBUTIL_X86_POPREG64(LIBUTIL_X86_RSI)
+
+        push    BufferLength
+        LIBUTIL_X86_POPREG64(LIBUTIL_X86_RCX)
+
+        rep     movsb
+
+        LIBUTIL_X86_EXIT_CS(0x23)
+
+        pop     edi
+        pop     esi
+    }
+}
+
+LIBUTIL_API
+libutil_bool LibUtil_Nt_ReadTeb64(LIBUTIL_NT_TEB64 *TEB)
+{
+    libutil_u64 TEB64 = LibUtil_Nt_GetTeb64();
+    if(TEB64 == NULL)
+    {
+        return FALSE;
+    }
+
+    LibUtil_x86_Memcpy64((libutil_u64)(TEB), TEB64, sizeof(LIBUTIL_NT_TEB64));
+
+    return TRUE;
 }
 #endif
 

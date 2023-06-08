@@ -14,10 +14,10 @@
         #define LIBUTIL_FEATURE_AVX512F
     #endif
 
-    #if defined(__linux__)
-        #define LIBUTIL_LINUX
-    #elif defined(_WIN32)
+    #if defined(_WIN32)
         #define LIBUTIL_WINDOWS
+    #elif defined(__linux__)
+        #define LIBUTIL_LINUX
     #endif
 
     #if defined(_MSC_VER)
@@ -33,7 +33,7 @@
     #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
         #define LIBUTIL_LITTLE_ENDIAN
 
-        #if defined(__x86_64__) || defined(_M_X64)
+        #if (defined(__x86_64__) || defined(_M_X64)) && !defined(_LIBUTIL_SYNTAX_HIGHLIGHT_X86)
             #define LIBUTIL_64_BITS
             #define LIBUTIL_X86_64
         #else

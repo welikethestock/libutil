@@ -3,12 +3,23 @@ cmake_minimum_required(VERSION 3.0.0)
 
 include_directories("./")
 
+# libutil-internal
+project(util-internal)
+
+set(PROJECT_SOURCES
+    ${PROJECT_SOURCE_DIR}/libutil/internal/stack_chk_fail.c
+    ${PROJECT_SOURCE_DIR}/libutil/internal/stack_chk_fail_local.c
+)
+
+add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+
 # libutil-common
 project(util-common)
 
 if(${CMAKE_C_COMPILER_FRONTEND_VARIANT} STREQUAL "MSVC")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /arch:AVX2 /Oi /Zc:tlsGuards-") # avx2, intrinsics, disable tls guard
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2 /Oi /Zc:tlsGuards-") # avx2, intrinsics, disable tls guard
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /arch:AVX2 /Oi") # avx2, intrinsics
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2 /Oi") # avx2, intrinsics
 
     add_definitions(/DLIBUTIL_HEAP_CALLBACKS)
 
@@ -43,10 +54,14 @@ add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
 target_link_options(${PROJECT_NAME} PRIVATE ${LINK_OPTIONS})
 target_link_options(${PROJECT_NAME}_shared PRIVATE ${LINK_OPTIONS})
 
+target_link_libraries(${PROJECT_NAME} util-internal)
+target_link_libraries(${PROJECT_NAME}_shared util-internal)
+
 # libutil-arch
 project(util-arch)
 
 set(PROJECT_SOURCES
+    ${PROJECT_SOURCE_DIR}/libutil/arch/x86/mode.c
     ${PROJECT_SOURCE_DIR}/libutil/arch/x86/random.c
 )
 
@@ -162,16 +177,6 @@ target_link_libraries(${PROJECT_NAME} util-platform)
 
 target_link_libraries(${PROJECT_NAME}_shared util-common)
 target_link_libraries(${PROJECT_NAME}_shared util-platform)
-
-# libutil-internal
-project(util-internal)
-
-set(PROJECT_SOURCES
-    ${PROJECT_SOURCE_DIR}/libutil/internal/stack_chk_fail.c
-)
-
-add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})
-add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
 
 # tests
 project(tests-crt)

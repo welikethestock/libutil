@@ -292,6 +292,9 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_TEB64
 
         LIBUTIL_API LIBUTIL_IMPORT
         libutil_u64         LibUtil_Nt_GetTeb64();
+
+        LIBUTIL_API LIBUTIL_IMPORT
+        libutil_bool        LibUtil_Nt_ReadTeb64(LIBUTIL_NT_TEB64 *TEB);
     #endif
 #endif
 
@@ -306,6 +309,7 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_TEB64
         #ifdef LIBUTIL_32_BITS
             #define lu_nt_getteb                LibUtil_Nt_GetTeb32
             #define lu_nt_getteb64              LibUtil_Nt_GetTeb64
+            #define lu_nt_readteb64             LibUtil_Nt_ReadTeb64
 
             #define LibUtil_Nt_GetTeb           LibUtil_Nt_GetTeb32
         #else

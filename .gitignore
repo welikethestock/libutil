@@ -1,5 +1,12 @@
 [Bb]uild/
-[Bb]uild32/
+[Bb]uild-gcc/
+[Bb]uild-clang/
+[Bb]uild-gcc32/
+[Bb]uild-clang32/
+[Bb]uild-win/
+[Bb]uild-win32/
+[Bb]uild-win-clang/
+[Bb]uild-win-clang32/
 .vscode/
 .kdev4/
 *.kdev4

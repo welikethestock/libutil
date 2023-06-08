@@ -77,7 +77,7 @@ LIBUTIL_EXTERN_C_BLOCK_START
             typedef signed long long    libutil_ssize;
         #endif
     #else
-        #ifdef _MSC_VER
+        #if defined(LIBUTIL_MSVC) || defined(LIBUTIL_GNUC)
             typedef unsigned int        libutil_size;
             typedef signed int          libutil_ssize;
         #else
@@ -159,7 +159,7 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #if defined(LIBUTIL_GNUC) || defined(LIBUTIL_CLANG)
         #define LIBUTIL_FORCE_INLINE LIBUTIL_INLINE LIBUTIL_ATTRIBUTE(always_inline)
     #else
-        #define LIBUTIL_FORCE_INLINE LIBUTIL_INLINE
+        #define LIBUTIL_FORCE_INLINE LIBUTIL_INLINE __forceinline
     #endif
 #endif
 
@@ -167,7 +167,11 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #if defined(LIBUTIL_GNUC) || defined(LIBUTIL_CLANG)
         #define LIBUTIL_NAKED LIBUTIL_ATTRIBUTE(naked)
     #else
-        #define LIBUTIL_NAKED
+        #ifdef LIBUTIL_X86
+            #define LIBUTIL_NAKED LIBUTIL_ATTRIBUTE(naked)
+        #else
+            #define LIBUTIL_NAKED
+        #endif
     #endif
 #endif
 
@@ -175,7 +179,7 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #if defined(LIBUTIL_GNUC) || defined(LIBUTIL_CLANG)
         #define LIBUTIL_NORETURN LIBUTIL_ATTRIBUTE(noreturn)
     #else
-        #define LIBUTIL_NORETURN
+        #define LIBUTIL_NORETURN LIBUTIL_ATTRIBUTE(noreturn)
     #endif
 #endif
 

@@ -161,5 +161,15 @@ int main(int argc, const char **argv)
     );
 #endif
 
+#if defined(LIBUTIL_WINDOWS) && defined(LIBUTIL_X86)
+    lu_nt_teb64 TEB64;
+    if(lu_nt_readteb64(&TEB64))
+    {
+        printf("%llX\n", TEB64.ProcessEnvironmentBlock);
+    }
+
+    printf("%d\n", lu_syscall0(0xE1));
+#endif
+
     return 0;
 }

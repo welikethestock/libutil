@@ -6,39 +6,46 @@
 
 LIBUTIL_EXTERN_C_BLOCK_START
 
-typedef libutil_ssize libutil_syscallresult;
+#ifndef LIBUTIL_X86_PURE32
+    typedef libutil_u32     libutil_syscallresult;
+    typedef libutil_u32     libutil_syscallarg;
+#else
+    typedef libutil_u64     libutil_syscallresult;
+    typedef libutil_u64     libutil_syscallarg;
+#endif
 
 LIBUTIL_API LIBUTIL_IMPORT
 libutil_syscallresult LibUtil_Syscall0(libutil_i32 ID);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall1(libutil_i32 ID, libutil_size Arg1);
+libutil_syscallresult LibUtil_Syscall1(libutil_i32 ID, libutil_syscallarg Arg1);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall2(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2);
+libutil_syscallresult LibUtil_Syscall2(libutil_i32 ID, libutil_syscallarg Arg1, libutil_syscallarg Arg2);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall3(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3);
+libutil_syscallresult LibUtil_Syscall3(libutil_i32 ID, libutil_syscallarg Arg1, libutil_syscallarg Arg2, libutil_syscallarg Arg3);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall4(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4);
+libutil_syscallresult LibUtil_Syscall4(libutil_i32 ID, libutil_syscallarg Arg1, libutil_syscallarg Arg2, libutil_syscallarg Arg3, libutil_syscallarg Arg4);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall5(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5);
+libutil_syscallresult LibUtil_Syscall5(libutil_i32 ID, libutil_syscallarg Arg1, libutil_syscallarg Arg2, libutil_syscallarg Arg3, libutil_syscallarg Arg4, libutil_syscallarg Arg5);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall6(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5, libutil_size Arg6);
+libutil_syscallresult LibUtil_Syscall6(libutil_i32 ID, libutil_syscallarg Arg1, libutil_syscallarg Arg2, libutil_syscallarg Arg3, libutil_syscallarg Arg4, libutil_syscallarg Arg5, libutil_syscallarg Arg6);
 
 #ifdef LIBUTIL_WINDOWS
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall7(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5, libutil_size Arg6, libutil_size Arg7);
+libutil_syscallresult LibUtil_Syscall7(libutil_i32 ID, libutil_syscallarg Arg1, libutil_syscallarg Arg2, libutil_syscallarg Arg3, libutil_syscallarg Arg4, libutil_syscallarg Arg5, libutil_syscallarg Arg6, libutil_size Arg7);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_syscallresult LibUtil_Syscall8(libutil_i32 ID, libutil_size Arg1, libutil_size Arg2, libutil_size Arg3, libutil_size Arg4, libutil_size Arg5, libutil_size Arg6, libutil_size Arg7, libutil_size Arg8);
+libutil_syscallresult LibUtil_Syscall8(libutil_i32 ID, libutil_syscallarg Arg1, libutil_syscallarg Arg2, libutil_syscallarg Arg3, libutil_syscallarg Arg4, libutil_syscallarg Arg5, libutil_syscallarg Arg6, libutil_syscallarg Arg7, libutil_syscallarg Arg8);
 #endif
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
-    typedef libutil_syscallresult lu_syscallr;
+    typedef libutil_syscallresult   lu_syscallr;
+    typedef libutil_syscallarg      lu_syscallarg;
 
     #define lu_syscall0 LibUtil_Syscall0
     #define lu_syscall1 LibUtil_Syscall1
