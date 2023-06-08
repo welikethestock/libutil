@@ -47,7 +47,7 @@ target_link_options(${PROJECT_NAME}_shared PRIVATE ${LINK_OPTIONS})
 project(util-arch)
 
 set(PROJECT_SOURCES
-    ${PROJECT_SOURCE_DIR}/libutil/arch/random/x86.c
+    ${PROJECT_SOURCE_DIR}/libutil/arch/x86/random.c
 )
 
 add_library(${PROJECT_NAME}_shared SHARED ${PROJECT_SOURCES})

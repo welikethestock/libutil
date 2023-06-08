@@ -5,7 +5,7 @@
 
 #include "../../common/decl.h"
 
-#ifdef LIBUTIL_32_BITS
+#ifdef LIBUTIL_X86
     #define LIBUTIL_X86_RAX (0)
     #define LIBUTIL_X86_RCX (1)
     #define LIBUTIL_X86_RDX (2)
@@ -27,7 +27,7 @@
         #define LIBUTIL_X86_ENTER_CS(Segment) \
         { \
             __asm push Segment \
-            __asm _emit 0xE8 __asm _emit 0x00 __asm _emit 0x00 __asm _emit 0x00 __asm _emit 0x00 /*call $+5*/ \
+            __asm call $+5 \
             __asm add dword ptr [esp], 0x5 \
             __asm retf \
         }
@@ -35,8 +35,8 @@
         #define LIBUTIL_X86_EXIT_CS(Segment) \
         __asm \
         { \
-            __asm _emit 0xE8 __asm _emit 0x00 __asm _emit 0x00 __asm _emit 0x00 __asm _emit 0x00 /*call $+5*/ \
-            __asm mov dword ptr [esp + 4], Segment \
+            __asm call $+5 \
+            __asm mov dword ptr [esp + 0x4], Segment \
             __asm add dword ptr [esp], 0xD \
             __asm retf \
         }
