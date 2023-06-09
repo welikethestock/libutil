@@ -1,5 +1,5 @@
-#CC=gcc CXX=g++ cmake -B ./build-gcc -S . -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
-#CC=gcc CXX=g++ cmake --build ./build-gcc
+CC=gcc CXX=g++ cmake -B ./build-gcc -S . -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
+CC=gcc CXX=g++ cmake --build ./build-gcc
 
 #CC=gcc CXX=g++ cmake -B ./build-gcc32 -S . -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_SHARED_LINKER_FLAGS=-m32
 #CC=gcc CXX=g++ cmake --build ./build-gcc32

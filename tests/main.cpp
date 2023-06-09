@@ -134,10 +134,11 @@ int main(int argc, const char **argv)
     printf("%X %d\n", Result, Response);
 #endif
 
+#if 1
 #ifdef LIBUTIL_WINDOWS // works
     lu_nt_teb           *TEB = lu_nt_getteb();
-    lu_nt_peb           *PEB = (lu_nt_peb *)(TEB->ProcessEnvironmentBlock);
-    lu_nt_ldrdata       *Ldr = (lu_nt_ldrdata *)(PEB->Ldr);
+    lu_nt_peb           *PEB = lu_nt_getpeb();
+    lu_nt_ldrdata       *Ldr = lu_nt_getldrdata();
     lu_nt_ldrdataentry  *Entry = (lu_nt_ldrdataentry *)(Ldr->InLoadOrderModuleList.Flink);
     while(Entry)
     {
@@ -151,36 +152,19 @@ int main(int argc, const char **argv)
         Entry = (lu_nt_ldrdataentry *)(Entry->InLoadOrderMemoryLinks.Flink);
     }
 
-    printf("%p %p %p %llX %llX %d\n",
+    printf("%p %p %p\n",
         TEB,
         PEB,
-        Ldr,
-        lu_nt_getteb64(),
-        ((lu_nt_teb64 *)(lu_nt_getteb64()))->ProcessEnvironmentBlock,
-        ((lu_nt_peb64 *)(((lu_nt_teb64 *)(lu_nt_getteb64()))->ProcessEnvironmentBlock))->OSMajorVersion
+        Ldr
     );
 #endif
 
 #if defined(LIBUTIL_WINDOWS) && defined(LIBUTIL_X86)
     lu_nt_teb64 TEB64;
-    if(lu_nt_readteb64(&TEB64))
-    {
-        printf("%llX\n", TEB64.ProcessEnvironmentBlock);
-    }
+    printf("%llX %llX %llX\n", lu_nt_getteb64(), lu_nt_getpeb64(), lu_nt_getldrdata64());
 
-    lu_nt_peb64 PEB64;
-    if(lu_nt_readpeb64(&PEB64))
-    {
-        printf("%llX\n", PEB64.Ldr);
-    }
-
-    lu_nt_ldrdata64 Ldr64;
-    if(lu_nt_readldrdata64(&Ldr64))
-    {
-        printf("%d\n", Ldr64.Length);
-    }
-
-    printf("%d\n", lu_syscall0(0xE1));
+    //printf("%d\n", lu_syscall0(0xE1)); //server 2012
+    printf("%d\n", lu_syscall0(0xF8)); //win11
 #endif
 
     libutil_u64 Base = 0;
@@ -192,6 +176,7 @@ int main(int argc, const char **argv)
     {
         printf("valloc> fail\n");
     }
+#endif
 
     return 0;
 }

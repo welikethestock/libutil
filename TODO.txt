@@ -1,2 +1,3 @@
 Constructors/Deconstructors for all C++ wrappers
 Disassembler
+add missing c++ wrappers for functions

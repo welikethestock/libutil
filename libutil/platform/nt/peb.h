@@ -24,7 +24,7 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB32
         libutil_bool                IsPackagedProcess : 1;
         libutil_bool                IsAppContainer : 1;
         libutil_bool                IsProtectedProcessLight : 1;
-        libutil_u8                  SpareBits : 1;
+        libutil_u8                  IsLongPathAwareProcess : 1;
     } BitField;                                                                                                         /*+0x003*/
     libutil_u32                 Mutant;                                                                                 /*+0x004*/
     libutil_u32                 ImageBaseAddress;                                                                       /*+0x008*/
@@ -42,7 +42,9 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB32
         libutil_bool                ProcessUsingVEH : 1;
         libutil_bool                ProcessUsingVCH : 1;
         libutil_bool                ProcessUsingFTH : 1;
-        libutil_u8                  ReservedBits0 : 3;
+        libutil_bool                ProcessPreviouslyThrottled : 1;
+        libutil_bool                ProcessCurrentlyThrottled : 1;
+        libutil_bool                ProcessImagesHotPatched : 1;
         libutil_u8                  ReservedBits1 : 8;
         libutil_u8                  ReservedBits2 : 8;
         libutil_u8                  ReservedBits3 : 8;
@@ -59,7 +61,7 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB32
     libutil_u32                 TlsBitmap;                                                                              /*+0x040*/
     libutil_u32                 TlsBitmapBits[2];                                                                       /*+0x044*/
     libutil_u32                 ReadOnlySharedMemoryBase;                                                               /*+0x04C*/
-    libutil_u32                 SparePvoid0;                                                                            /*+0x050*/
+    libutil_u32                 SharedData;                                                                             /*+0x050*/
     libutil_u32                 ReadOnlyStaticServerData;                           /*void** */                         /*+0x054*/
     libutil_u32                 AnsiCodePageData;                                                                       /*+0x058*/
     libutil_u32                 OemCodePageData;                                                                        /*+0x05C*/
@@ -103,11 +105,29 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB32
     libutil_u32                 SystemDefaultActivationContextData;                 /*_ACTIVATION_CONTEXT_DATA* */      /*+0x200*/
     libutil_u32                 SystemAssemblyStorageMap;                           /*_ASSEMBLY_STORAGE_MAP* */         /*+0x204*/
     libutil_u32                 MinimumStackCommit;                                                                     /*+0x208*/
-    libutil_u32                 FlsCallback;                                        /*_FLS_CALLBACK_INFO* */            /*+0x20C*/
-    LIBUTIL_NT_LIST_ENTRY32     FlsListHead;                                                                            /*+0x210*/
-    libutil_u32                 FlsBitmap;                                                                              /*+0x218*/
-    libutil_u32                 FlsBitmapBits[4];                                                                       /*+0x21C*/
-    libutil_u32                 FlsHighIndex;                                                                           /*+0x22C*/
+    union
+    {
+        struct
+        {
+            libutil_u32                 FlsCallback;                                /*_FLS_CALLBACK_INFO* */            /*+0x20C*/
+            LIBUTIL_NT_LIST_ENTRY32     FlsListHead;                                                                    /*+0x210*/
+            libutil_u32                 FlsBitmap;                                                                      /*+0x218*/
+            libutil_u32                 FlsBitmapBits[4];                                                               /*+0x21C*/
+            libutil_u32                 FlsHighIndex;                                                                   /*+0x22C*/
+        };
+        struct
+        {
+            libutil_u32                 SparePointers[2];                                                               /*+0x20C*/
+            libutil_u32                 PatchLoaderData;                                                                /*+0x214*/
+            libutil_u32                 ChpeV2ProcessInfo;                          /*_CHPEV2_PROCESS_INFO* */          /*+0x218*/
+            libutil_u32                 AppModelFeatureState;                                                           /*+0x21C*/
+            libutil_u32                 SpareUlongs[2];                                                                 /*+0x220*/
+            libutil_u16                 ActiveCodePage;                                                                 /*+0x228*/
+            libutil_u16                 OemCodePage;                                                                    /*+0x22A*/
+            libutil_u16                 UseCaseMapping;                                                                 /*+0x22C*/
+            libutil_u16                 UnusedNlsField;                                                                 /*+0x22E*/
+        };
+    };
     libutil_u32                 WerRegistrationData;                                                                    /*+0x230*/
     libutil_u32                 WerShipAssertPtr;                                                                       /*+0x234*/
     libutil_u32                 pUnused;                                                                                /*+0x238*/
@@ -124,6 +144,27 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB32
     } TracingFlags;                                                                                                     /*+0x240*/
     libutil_u8                  Padding2[4];                                                                            /*+0x244*/
     libutil_u64                 CsrServerReadOnlySharedMemoryBase;                                                      /*+0x248*/
+    // Taken from Win11
+    libutil_u32                 TppWorkerpListLock;                                                                     /*+0x250*/
+    LIBUTIL_NT_LIST_ENTRY32     TppWorkerpList;                                                                         /*+0x254*/
+    libutil_u32                 WaitOnAddressHashTable[128];                                                            /*+0x25C*/
+    libutil_u32                 TelemetryCoverageHeader;                                                                /*+0x45C*/
+    libutil_u32                 CloudFileFlags;                                                                         /*+0x460*/
+    libutil_u32                 CloudFileDiagFlags;                                                                     /*+0x464*/
+    libutil_u8                  PlaceholderCompatibilityMode;                                                           /*+0x468*/
+    libutil_u8                  PlaceholderCompatibilityModeReserved[7];                                                /*+0x469*/
+    libutil_u32                 LeapSecondData;                                     /*_LEAP_SECOND_DATA* */             /*+0x470*/
+    struct
+    {
+        libutil_bool                SixtySecondEnabled : 1;                                                             /*+0x474*/
+        libutil_u8                  ReservedBits0 : 7;                                                                  /*+0x474*/
+        libutil_u8                  ReservedBits1 : 8;                                                                  /*+0x475*/
+        libutil_u8                  ReservedBits2 : 8;                                                                  /*+0x476*/
+        libutil_u8                  ReservedBits3 : 8;                                                                  /*+0x477*/
+    } LeapSecondFlags;
+    libutil_u32                 NtGlobalFlag2;                                                                          /*+0x478*/
+    libutil_u8                  Padding3[4];                                                                            /*+0x47C*/
+    libutil_u64                 ExtendedFeatureDisableMask;                                                             /*+0x480*/
 } LIBUTIL_NT_PEB32;
 
 typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
@@ -140,7 +181,7 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
         libutil_bool                IsPackagedProcess : 1;
         libutil_bool                IsAppContainer : 1;
         libutil_bool                IsProtectedProcessLight : 1;
-        libutil_u8                  SpareBits : 1;
+        libutil_u8                  ProcessImagesHotPatched : 1;
     } BitField;                                                                                                         /*+0x003*/
     libutil_u8                  Padding0[4];                                                                            /*+0x004*/
     libutil_u64                 Mutant;                                                                                 /*+0x008*/
@@ -159,7 +200,9 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
         libutil_bool                ProcessUsingVEH : 1;
         libutil_bool                ProcessUsingVCH : 1;
         libutil_bool                ProcessUsingFTH : 1;
-        libutil_u8                  ReservedBits0 : 3;
+        libutil_bool                ProcessPreviouslyThrottled : 1;
+        libutil_bool                ProcessCurrentlyThrottled : 1;
+        libutil_bool                ProcessImagesHotPatched : 1;
         libutil_u8                  ReservedBits1 : 8;
         libutil_u8                  ReservedBits2 : 8;
         libutil_u8                  ReservedBits3 : 8;
@@ -173,12 +216,12 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
     libutil_u32                 SystemReserved[1];                                                                      /*+0x060*/
     libutil_u32                 AtlThunkSListPtr32;                                                                     /*+0x064*/
     libutil_u64                 ApiSetMap;                                                                              /*+0x068*/
-    libutil_u32                 TlsExpansionCounter; /*+0x070*/
+    libutil_u32                 TlsExpansionCounter;                                                                    /*+0x070*/
     libutil_u8                  Padding2[4];                                                                            /*+0x074*/
     libutil_u64                 TlsBitmap;                                                                              /*+0x078*/
     libutil_u32                 TlsBitmapBits[2];                                                                       /*+0x080*/
     libutil_u64                 ReadOnlySharedMemoryBase;                                                               /*+0x088*/
-    libutil_u64                 SparePvoid0;                                                                            /*+0x090*/
+    libutil_u64                 SharedData;                                                                             /*+0x090*/
     libutil_u64                 ReadOnlyStaticServerData;                           /*void** */                         /*+0x098*/
     libutil_u64                 AnsiCodePageData;                                                                       /*+0x0AO*/
     libutil_u64                 OemCodePageData;                                                                        /*+0x0A8*/
@@ -224,15 +267,32 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
     libutil_u64                 SystemDefaultActivationContextData;                 /*_ACTIVATION_CONTEXT_DATA* */      /*+0x308*/
     libutil_u64                 SystemAssemblyStorageMap;                           /*_ASSEMBLY_STORAGE_MAP* */         /*+0x310*/
     libutil_u64                 MinimumStackCommit;                                                                     /*+0x318*/
-    libutil_u64                 FlsCallback;                                        /*_FLS_CALLBACK_INFO* */            /*+0x320*/
-    LIBUTIL_NT_LIST_ENTRY64     FlsListHead;                                                                            /*+0x328*/
-    libutil_u64                 FlsBitmap;                                                                              /*+0x338*/
-    libutil_u32                 FlsBitmapBits[4];                                                                       /*+0x340*/
-    libutil_u32                 FlsHighIndex;                                                                           /*+0x350*/
+    union
+    {
+        struct
+        {
+            libutil_u64                 FlsCallback;                                /*_FLS_CALLBACK_INFO* */            /*+0x320*/
+            LIBUTIL_NT_LIST_ENTRY64     FlsListHead;                                                                    /*+0x328*/
+            libutil_u64                 FlsBitmap;                                                                      /*+0x338*/
+            libutil_u32                 FlsBitmapBits[4];                                                               /*+0x340*/
+            libutil_u32                 FlsHighIndex;                                                                   /*+0x350*/
+        };
+        struct
+        {
+            libutil_u64                 SparePointers[2];                                                               /*+0x320*/
+            libutil_u64                 PatchLoaderData;                                                                /*+0x330*/
+            libutil_u64                 ChpeV2ProcessInfo;                          /*_CHPEV2_PROCESS_INFO* */          /*+0x338*/
+            libutil_u32                 AppModelFeatureState;                                                           /*+0x340*/
+            libutil_u32                 SpareUlongs[2];                                                                 /*+0x344*/
+            libutil_u16                 ActiveCodePage;                                                                 /*+0x34C*/
+            libutil_u16                 OemCodePage;                                                                    /*+0x34E*/
+            libutil_u16                 UseCaseMapping;                                                                 /*+0x350*/
+            libutil_u16                 UnusedNlsField;                                                                 /*+0x352*/
+        };
+    };
     libutil_u64                 WerRegistrationData;                                                                    /*+0x358*/
     libutil_u64                 WerShipAssertPtr;                                                                       /*+0x360*/
-    libutil_u8                  Padding6[4];                                                                            /*+0x364*/
-    libutil_u64                 pUnused;                                                                                /*+0x368*/
+    libutil_u64                 EcCodeBitMap;                                                                           /*+0x368*/
     libutil_u64                 pImageHeaderHash;                                                                       /*+0x370*/
     struct
     {
@@ -246,6 +306,29 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
     } TracingFlags;                                                                                                     /*+0x378*/
     libutil_u8                  Padding7[4];                                                                            /*+0x37C*/
     libutil_u64                 CsrServerReadOnlySharedMemoryBase;                                                      /*+0x380*/
+    // Taken from Win11
+    struct
+    {
+        libutil_u64                 TppWorkerpListLock;                                                                 /*+0x388*/
+        LIBUTIL_NT_LIST_ENTRY64     TppWorkerpList;                                                                     /*+0x390*/
+        libutil_u64                 WaitOnAddressHashTable[128];                                                        /*+0x3A0*/
+        libutil_u64                 TelemetryCoverageHeader;                                                            /*+0x7A0*/
+        libutil_u32                 CloudFileFlags;                                                                     /*+0x7A8*/
+        libutil_u32                 CloudFileDiagFlags;                                                                 /*+0x7AC*/
+        libutil_u8                  PlaceholderCompatibilityMode;                                                       /*+0x7B0*/
+        libutil_u8                  PlaceholderCompatibilityModeReserved[7];                                            /*+0x7B1*/
+        libutil_u64                 LeapSecondData;                                 /*_LEAP_SECOND_DATA* */             /*+0x7B8*/
+        struct
+        {
+            libutil_bool                SixtySecondEnabled : 1;                                                         /*+0x7C0*/
+            libutil_u8                  ReservedBits0 : 7;                                                              /*+0x7C0*/
+            libutil_u8                  ReservedBits1 : 8;                                                              /*+0x7C1*/
+            libutil_u8                  ReservedBits2 : 8;                                                              /*+0x7C2*/
+            libutil_u8                  ReservedBits3 : 8;                                                              /*+0x7C3*/
+        } LeapSecondFlags;
+        libutil_u32                 NtGlobalFlag2;                                                                      /*+0x7C4*/
+        libutil_u64                 ExtendedFeatureDisableMask;                                                         /*+0x7C8*/
+    };
 } LIBUTIL_NT_PEB64;
 
 #ifdef LIBUTIL_MSVC
@@ -299,8 +382,8 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
 LIBUTIL_EXTERN_C_BLOCK_END
 
 #ifdef __cplusplus
-    static_assert(sizeof(LIBUTIL_NT_PEB32) == 0x250, "sizeof(LIBUTIL_NT_PEB64) == 0x250");
-    static_assert(sizeof(LIBUTIL_NT_PEB64) == 0x388, "sizeof(LIBUTIL_NT_PEB64) == 0x388");
+    static_assert(sizeof(LIBUTIL_NT_PEB32) == 0x488, "sizeof(LIBUTIL_NT_PEB32) == 0x488");
+    static_assert(sizeof(LIBUTIL_NT_PEB64) == 0x7D0, "sizeof(LIBUTIL_NT_PEB64) == 0x7D0");
 #endif
 
 #endif

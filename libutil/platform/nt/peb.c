@@ -12,16 +12,21 @@ LIBUTIL_NT_PEB32 *LibUtil_Nt_GetPeb32()
     return (LIBUTIL_NT_PEB32 *)(LibUtil_Nt_GetTeb32()->ProcessEnvironmentBlock);
 }
 
+#include <stdio.h>
+
 LIBUTIL_API LIBUTIL_IMPORT
 libutil_u64 LibUtil_Nt_GetPeb64()
 {
-    LIBUTIL_NT_TEB64 TEB;
-    if(!LibUtil_Nt_ReadTeb64(&TEB))
+    libutil_u64 TEB = LibUtil_Nt_GetTeb64();
+    if(TEB == NULL)
     {
         return NULL;
     }
 
-    return TEB.ProcessEnvironmentBlock;
+    libutil_u64 PEB;
+    LibUtil_x86_Memcpy64((libutil_u64)(&PEB), TEB + LIBUTIL_OFFSETOF(LIBUTIL_NT_TEB64, ProcessEnvironmentBlock), sizeof(libutil_u64));
+
+    return PEB;
 }
 
 LIBUTIL_API LIBUTIL_IMPORT

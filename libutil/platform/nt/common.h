@@ -1,7 +1,7 @@
 #ifndef __LIBUTIL_PLATFORM_NT_COMMON__
 #define __LIBUTIL_PLATFORM_NT_COMMON__
 
-// initial: these were reconstructed from windows server 2012 r2
+// NOTE: these were reconstructed from windows server 2012 r2 & windows 11 build 22000
 
 #include "../../common/decl.h"
 
@@ -11,8 +11,13 @@ typedef union _LIBUTIL_NT_LARGE_INTEGER
 {
     struct
     {
+    #if defined(LIBUTIL_LITTLE_ENDIAN)
         libutil_u32 LowPart;
         libutil_i32 HighPart;
+    #else
+        libutil_i32 HighPart;
+        libutil_u32 LowPart;
+    #endif
     };
     libutil_i64 QuadPart;
 } LIBUTIL_NT_LARGE_INTEGER;
@@ -21,8 +26,13 @@ typedef union _LIBUTIL_NT_ULARGE_INTEGER
 {
     struct
     {
+    #if defined(LIBUTIL_LITTLE_ENDIAN)
         libutil_u32 LowPart;
         libutil_u32 HighPart;
+    #else
+        libutil_u32 HighPart;
+        libutil_u32 LowPart;
+    #endif
     };
     libutil_u64 QuadPart;
 } LIBUTIL_NT_ULARGE_INTEGER;
@@ -140,27 +150,57 @@ typedef struct _LIBUTIL_NT_RTL_BALANCED_NODE
     };
 } LIBUTIL_NT_RTL_BALANCED_NODE;
 
-typedef libutil_i32 LIBUTIL_NT_STATUS;
+typedef struct LIBUTIL_ALIGN(4) _LIBUTIL_NT_ACTIVATION_CONTEXT_STACK32
+{
+    libutil_u32             ActiveFrame;
+    LIBUTIL_NT_LIST_ENTRY32 FrameListCache;
+    libutil_u32             Flags;
+    libutil_u32             NextCookieSequenceNumber;
+    libutil_u32             StackId;
+} LIBUTIL_NT_ACTIVATION_CONTEXT_STACK32;
 
+typedef struct LIBUTIL_ALIGN(8) _LIBUTIL_NT_ACTIVATION_CONTEXT_STACK64
+{
+    libutil_u64             ActiveFrame;
+    LIBUTIL_NT_LIST_ENTRY64 FrameListCache;
+    libutil_u32             Flags;
+    libutil_u32             NextCookieSequenceNumber;
+    libutil_u32             StackId;
+} LIBUTIL_NT_ACTIVATION_CONTEXT_STACK64;
+
+typedef struct _LIBUTIL_NT_ACTIVATION_CONTEXT_STACK
+{
+    void                    *ActiveFrame;
+    LIBUTIL_NT_LIST_ENTRY   FrameListCache;
+    libutil_u32             Flags;
+    libutil_u32             NextCookieSequenceNumber;
+    libutil_u32             StackId;
+} LIBUTIL_NT_ACTIVATION_CONTEXT_STACK;
+
+typedef libutil_i32 LIBUTIL_NT_STATUS;
 #define LIBUTIL_NT_SUCCESS(Status) ((Status) >= 0)
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
-    typedef LIBUTIL_NT_LARGE_INTEGER        lu_nt_largeinteger;
-    typedef LIBUTIL_NT_ULARGE_INTEGER       lu_nt_ulargeinteger;
+    typedef LIBUTIL_NT_LARGE_INTEGER                lu_nt_largeinteger;
+    typedef LIBUTIL_NT_ULARGE_INTEGER               lu_nt_ulargeinteger;
 
-    typedef LIBUTIL_NT_GUID                 lu_nt_guid;
+    typedef LIBUTIL_NT_GUID                         lu_nt_guid;
 
-    typedef LIBUTIL_NT_UNICODE_STRING32     lu_nt_unicodestring32;
-    typedef LIBUTIL_NT_UNICODE_STRING64     lu_nt_unicodestring64;
-    typedef LIBUTIL_NT_UNICODE_STRING       lu_nt_unicodestring;
+    typedef LIBUTIL_NT_UNICODE_STRING32             lu_nt_unicodestring32;
+    typedef LIBUTIL_NT_UNICODE_STRING64             lu_nt_unicodestring64;
+    typedef LIBUTIL_NT_UNICODE_STRING               lu_nt_unicodestring;
 
-    typedef LIBUTIL_NT_LIST_ENTRY32         lu_nt_list_entry32;
-    typedef LIBUTIL_NT_LIST_ENTRY64         lu_nt_list_entry64;
-    typedef LIBUTIL_NT_LIST_ENTRY           lu_nt_list_entry;
+    typedef LIBUTIL_NT_LIST_ENTRY32                 lu_nt_list_entry32;
+    typedef LIBUTIL_NT_LIST_ENTRY64                 lu_nt_list_entry64;
+    typedef LIBUTIL_NT_LIST_ENTRY                   lu_nt_list_entry;
 
-    typedef LIBUTIL_NT_RTL_BALANCED_NODE32  lu_nt_rtl_balancednode32;
-    typedef LIBUTIL_NT_RTL_BALANCED_NODE64  lu_nt_rtl_balancednode64;
-    typedef LIBUTIL_NT_RTL_BALANCED_NODE    lu_nt_rtl_balancednode;
+    typedef LIBUTIL_NT_RTL_BALANCED_NODE32          lu_nt_rtl_balancednode32;
+    typedef LIBUTIL_NT_RTL_BALANCED_NODE64          lu_nt_rtl_balancednode64;
+    typedef LIBUTIL_NT_RTL_BALANCED_NODE            lu_nt_rtl_balancednode;
+
+    typedef LIBUTIL_NT_ACTIVATION_CONTEXT_STACK32   lu_nt_activationctxstack32;
+    typedef LIBUTIL_NT_ACTIVATION_CONTEXT_STACK64   lu_nt_activationctxstack64;
+    typedef LIBUTIL_NT_ACTIVATION_CONTEXT_STACK     lu_nt_activationctxstack;
 
     typedef LIBUTIL_NT_STATUS               lu_nt_status;
 #endif

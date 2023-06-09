@@ -15,13 +15,16 @@ LIBUTIL_NT_PEB_LDR_DATA32 *LibUtil_Nt_GetLdrData32()
 LIBUTIL_API
 libutil_u64 LibUtil_Nt_GetLdrData64()
 {
-    LIBUTIL_NT_PEB64 PEB;
-    if(!LibUtil_Nt_ReadPeb64(&PEB))
+    libutil_u64 PEB = LibUtil_Nt_GetPeb64();
+    if(PEB == NULL)
     {
         return NULL;
     }
 
-    return PEB.Ldr;
+    libutil_u64 Ldr;
+    LibUtil_x86_Memcpy64((libutil_u64)(&Ldr), PEB + LIBUTIL_OFFSETOF(LIBUTIL_NT_PEB64, Ldr), sizeof(libutil_u64));
+
+    return Ldr;
 }
 
 LIBUTIL_API

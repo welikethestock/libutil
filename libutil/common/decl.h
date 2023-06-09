@@ -123,6 +123,9 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #endif
 #endif
 
+#define LIBUTIL_OFFSETOF(Type, Member) \
+    ((libutil_size)(&(((Type *)(NULL))->Member)))
+
 /* compiler declarations */
 #ifndef LIBUTIL_ATTRIBUTE
     #if defined(LIBUTIL_GNUC) || defined(LIBUTIL_CLANG)
