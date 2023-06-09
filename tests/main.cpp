@@ -11,9 +11,12 @@
 #include "libutil/platform/nt/teb.h"
 #include "libutil/platform/nt/peb.h"
 #include "libutil/platform/nt/ldr.h"
+#include "libutil/platform/nt/pe.h"
 
 #include <stdio.h>
 #include <stddef.h>
+
+#include <windows.h>
 
 int main(int argc, const char **argv)
 {
@@ -188,6 +191,17 @@ int main(int argc, const char **argv)
 
     printf("%p\n", sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64));
 #endif
+
+    void                *Handle = GetModuleHandleA(NULL);
+    lu_nt_dosheader     *DOS = (lu_nt_dosheader *)(Handle);
+    lu_nt_ntheaders32   *NT = (lu_nt_ntheaders32 *)((libutil_size)(DOS) + DOS->e_lfanew);
+    LIBUTIL_NT_IMAGE_SECTION_HEADER *Hdr = (LIBUTIL_NT_IMAGE_SECTION_HEADER *)(LIBUTIL_NT_FIRST_SECTION_HEADER32(NT, NT->FileHeader.SizeOfOptionalHeader));
+    for(int Index = 0; Index < NT->FileHeader.NumberOfSections; ++Index, Hdr++)
+    {
+        printf("%s %p\n", Hdr->Name, Hdr->VirtualAddress);
+    }
+
+
 
     return 0;
 }

@@ -1,3 +1,4 @@
 Constructors/Deconstructors for all C++ wrappers
 Disassembler
 add missing c++ wrappers for functions
+support tls later for PE stuff perhaps?
