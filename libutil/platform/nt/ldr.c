@@ -12,6 +12,12 @@ LIBUTIL_NT_PEB_LDR_DATA32 *LibUtil_Nt_GetLdrData32()
     return (LIBUTIL_NT_PEB_LDR_DATA32 *)(LibUtil_Nt_GetPeb32()->Ldr);
 }
 
+LIBUTIL_API
+LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32 *LibUtil_Nt_ReadLdrDataEntry32()
+{
+    return (LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32 *)(LibUtil_Nt_GetLdrData32()->InLoadOrderModuleList.Flink);
+}
+
 #ifndef LIBUTIL_X86_PURE32
 LIBUTIL_API
 libutil_u64 LibUtil_Nt_GetLdrData64()
@@ -55,6 +61,19 @@ libutil_u64 LibUtil_Nt_GetLdrDataEntry64()
     LibUtil_x86_Memcpy64((libutil_size)(&Entry), Ldr + LIBUTIL_OFFSETOF(LIBUTIL_NT_PEB_LDR_DATA64, InLoadOrderModuleList.Flink), sizeof(libutil_u64));
 
     return Entry;
+}
+
+LIBUTIL_API
+libutil_bool LibUtil_Nt_ReadLdrDataEntry64(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64 *Entry, libutil_u64 Address)
+{
+    if(Address == NULL)
+    {
+        return FALSE;
+    }
+
+    LibUtil_x86_Memcpy64((libutil_size)(Entry), Address, sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64));
+
+    return TRUE;
 }
 #endif
 #elif defined(LIBUTIL_X86_64)

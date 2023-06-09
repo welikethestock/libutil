@@ -19,6 +19,9 @@ typedef enum _LIBUTIL_NT_LDR_DLL_LOAD_REASON
     LIBUTIL_NT_LoadReasonDynamicLoad,
     LIBUTIL_NT_LoadReasonAsImageLoad,
     LIBUTIL_NT_LoadReasonAsDataLoad,
+    LIBUTIL_NT_LoadReasonEnclavePrimary,
+    LIBUTIL_NT_LoadReasonEnclaveDependency,
+    LIBUTIL_NT_LoadReasonPatchImage,
     LIBUTIL_NT_LoadReasonUnknown = -1
 } LIBUTIL_NT_LDR_DLL_LOAD_REASON;
 
@@ -244,6 +247,9 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_PEB_LDR_DATA32           *LibUtil_Nt_GetLdrData32();
 
+        LIBUTIL_API LIBUTIL_IMPORT
+        LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32   *LibUtil_Nt_ReadLdrDataEntry32();
+
         #ifndef LIBUTIL_X86_PURE32
             LIBUTIL_API LIBUTIL_IMPORT
             libutil_u64                         LibUtil_Nt_GetLdrData64();
@@ -251,33 +257,46 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
             LIBUTIL_API LIBUTIL_IMPORT
             libutil_bool                        LibUtil_Nt_ReadLdrData64(LIBUTIL_NT_PEB_LDR_DATA64 *Ldr);
 
-            LIBUTIL_API LIBUTIL_API
+            LIBUTIL_API LIBUTIL_IMPORT
             libutil_u64                         LibUtil_Nt_GetLdrDataEntry64();
+
+            LIBUTIL_API LIBUTIL_IMPORT
+            libutil_bool                        LibUtil_Nt_ReadLdrDataEntry64(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64 *Entry, libutil_u64 Address);
         #endif
     #elif defined(LIBUTIL_X86_64)
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_PEB_LDR_DATA64           *LibUtil_Nt_GetLdrData64();
+
+        LIBUTIL_API LIBUTIL_IMPORT
+        LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64   *LibUtil_Nt_GetLdrDataEntry64();
     #endif
 #endif
 
 #ifdef LIBUTIL_WINDOWS
     #ifdef LIBUTIL_32_BITS
         #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData32
+        #define LibUtil_Nt_GetLdrDataEntry  LibUtil_Nt_GetLdrDataEntry32
     #else
         #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData64
+        #define LibUtil_Nt_GetLdrDataEntry  LibUtil_Nt_GetLdrDataEntry64
     #endif
 
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
         #ifdef LIBUTIL_32_BITS
             #define lu_nt_getldrdata            LibUtil_Nt_GetLdrData32
+            #define lu_nt_getldrdataentry       LibUtil_Nt_GetLdrDataEntry32
 
             #ifndef LIBUTIL_X86_PURE32
                 #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
                 #define lu_nt_readldrdata64         LibUtil_Nt_ReadLdrData64
+                #define lu_nt_readldrdataentry64    LibUtil_Nt_ReadLdrDataEntry64
             #endif
         #else
             #define lu_nt_getldrdata            LibUtil_Nt_GetLdrData64
             #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
+
+            #define lu_nt_getldrdataentry       LibUtil_Nt_GetLdrDataEntry64
+            #define lu_nt_getldrdataentry64     LibUtil_Nt_GetLdrDataEntry64
         #endif
     #endif
 #endif

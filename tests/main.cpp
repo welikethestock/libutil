@@ -159,8 +159,11 @@ int main(int argc, const char **argv)
     );
 
 #ifdef LIBUTIL_X86
-    libutil_u64 Entry64 = LibUtil_Nt_GetLdrDataEntry64();
-    printf("-> %llX\n", Entry64);
+    lu_nt_ldrdataentry64 Entry64;
+    if(LibUtil_Nt_ReadLdrDataEntry64(&Entry64, LibUtil_Nt_GetLdrDataEntry64()))
+    {
+        printf("@%llX\n", Entry64.DllBase);
+    }
 #endif
 #endif
 
