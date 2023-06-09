@@ -340,11 +340,13 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_PEB32    *LibUtil_Nt_GetPeb32();
 
-        LIBUTIL_API LIBUTIL_IMPORT
-        libutil_u64         LibUtil_Nt_GetPeb64();
+        #ifndef LIBUTIL_X86_PURE32
+            LIBUTIL_API LIBUTIL_IMPORT
+            libutil_u64         LibUtil_Nt_GetPeb64();
 
-        LIBUTIL_API LIBUTIL_IMPORT
-        libutil_bool        LibUtil_Nt_ReadPeb64(LIBUTIL_NT_PEB64 *PEB);
+            LIBUTIL_API LIBUTIL_IMPORT
+            libutil_bool        LibUtil_Nt_ReadPeb64(LIBUTIL_NT_PEB64 *PEB);
+        #endif
     #elif definded(LIBUTIL_X86_64)
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_PEB64    *LibUtil_Nt_GetPeb64();
@@ -354,28 +356,33 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB64
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
     typedef LIBUTIL_NT_PEB32    lu_nt_peb32;
     typedef LIBUTIL_NT_PEB64    lu_nt_peb64;
-#endif
 
-#ifdef LIBUTIL_32_BITS
-    typedef LIBUTIL_NT_PEB32    lu_nt_peb;
-#else
-    typedef LIBUTIL_NT_PEB64    lu_nt_peb;
+    #ifdef LIBUTIL_32_BITS
+        typedef LIBUTIL_NT_PEB32    lu_nt_peb;
+    #else
+        typedef LIBUTIL_NT_PEB64    lu_nt_peb;
+    #endif
 #endif
 
 #ifdef LIBUTIL_WINDOWS
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
         #ifdef LIBUTIL_32_BITS
             #define lu_nt_getpeb                LibUtil_Nt_GetPeb32
-            #define lu_nt_getpeb64              LibUtil_Nt_GetPeb64
-            #define lu_nt_readpeb64             LibUtil_Nt_ReadPeb64
 
-            #define LibUtil_Nt_GetPeb           LibUtil_Nt_GetPeb32
+            #ifndef LIBUTIL_X86_PURE32
+                #define lu_nt_getpeb64              LibUtil_Nt_GetPeb64
+                #define lu_nt_readpeb64             LibUtil_Nt_ReadPeb64
+            #endif
         #else
             #define lu_nt_getpeb                LibUtil_Nt_GetPeb64
             #define lu_nt_getpeb64              LibUtil_Nt_GetPeb64
-
-            #define LibUtil_Nt_GetPeb           LibUtil_Nt_GetPeb64
         #endif
+    #endif
+
+    #ifdef LIBUTIL_32_BITS
+        #define LibUtil_Nt_GetPeb           LibUtil_Nt_GetPeb32
+    #else
+        #define LibUtil_Nt_GetPeb           LibUtil_Nt_GetPeb64
     #endif
 #endif
 

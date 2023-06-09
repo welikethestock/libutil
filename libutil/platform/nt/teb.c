@@ -12,13 +12,14 @@ LIBUTIL_NT_TEB64 *LibUtil_Nt_GetTeb64()
 #else
 #include "../../arch/x86/mode.h"
 
-LIBUTIL_API LIBUTIL_IMPORT
+LIBUTIL_API
 LIBUTIL_NT_TEB32 *LibUtil_Nt_GetTeb32()
 {
     return (LIBUTIL_NT_TEB32 *)(__readfsdword(0x18));
 }
 
-LIBUTIL_API LIBUTIL_IMPORT
+#ifndef LIBUTIL_X86_PURE32
+LIBUTIL_API
 libutil_u64 LibUtil_Nt_GetTeb64()
 {
     #ifdef LIBUTIL_MSVC
@@ -90,6 +91,7 @@ libutil_bool LibUtil_Nt_ReadTeb64(LIBUTIL_NT_TEB64 *TEB)
 
     return TRUE;
 }
+#endif
 #endif
 
 #endif

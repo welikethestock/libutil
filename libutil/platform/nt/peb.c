@@ -6,15 +6,14 @@
 #include "../../arch/x86/mode.h"
 
 #ifdef LIBUTIL_X86
-LIBUTIL_API LIBUTIL_IMPORT
+LIBUTIL_API
 LIBUTIL_NT_PEB32 *LibUtil_Nt_GetPeb32()
 {
     return (LIBUTIL_NT_PEB32 *)(LibUtil_Nt_GetTeb32()->ProcessEnvironmentBlock);
 }
 
-#include <stdio.h>
-
-LIBUTIL_API LIBUTIL_IMPORT
+#ifndef LIBUTIL_X86_PURE32
+LIBUTIL_API
 libutil_u64 LibUtil_Nt_GetPeb64()
 {
     libutil_u64 TEB = LibUtil_Nt_GetTeb64();
@@ -29,7 +28,7 @@ libutil_u64 LibUtil_Nt_GetPeb64()
     return PEB;
 }
 
-LIBUTIL_API LIBUTIL_IMPORT
+LIBUTIL_API
 libutil_bool LibUtil_Nt_ReadPeb64(LIBUTIL_NT_PEB64 *PEB)
 {
     libutil_u64 PEB64 = LibUtil_Nt_GetPeb64();
@@ -42,6 +41,7 @@ libutil_bool LibUtil_Nt_ReadPeb64(LIBUTIL_NT_PEB64 *PEB)
 
     return TRUE;
 }
+#endif
 #elif defined(LIBUTIL_X86_64)
 LIBUTIL_API
 LIBUTIL_NT_PEB64 *LibUtil_Nt_GetPeb64()

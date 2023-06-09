@@ -157,6 +157,11 @@ int main(int argc, const char **argv)
         PEB,
         Ldr
     );
+
+#ifdef LIBUTIL_X86
+    libutil_u64 Entry64 = LibUtil_Nt_GetLdrDataEntry64();
+    printf("-> %llX\n", Entry64);
+#endif
 #endif
 
 #if defined(LIBUTIL_WINDOWS) && defined(LIBUTIL_X86)
@@ -176,6 +181,9 @@ int main(int argc, const char **argv)
     {
         printf("valloc> fail\n");
     }
+
+
+    printf("%p\n", sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64));
 #endif
 
     return 0;

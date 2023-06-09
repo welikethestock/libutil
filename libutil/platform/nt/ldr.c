@@ -12,6 +12,7 @@ LIBUTIL_NT_PEB_LDR_DATA32 *LibUtil_Nt_GetLdrData32()
     return (LIBUTIL_NT_PEB_LDR_DATA32 *)(LibUtil_Nt_GetPeb32()->Ldr);
 }
 
+#ifndef LIBUTIL_X86_PURE32
 LIBUTIL_API
 libutil_u64 LibUtil_Nt_GetLdrData64()
 {
@@ -40,6 +41,22 @@ libutil_bool LibUtil_Nt_ReadLdrData64(LIBUTIL_NT_PEB_LDR_DATA64 *Ldr)
 
     return TRUE;
 }
+
+LIBUTIL_API
+libutil_u64 LibUtil_Nt_GetLdrDataEntry64()
+{
+    libutil_u64 Ldr = LibUtil_Nt_GetLdrData64();
+    if(Ldr == NULL)
+    {
+        return NULL;
+    }
+
+    libutil_u64 Entry;
+    LibUtil_x86_Memcpy64((libutil_size)(&Entry), Ldr + LIBUTIL_OFFSETOF(LIBUTIL_NT_PEB_LDR_DATA64, InLoadOrderModuleList.Flink), sizeof(libutil_u64));
+
+    return Entry;
+}
+#endif
 #elif defined(LIBUTIL_X86_64)
 LIBUTIL_API
 LIBUTIL_NT_PEB_LDR_DATA64 *LibUtil_Nt_GetLdrData64()

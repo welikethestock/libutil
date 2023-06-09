@@ -64,11 +64,12 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY3
             libutil_bool                        InIndexes : 1;                                              /*+0x034*/
             libutil_bool                        ShimDll : 1;                                                /*+0x035*/
             libutil_bool                        InExceptionTable : 1;                                       /*+0x035*/
-            libutil_u8                          ReservedFlags1 : 2;                                         /*+0x035*/
+            libutil_bool                        ReservedFlags1 : 2;                                         /*+0x035*/
             libutil_bool                        LoadInProgress : 1;                                         /*+0x035*/
-            libutil_u8                          ReservedFlags2 : 1;                                         /*+0x035*/
+            libutil_bool                        LoadConfigProcessed : 1;                                    /*+0x035*/
             libutil_bool                        EntryProcessed : 1;                                         /*+0x035*/
-            libutil_u8                          ReservedFlags3 : 3;                                         /*+0x036-0x036*/
+            libutil_bool                        ProtectDelayLoad : 1;                                       /*+0x035*/
+            libutil_bool                        ReservedFlags3 : 2;                                         /*+0x036*/
             libutil_bool                        DontCallForThreads : 1;                                     /*+0x036*/
             libutil_bool                        ProcessAttachCalled : 1;                                    /*+0x036*/
             libutil_bool                        ProcessAttachFailed : 1;                                    /*+0x036*/
@@ -76,10 +77,12 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY3
             libutil_bool                        CorImage : 1;                                               /*+0x036*/
             libutil_bool                        DontRelocate : 1;                                           /*+0x036*/
             libutil_bool                        CorILOnly : 1;                                              /*+0x037*/
-            libutil_u8                          ReservedFlags5 : 3;                                         /*+0x037*/
+            libutil_bool                        ChpeImage : 1;                                              /*+0x037*/
+            libutil_bool                        ChpeEmulatorImage : 1;                                      /**0x037*/
+            libutil_bool                        ReservedFlags5 : 1;                                         /*+0x037*/
             libutil_bool                        Redirected : 1;                                             /*+0x037*/
-            libutil_u8                          ReservedFlags6 : 2;                                         /*+0x037*/
-            //libutil_bool                        CompatDatabaseProcessed : 1;                              /*+0x037*/
+            libutil_bool                        ReservedFlags6 : 2;                                         /*+0x037*/
+            libutil_bool                       CompatDatabaseProcessed : 1;                                 /*+0x037*/
         } Flags;
     };
     libutil_u16                             ObsoleteLoadCount;                                              /*+0x038*/
@@ -87,10 +90,14 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY3
     LIBUTIL_NT_LIST_ENTRY32                 HashLinks;                                                      /*+0x03C*/
     libutil_u32                             TimeDateStamp;                                                  /*+0x044*/
     libutil_u32                             EntryPointActivationContext;    /*_ACTIVATION_CONTEXT* */       /*+0x048*/
-    libutil_u32                             Spare;                                                          /*+0x04C*/
+    libutil_u32                             Lock;                                                           /*+0x04C*/
     libutil_u32                             DdagNode;                       /*_LDR_DDAG_NODE* */            /*+0x050*/
     LIBUTIL_NT_LIST_ENTRY32                 NodeModuleLink;                                                 /*+0x058*/
-    libutil_u32                             SnapContext;                    /*_LDRP_DLL_SNAP_CONTEXT*/      /*+0x05C*/
+    union
+    {
+        libutil_u32                             SnapContext;                    /*_LDR_DLL_SNAP_CONTEXT* */ /*+0x05C*/
+        libutil_u32                             LoadContext;                    /*_LDR_LOAD_CONTEXT* */     /*+0x05C*/
+    };
     libutil_u32                             ParentDllBase;                                                  /*+0x060*/
     libutil_u32                             SwitchBackContext;                                              /*+0x064*/
     LIBUTIL_NT_RTL_BALANCED_NODE32          BaseAddressIndexNode;                                           /*+0x06C*/
@@ -100,6 +107,14 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY3
     libutil_u32                             BaseNameHashValue;                                              /*+0x090*/
     LIBUTIL_NT_LDR_DLL_LOAD_REASON          LoadReason;                                                     /*+0x094*/
     libutil_u32                             ImplicitPathOptions;                                            /*+0x098*/
+    // Taken from Win11
+    libutil_u32                             ReferenceCount;                                                 /*+0x09C*/
+    libutil_u32                             DependentLoadFlags;                                             /*+0x0A0*/
+    libutil_u8                              SigningLevel;                                                   /*+0x0A4*/
+    libutil_u8                              Padding1[3];                                                    /*+0x0A5*/
+    libutil_u32                             CheckSum;                                                       /*+0x0A8*/
+    libutil_u32                             ActivePatchImageBase;                                           /*+0x0AC*/
+    libutil_u32                             HotPatchState;                      /*_LDR_HOT_PATCH_STATE*/    /*+0x0B0*/
 } LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32;
 
 typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_PEB_LDR_DATA64
@@ -146,11 +161,12 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
             libutil_bool                        InIndexes : 1;                                              /*+0x068*/
             libutil_bool                        ShimDll : 1;                                                /*+0x069*/
             libutil_bool                        InExceptionTable : 1;                                       /*+0x069*/
-            libutil_u8                          ReservedFlags1 : 2;                                         /*+0x069*/
+            libutil_bool                        ReservedFlags1 : 2;                                         /*+0x069*/
             libutil_bool                        LoadInProgress : 1;                                         /*+0x069*/
-            libutil_u8                          ReservedFlags2 : 1;                                         /*+0x069*/
+            libutil_bool                        LoadConfigProcessed : 1;                                    /*+0x069*/
             libutil_bool                        EntryProcessed : 1;                                         /*+0x069*/
-            libutil_u8                          ReservedFlags3 : 3;                                         /*+0x069-0x06A*/
+            libutil_bool                        ProtectDelayLoad : 1;                                       /*+0x069*/
+            libutil_bool                        ReservedFlags3 : 2;                                         /*+0x06A*/
             libutil_bool                        DontCallForThreads : 1;                                     /*+0x06A*/
             libutil_bool                        ProcessAttachCalled : 1;                                    /*+0x06A*/
             libutil_bool                        ProcessAttachFailed : 1;                                    /*+0x06A*/
@@ -158,10 +174,12 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
             libutil_bool                        CorImage : 1;                                               /*+0x06A*/
             libutil_bool                        DontRelocate : 1;                                           /*+0x06A*/
             libutil_bool                        CorILOnly : 1;                                              /*+0x06B*/
-            libutil_u8                          ReservedFlags5 : 3;                                         /*+0x06B*/
+            libutil_bool                        ChpeImage : 1;                                              /*+0x06B*/
+            libutil_bool                        ChpeEmulatorImage : 1;                                      /**0x06B*/
+            libutil_bool                        ReservedFlags5 : 1;                                         /*+0x06B*/
             libutil_bool                        Redirected : 1;                                             /*+0x06B*/
-            libutil_u8                          ReservedFlags6 : 2;                                         /*+0x06B*/
-            //libutil_bool                        CompatDatabaseProcessed : 1;                              /*+0x06B*/
+            libutil_bool                        ReservedFlags6 : 2;                                         /*+0x06B*/
+            libutil_bool                       CompatDatabaseProcessed : 1;                                 /*+0x06B*/
         } Flags;
     };
     libutil_u16                             ObsoleteLoadCount;                                              /*+0x06C*/
@@ -170,10 +188,14 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
     libutil_u32                             TimeDateStamp;                                                  /*+0x080*/
     libutil_u8                              Padding1[4];                                                    /*+0x084*/
     libutil_u64                             EntryPointActivationContext;    /*_ACTIVATION_CONTEXT* */       /*+0x088*/
-    libutil_u64                             Spare;                                                          /*+0x090*/
+    libutil_u64                             Lock;                                                           /*+0x090*/
     libutil_u64                             DdagNode;                       /*_LDR_DDAG_NODE* */            /*+0x098*/
     LIBUTIL_NT_LIST_ENTRY64                 NodeModuleLink;                                                 /*+0x0A0*/
-    libutil_u64                             SnapContext;                    /*_LDRP_DLL_SNAP_CONTEXT*/      /*+0x0B0*/
+    union
+    {
+        libutil_u64                             SnapContext;                    /*_LDR_DLL_SNAP_CONTEXT* */ /*+0x0B0*/
+        libutil_u64                             LoadContext;                    /*_LDR_LOAD_CONTEXT* */     /*+0x0B0*/
+    };
     libutil_u64                             ParentDllBase;                                                  /*+0x0B8*/
     libutil_u64                             SwitchBackContext;                                              /*+0x0C0*/
     LIBUTIL_NT_RTL_BALANCED_NODE64          BaseAddressIndexNode;                                           /*+0x0C8*/
@@ -183,7 +205,16 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
     libutil_u32                             BaseNameHashValue;                                              /*+0x108*/
     LIBUTIL_NT_LDR_DLL_LOAD_REASON          LoadReason;                                                     /*+0x10C*/
     libutil_u32                             ImplicitPathOptions;                                            /*+0x110*/
-    libutil_u8                              Padding2[4];                                                    /*+0x114*/ // MSVC hack
+    // Taken from Win11
+    libutil_u32                             ReferenceCount;                                                 /*+0x114*/
+    libutil_u32                             DependentLoadFlags;                                             /*+0x118*/
+    libutil_u8                              SigningLevel;                                                   /*+0x11C*/
+    libutil_u8                              Padding2[3];                                                    /*+0x11D*/
+    libutil_u32                             CheckSum;                                                       /*+0x120*/
+    libutil_u8                              Padding3[4];                                                    /*+0x124*/
+    libutil_u64                             ActivePatchImageBase;                                           /*+0x128*/
+    libutil_u32                             HotPatchState;                      /*_LDR_HOT_PATCH_STATE*/    /*+0x130*/
+    libutil_u8                              Padding4[4];                                                    /*+0x134*/
 } LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64;
 
 #ifdef LIBUTIL_MSVC
@@ -198,14 +229,14 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
 
     typedef LIBUTIL_NT_PEB_LDR_DATA64           lu_nt_ldrdata64;
     typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64   lu_nt_ldrdataentry64;
-#endif
 
-#ifdef LIBUTIL_32_BITS
-    typedef LIBUTIL_NT_PEB_LDR_DATA32           lu_nt_ldrdata;
-    typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32   lu_nt_ldrdataentry;
-#else
-    typedef LIBUTIL_NT_PEB_LDR_DATA64           lu_nt_ldrdata;
-    typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64   lu_nt_ldrdataentry;
+    #ifdef LIBUTIL_32_BITS
+        typedef LIBUTIL_NT_PEB_LDR_DATA32           lu_nt_ldrdata;
+        typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32   lu_nt_ldrdataentry;
+    #else
+        typedef LIBUTIL_NT_PEB_LDR_DATA64           lu_nt_ldrdata;
+        typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64   lu_nt_ldrdataentry;
+    #endif
 #endif
 
 #ifdef LIBUTIL_WINDOWS
@@ -213,11 +244,16 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_PEB_LDR_DATA32           *LibUtil_Nt_GetLdrData32();
 
-        LIBUTIL_API LIBUTIL_IMPORT
-        libutil_u64                         LibUtil_Nt_GetLdrData64();
+        #ifndef LIBUTIL_X86_PURE32
+            LIBUTIL_API LIBUTIL_IMPORT
+            libutil_u64                         LibUtil_Nt_GetLdrData64();
 
-        LIBUTIL_API LIBUTIL_IMPORT
-        libutil_bool                        LibUtil_Nt_ReadLdrData64(LIBUTIL_NT_PEB_LDR_DATA64 *Ldr);
+            LIBUTIL_API LIBUTIL_IMPORT
+            libutil_bool                        LibUtil_Nt_ReadLdrData64(LIBUTIL_NT_PEB_LDR_DATA64 *Ldr);
+
+            LIBUTIL_API LIBUTIL_API
+            libutil_u64                         LibUtil_Nt_GetLdrDataEntry64();
+        #endif
     #elif defined(LIBUTIL_X86_64)
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_PEB_LDR_DATA64           *LibUtil_Nt_GetLdrData64();
@@ -225,18 +261,23 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
 #endif
 
 #ifdef LIBUTIL_WINDOWS
+    #ifdef LIBUTIL_32_BITS
+        #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData32
+    #else
+        #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData64
+    #endif
+
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
         #ifdef LIBUTIL_32_BITS
             #define lu_nt_getldrdata            LibUtil_Nt_GetLdrData32
-            #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
-            #define lu_nt_readldrdata64         LibUtil_Nt_ReadLdrData64
 
-            #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData32
+            #ifndef LIBUTIL_X86_PURE32
+                #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
+                #define lu_nt_readldrdata64         LibUtil_Nt_ReadLdrData64
+            #endif
         #else
             #define lu_nt_getldrdata            LibUtil_Nt_GetLdrData64
             #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
-
-            #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData64
         #endif
     #endif
 #endif
@@ -245,10 +286,10 @@ LIBUTIL_EXTERN_C_BLOCK_END
 
 #ifdef __cplusplus
     static_assert(sizeof(LIBUTIL_NT_PEB_LDR_DATA32) == 0x30, "sizeof(LIBUTIL_NT_PEB_LDR_DATA32) == 0x30");
-    static_assert(sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32) == 0x09C, "sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32) == 0x09C");
+    static_assert(sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32) == 0xB4, "sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY32) == 0xB4");
 
     static_assert(sizeof(LIBUTIL_NT_PEB_LDR_DATA64) == 0x58, "sizeof(LIBUTIL_NT_PEB_LDR_DATA64) == 0x58");
-    static_assert(sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x118, "sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x118");
+    static_assert(sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x138, "sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64) == 0x138");
 #endif
 
 #endif

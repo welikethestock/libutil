@@ -352,11 +352,13 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_TEB64
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_TEB32    *LibUtil_Nt_GetTeb32();
 
-        LIBUTIL_API LIBUTIL_IMPORT
-        libutil_u64         LibUtil_Nt_GetTeb64();
+        #ifndef LIBUTIL_X86_PURE32
+            LIBUTIL_API LIBUTIL_IMPORT
+            libutil_u64         LibUtil_Nt_GetTeb64();
 
-        LIBUTIL_API LIBUTIL_IMPORT
-        libutil_bool        LibUtil_Nt_ReadTeb64(LIBUTIL_NT_TEB64 *TEB);
+            LIBUTIL_API LIBUTIL_IMPORT
+            libutil_bool        LibUtil_Nt_ReadTeb64(LIBUTIL_NT_TEB64 *TEB);
+        #endif
     #elif defined(LIBUTIL_64_BITS)
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_TEB64    *LibUtil_Nt_GetTeb64();
@@ -373,25 +375,32 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_TEB64
     #ifdef LIBUTIL_WINDOWS
         #ifdef LIBUTIL_32_BITS
             #define lu_nt_getteb                LibUtil_Nt_GetTeb32
-            #define lu_nt_getteb64              LibUtil_Nt_GetTeb64
-            #define lu_nt_readteb64             LibUtil_Nt_ReadTeb64
 
-            #define LibUtil_Nt_GetTeb           LibUtil_Nt_GetTeb32
+            #ifndef LIBUTIL_X86_PURE32
+                #define lu_nt_getteb64              LibUtil_Nt_GetTeb64
+                #define lu_nt_readteb64             LibUtil_Nt_ReadTeb64
+            #endif
         #else
             #define lu_nt_getteb                LibUtil_Nt_GetTeb64
             #define lu_nt_getteb64              LibUtil_Nt_GetTeb64
-
-            #define LibUtil_Nt_GetTeb           LibUtil_Nt_GetTeb64
         #endif
+    #endif
+
+    #ifdef LIBUTIL_32_BITS
+        typedef lu_nt_gditebbatch32         lu_nt_gditebbatch;
+        typedef lu_nt_teb32                 lu_nt_teb;
+    #else
+        typedef lu_nt_gditebbatch64         lu_nt_gditebbatch;
+        typedef lu_nt_teb64                 lu_nt_teb;
     #endif
 #endif
 
-#ifdef LIBUTIL_32_BITS
-    typedef lu_nt_gditebbatch32         lu_nt_gditebbatch;
-    typedef lu_nt_teb32                 lu_nt_teb;
-#else
-    typedef lu_nt_gditebbatch64         lu_nt_gditebbatch;
-    typedef lu_nt_teb64                 lu_nt_teb;
+#ifdef LIBUTIL_WINDOWS
+    #ifdef LIBUTIL_32_BITS
+        #define LibUtil_Nt_GetTeb           LibUtil_Nt_GetTeb32
+    #else
+        #define LibUtil_Nt_GetTeb           LibUtil_Nt_GetTeb64
+    #endif
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END
