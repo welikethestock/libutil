@@ -208,6 +208,39 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
     typedef LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64   lu_nt_ldrdataentry;
 #endif
 
+#ifdef LIBUTIL_WINDOWS
+    #ifdef LIBUTIL_X86
+        LIBUTIL_API LIBUTIL_IMPORT
+        LIBUTIL_NT_PEB_LDR_DATA32           *LibUtil_Nt_GetLdrData32();
+
+        LIBUTIL_API LIBUTIL_IMPORT
+        libutil_u64                         LibUtil_Nt_GetLdrData64();
+
+        LIBUTIL_API LIBUTIL_IMPORT
+        libutil_bool                        LibUtil_Nt_ReadLdrData64(LIBUTIL_NT_PEB_LDR_DATA64 *Ldr);
+    #elif defined(LIBUTIL_X86_64)
+        LIBUTIL_API LIBUTIL_IMPORT
+        LIBUTIL_NT_PEB_LDR_DATA64           *LibUtil_Nt_GetLdrData64();
+    #endif
+#endif
+
+#ifdef LIBUTIL_WINDOWS
+    #ifndef LIBUTIL_DISABLE_SHORT_NAMES
+        #ifdef LIBUTIL_32_BITS
+            #define lu_nt_getldrdata            LibUtil_Nt_GetLdrData32
+            #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
+            #define lu_nt_readldrdata64         LibUtil_Nt_ReadLdrData64
+
+            #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData32
+        #else
+            #define lu_nt_getldrdata            LibUtil_Nt_GetLdrData64
+            #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
+
+            #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData64
+        #endif
+    #endif
+#endif
+
 LIBUTIL_EXTERN_C_BLOCK_END
 
 #ifdef __cplusplus

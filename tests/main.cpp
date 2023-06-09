@@ -168,6 +168,18 @@ int main(int argc, const char **argv)
         printf("%llX\n", TEB64.ProcessEnvironmentBlock);
     }
 
+    lu_nt_peb64 PEB64;
+    if(lu_nt_readpeb64(&PEB64))
+    {
+        printf("%llX\n", PEB64.Ldr);
+    }
+
+    lu_nt_ldrdata64 Ldr64;
+    if(lu_nt_readldrdata64(&Ldr64))
+    {
+        printf("%d\n", Ldr64.Length);
+    }
+
     printf("%d\n", lu_syscall0(0xE1));
 #endif
 

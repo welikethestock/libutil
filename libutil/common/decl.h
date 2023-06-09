@@ -88,6 +88,7 @@ LIBUTIL_EXTERN_C_BLOCK_START
 
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
         typedef libutil_size        lu_size;
+        typedef libutil_ssize       lu_ssize;
     #endif
 
     typedef libutil_u16             libutil_wchar; // microsoft garbage

@@ -1,0 +1,48 @@
+#include "../../common/features.h"
+
+#ifdef LIBUTIL_WINDOWS
+#include "peb.h"
+#include "teb.h"
+#include "../../arch/x86/mode.h"
+
+#ifdef LIBUTIL_X86
+LIBUTIL_API LIBUTIL_IMPORT
+LIBUTIL_NT_PEB32 *LibUtil_Nt_GetPeb32()
+{
+    return (LIBUTIL_NT_PEB32 *)(LibUtil_Nt_GetTeb32()->ProcessEnvironmentBlock);
+}
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_u64 LibUtil_Nt_GetPeb64()
+{
+    LIBUTIL_NT_TEB64 TEB;
+    if(!LibUtil_Nt_ReadTeb64(&TEB))
+    {
+        return NULL;
+    }
+
+    return TEB.ProcessEnvironmentBlock;
+}
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_bool LibUtil_Nt_ReadPeb64(LIBUTIL_NT_PEB64 *PEB)
+{
+    libutil_u64 PEB64 = LibUtil_Nt_GetPeb64();
+    if(PEB64 == NULL)
+    {
+        return FALSE;
+    }
+
+    LibUtil_x86_Memcpy64((libutil_u64)(PEB), PEB64, sizeof(LIBUTIL_NT_PEB64));
+
+    return TRUE;
+}
+#elif defined(LIBUTIL_X86_64)
+LIBUTIL_API
+LIBUTIL_NT_PEB64 *LibUtil_Nt_GetPeb64()
+{
+    return (LIBUTIL_NT_PEB64 *)(LibUtil_Nt_GetTeb64()->ProcessEnvironmentBlock);
+}
+#endif
+
+#endif
