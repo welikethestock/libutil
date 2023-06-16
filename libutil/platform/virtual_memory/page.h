@@ -2,6 +2,7 @@
 #define __LIBUTIL_PLATFORM_VIRTUALMEMORY_PAGE__
 
 #include "../../common/decl.h"
+#include "../sys/syscall.h"
 
 LIBUTIL_EXTERN_C_BLOCK_START
 
@@ -71,18 +72,26 @@ enum
 };
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_bool LibUtil_Page_Allocate(void **BaseAddress, libutil_size Size, libutil_u32 Protection, libutil_u32 Flags);
+libutil_bool LibUtil_Page_Allocate(libutil_syscallarg *BaseAddress, libutil_size Size, libutil_u32 Protection, libutil_u32 Flags);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_bool LibUtil_Page_Free(void *BaseAddress);
+libutil_bool LibUtil_Page_Free(libutil_syscallarg BaseAddress);
 
 LIBUTIL_API LIBUTIL_IMPORT
-libutil_bool LibUtil_Page_Protect(void *Address, libutil_size Size, libutil_u32 Protection, libutil_u32 *OldProtection);
+libutil_bool LibUtil_Page_Protect(libutil_syscallarg Address, libutil_size Size, libutil_u32 Protection, libutil_u32 *OldProtection);
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_bool LibUtil_Page_QueryProtection(libutil_syscallarg Address, libutil_u32 *Protection);
+
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_bool LibUtil_Page_IsExecutable(libutil_syscallarg Address);
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
-    #define lu_pageallocate LibUtil_Page_Allocate
-    #define lu_pagefree     LibUtil_Page_Free
-    #define lu_pageprotect  LibUtil_Page_Protect
+    #define lu_pageallocate         LibUtil_Page_Allocate
+    #define lu_pagefree             LibUtil_Page_Free
+    #define lu_pageprotect          LibUtil_Page_Protect
+    #define lu_pagequeryprotection  LibUtil_Page_QueryProtection
+    #define lu_pageisexecutable     LibUtil_Page_IsExecutable
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END

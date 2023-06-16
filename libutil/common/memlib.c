@@ -4,7 +4,7 @@
     #define INTRIN_MIN_LEN (sizeof(__m128i))
 #elif defined(LIBUTIL_FEATURE_AVX)
     #define INTRIN_MIN_LEN (sizeof(__m256i))
-#elif defiend(LIBUTIL_FEATURE_AVX512F)
+#elif defined(LIBUTIL_FEATURE_AVX512F)
     #define INTRIN_MIN_LEN (sizeof(__m512i))
 #endif
 

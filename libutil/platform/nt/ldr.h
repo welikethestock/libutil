@@ -10,6 +10,12 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #pragma pack(push, 1)
 #endif
 
+typedef enum _LIBUTIL_NT_BASE_NAME_HASH_VALUES
+{
+    LIBUTIL_NT_BASE_NAME_HASH_NTDLL = 0xCE4A7546,
+    LIBUTIL_NT_BASE_NAME_HASH_KERNEL32 = 0xDDBCDC44
+} LIBUTIL_NT_BASE_NAME_HASH_VALUES;
+
 typedef enum _LIBUTIL_NT_LDR_DLL_LOAD_REASON
 {
     LIBUTIL_NT_LoadReasonStaticDependency = 0,
@@ -263,6 +269,12 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
             LIBUTIL_API LIBUTIL_IMPORT
             libutil_bool                        LibUtil_Nt_ReadLdrDataEntry64(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64 *Entry, libutil_u64 Address);
         #endif
+
+        LIBUTIL_API LIBUTIL_IMPORT
+        void                                    *LibUtil_Nt_GetLdrModuleExport32(void *Module, libutil_u32 Hash);
+
+        LIBUTIL_API LIBUTIL_IMPORT
+        void                                    *LibUtil_Nt_GetLdrExport32(libutil_u32 ModuleHash, libutil_u32 Hash);
     #elif defined(LIBUTIL_X86_64)
         LIBUTIL_API LIBUTIL_IMPORT
         LIBUTIL_NT_PEB_LDR_DATA64           *LibUtil_Nt_GetLdrData64();

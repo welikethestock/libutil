@@ -72,16 +72,16 @@ LIBUTIL_API
 void LibUtil_Patch_Apply(LIBUTIL_CODE_PATCH *Patch)
 {
     libutil_u32 OldProtection = LIBUTIL_PAGE_RX; // assume page was RX on linux
-    LibUtil_Page_Protect(Patch->Address, Patch->Size, LIBUTIL_PAGE_RWX, &OldProtection);
+    LibUtil_Page_Protect((libutil_syscallarg)(Patch->Address), Patch->Size, LIBUTIL_PAGE_RWX, &OldProtection);
     LibUtil_Memcpy(Patch->Address, Patch->Patch, Patch->Size);
-    LibUtil_Page_Protect(Patch->Address, Patch->Size, OldProtection, &OldProtection);
+    LibUtil_Page_Protect((libutil_syscallarg)(Patch->Address), Patch->Size, OldProtection, &OldProtection);
 }
 
 LIBUTIL_API
 void LibUtil_Patch_Revert(LIBUTIL_CODE_PATCH *Patch)
 {
     libutil_u32 OldProtection = LIBUTIL_PAGE_RX; // assume page was RX on linux
-    LibUtil_Page_Protect(Patch->Address, Patch->Size, LIBUTIL_PAGE_RWX, &OldProtection);
+    LibUtil_Page_Protect((libutil_syscallarg)(Patch->Address), Patch->Size, LIBUTIL_PAGE_RWX, &OldProtection);
     LibUtil_Memcpy(Patch->Address, Patch->Backup, Patch->Size);
-    LibUtil_Page_Protect(Patch->Address, Patch->Size, OldProtection, &OldProtection);
+    LibUtil_Page_Protect((libutil_syscallarg)(Patch->Address), Patch->Size, OldProtection, &OldProtection);
 }

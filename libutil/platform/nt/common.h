@@ -177,8 +177,57 @@ typedef struct _LIBUTIL_NT_ACTIVATION_CONTEXT_STACK
     libutil_u32             StackId;
 } LIBUTIL_NT_ACTIVATION_CONTEXT_STACK;
 
+typedef enum _LIBUTIL_NT_MEMORY_INFORMATION_CLASS
+{
+    LIBUTIL_NT_MemoryBasicInformation = 0
+} LIBUTIL_NT_MEMORY_INFORMATION_CLASS;
+
+typedef struct LIBUTIL_ALIGN(4) _LIBUTIL_NT_MEMORY_BASIC_INFORMATION32
+{
+    libutil_u32             BaseAddress;
+    libutil_u32             AllocationBase;
+    libutil_u32             AllocationProtect;
+    libutil_u16             PartitionId;
+    libutil_u32             RegionSize;
+    libutil_u32             State;
+    libutil_u32             Protect;
+    libutil_u32             Type;
+} LIBUTIL_NT_MEMORY_BASIC_INFORMATION32;
+
+typedef struct LIBUTIL_ALIGN(8) _LIBUTIL_NT_MEMORY_BASIC_INFORMATION64
+{
+    libutil_u64             BaseAddress;
+    libutil_u64             AllocationBase;
+    libutil_u32             AllocationProtect;
+    libutil_u16             PartitionId;
+    libutil_u64             RegionSize;
+    libutil_u32             State;
+    libutil_u32             Protect;
+    libutil_u32             Type;
+} LIBUTIL_NT_MEMORY_BASIC_INFORMATION64;
+
+typedef struct _LIBUTIL_NT_MEMORY_BASIC_INFORMATION
+{
+    void                    *BaseAddress;
+    void                    *AllocationBase;
+    libutil_u32             AllocationProtect;
+    libutil_u16             PartitionId;
+    libutil_size            RegionSize;
+    libutil_u32             State;
+    libutil_u32             Protect;
+    libutil_u32             Type;
+} LIBUTIL_NT_MEMORY_BASIC_INFORMATION;
+
 typedef libutil_i32 LIBUTIL_NT_STATUS;
 #define LIBUTIL_NT_SUCCESS(Status) ((Status) >= 0)
+
+typedef enum _LIBUTIL_NT_DLL_LOAD_REASON
+{
+    LIBUTIL_NT_DLL_PROCESS_DETACH = 0,
+    LIBUTIL_NT_DLL_PROCESS_ATTACH,
+    LIBUTIL_NT_DLL_THREAD_ATTACH,
+    LIBUTIL_NT_DLL_THREAD_DETACH
+} LIBUTIL_NT_DLL_LOAD_REASON;
 
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
     typedef LIBUTIL_NT_LARGE_INTEGER                lu_nt_largeinteger;
@@ -202,7 +251,14 @@ typedef libutil_i32 LIBUTIL_NT_STATUS;
     typedef LIBUTIL_NT_ACTIVATION_CONTEXT_STACK64   lu_nt_activationctxstack64;
     typedef LIBUTIL_NT_ACTIVATION_CONTEXT_STACK     lu_nt_activationctxstack;
 
-    typedef LIBUTIL_NT_STATUS               lu_nt_status;
+    typedef LIBUTIL_NT_MEMORY_INFORMATION_CLASS     lu_nt_memoryinfoclass;
+    typedef LIBUTIL_NT_MEMORY_BASIC_INFORMATION32   lu_nt_memorybasicinfo32;
+    typedef LIBUTIL_NT_MEMORY_BASIC_INFORMATION64   lu_nt_memorybasicinfo64;
+    typedef LIBUTIL_NT_MEMORY_BASIC_INFORMATION     lu_nt_memorybasicinfo;
+
+    typedef LIBUTIL_NT_STATUS                       lu_nt_status;
+
+    typedef LIBUTIL_NT_DLL_LOAD_REASON              lu_nt_dll_loadreason;
 #endif
 
 LIBUTIL_EXTERN_C_BLOCK_END

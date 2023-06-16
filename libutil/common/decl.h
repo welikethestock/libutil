@@ -151,7 +151,7 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #if defined(LIBUTIL_GNUC) || defined(LIBUTIL_CLANG)
         #define LIBUTIL_EXPORT LIBUTIL_ATTRIBUTE(visibility("default"))
     #else
-        #define LIBUTIL_EXPORT
+        #define LIBUTIL_EXPORT __declspec(dllexport)
     #endif
 #endif
 
@@ -203,9 +203,36 @@ LIBUTIL_EXTERN_C_BLOCK_START
     #endif
 #endif
 
+#ifndef LIBUTIL_MSABI
+    #if defined(LIBUTIL_MSVC)
+        #define LIBUTIL_MSABI __stdcall
+    #else
+        #define LIBUTIL_MSABI
+    #endif
+#endif
+
+#ifndef LIBUTIL_FASTCALL
+    #if defined(LIBUTIL_MSVC)
+        #define LIBUTIL_FASTCALL __fastcall
+    #else
+        #define LIBUTIL_FASTCALL
+    #endif
+#endif
+
+#ifndef LIBUTIL_THISCALL
+    #if defined(LIBUTIL_MSVC)
+        #define LIBUTIL_THISCALL __thiscall
+    #else
+        #define LIBUTIL_THISCALL
+    #endif
+#endif
+
 LIBUTIL_EXTERN_C_BLOCK_END
 
 /* intrinsics */
 #include "intrinsics.h"
+
+#undef NULL
+#define NULL (0)
 
 #endif

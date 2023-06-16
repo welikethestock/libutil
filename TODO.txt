@@ -2,3 +2,4 @@ Constructors/Deconstructors for all C++ wrappers
 Disassembler
 add missing c++ wrappers for functions
 support tls later for PE stuff perhaps?
+need to implement fallback x86 syscalls when not on wow64

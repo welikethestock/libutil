@@ -71,9 +71,9 @@ libutil_syscallresult LibUtil_Syscall8(libutil_i32 ID, libutil_syscallarg Arg1, 
 #endif
 
 #define LIBUTIL_INVALID_SYSCALL         (-1)
-#define LIBUTIL_SYSCALLID(Name)         g_##Name##_SyscallID
-#define LIBUTIL_DECLARE_SYSCALL(Name)   extern libutil_i32 LIBUTIL_SYSCALLID(Name)
-#define LIBUTIL_DEFINE_SYSCALL(Name)   libutil_i32 LIBUTIL_SYSCALLID(Name) = LIBUTIL_INVALID_SYSCALL
+#define LIBUTIL_SYSCALLID(Name)         g_LibUtil_##Name##_SyscallID
+#define LIBUTIL_DECLARE_SYSCALL(Name)   extern "C" libutil_i32 LIBUTIL_SYSCALLID(Name)
+#define LIBUTIL_DEFINE_SYSCALL(Name)    libutil_i32 LIBUTIL_SYSCALLID(Name) = LIBUTIL_INVALID_SYSCALL
 #define LIBUTIL_CHECK_SYSCALLID(Name)   ((LIBUTIL_SYSCALLID(Name)) >= 0)
 
 LIBUTIL_EXTERN_C_BLOCK_END

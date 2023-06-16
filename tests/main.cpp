@@ -12,11 +12,19 @@
 #include "libutil/platform/nt/peb.h"
 #include "libutil/platform/nt/ldr.h"
 #include "libutil/platform/nt/pe.h"
+#include "libutil/code/signature/find.h"
+#include "libutil/code/stealth/return_address.h"
+#include "libutil/math/vector.h"
+#include "libutil/math/float.h"
+#include "libutil/crypto/luhash.h"
 
 #include <stdio.h>
 #include <stddef.h>
 
 #include <windows.h>
+
+void CallProxy();
+void __fastcall Stuff(void *, void *, float);
 
 int main(int argc, const char **argv)
 {
@@ -97,111 +105,43 @@ int main(int argc, const char **argv)
         printf("memset> %s\n", (Success) ? "success" : "fail");
     }
 
-    //string test
-    LIBUTIL_STRING  *StringTest = lu_stringcreatenarrowconst("test ");
-    libutil_bool StringAppendResult = lu_stringappendnarrow(StringTest, "test");
-    printf("string> %d %s %zu\n", StringAppendResult, (const char *)(StringTest->Vector.Data), StringTest->Vector.Count);
-
-    // mmap/mprotect/munmap test
-    /*void *BaseAddress = NULL;
-    if(lu_pageallocate(&BaseAddress, 0x4000, LIBUTIL_PAGE_R, LIBUTIL_MAP_PRIVATE | LIBUTIL_MAP_ANONYMOUS))
-    {
-        printf("mmap> success %p\n", BaseAddress);
-    }
-    else
-    {
-        printf("mmap> fail\n");
-    }*/
-
-    //NtRaiseHardError test
-#if 0
-    LIBUTIL_ALIGN(16) LIBUTIL_NT_UNICODE_STRING64 Caption, Text;
-    LIBUTIL_ALIGN(16) void *Arguments[] =
-    {
-        &Caption,
-        &Text,
-        (void *)(0x10) /*MB_OK | MB_ICONERROR*/
-    };
-
-    Caption.Buffer = (libutil_size)L"cool";
-    Caption.Length = sizeof(L"cool");
-    Caption.MaximumLength = sizeof(L"cool");
-
-    Text.Buffer = (libutil_size)L"cool";
-    Text.Length = sizeof(L"cool");
-    Text.MaximumLength = sizeof(L"cool");
-
-    LIBUTIL_ALIGN(16) libutil_u32 Response;
-    printf("%p %p\n", Arguments, &Response);
-    libutil_i64 Result = LibUtil_Syscall6(0x147, 0x40000018, 3, 0x3, (libutil_size)(Arguments), 0/*OptionOk*/, (libutil_size)(&Response));
-    printf("%X %d\n", Result, Response);
-#endif
-
-#if 1
-#ifdef LIBUTIL_WINDOWS // works
-    lu_nt_teb           *TEB = lu_nt_getteb();
-    lu_nt_peb           *PEB = lu_nt_getpeb();
-    lu_nt_ldrdata       *Ldr = lu_nt_getldrdata();
-    lu_nt_ldrdataentry  *Entry = (lu_nt_ldrdataentry *)(Ldr->InLoadOrderModuleList.Flink);
-    while(Entry)
-    {
-        if(Entry->BaseDllName.Buffer == NULL)
-        {
-            break;
-        }
-
-        printf("%S\n", Entry->BaseDllName.Buffer);
-
-        Entry = (lu_nt_ldrdataentry *)(Entry->InLoadOrderMemoryLinks.Flink);
-    }
-
-    printf("%p %p %p\n",
-        TEB,
-        PEB,
-        Ldr
-    );
+    //printf("-> %d\n", lu_syscall0(0x123)); //win10 32
+    printf("-> %d\n", lu_syscall0(0xF8)); //win11
+    printf("%d\n", LibUtil_Page_IsExecutable((libutil_syscallarg)(&main)));
 
 #ifdef LIBUTIL_X86
-    lu_nt_ldrdataentry64 Entry64;
-    if(LibUtil_Nt_ReadLdrDataEntry64(&Entry64, LibUtil_Nt_GetLdrDataEntry64()))
-    {
-        printf("@%llX\n", Entry64.DllBase);
-    }
-#endif
-#endif
-
-#if defined(LIBUTIL_WINDOWS) && defined(LIBUTIL_X86)
-    lu_nt_teb64 TEB64;
-    printf("%llX %llX %llX\n", lu_nt_getteb64(), lu_nt_getpeb64(), lu_nt_getldrdata64());
-
-    //printf("%d\n", lu_syscall0(0xE1)); //server 2012
-    printf("%d\n", lu_syscall0(0xF8)); //win11
+    LIBUTIL_STEALTH_PUSH_RETURN_ADDRESS(1);
+    LIBUTIL_STEALTH_PUSH_ARGUMENT_FLOAT(2.0f);
+    LIBUTIL_STEALTH_PUSH_SPOOFED_RETURN_ADDRESS(CallProxy);
+    LIBUTIL_STEALTH_PUSH_THISPTR(0xFFAABB);
+    LIBUTIL_STEALTH_JUMP_TO_FUNCTION(1, Stuff);
 #endif
 
-    libutil_u64 Base = 0;
-    if(LibUtil_Page_Allocate((void **)(&Base), 0x1000, LIBUTIL_PAGE_RW, LIBUTIL_MAP_ANONYMOUS))
-    {
-        printf("valloc> success %llX\n", Base);
-    }
-    else
-    {
-        printf("valloc> fail\n");
-    }
+    LIBUTIL_VECTOR3DF V1, V2, V3;
+    V1.X = 3.0f; V1.Y = 10.0f; V1.Z = 15.0f;
+    V2.X = -2.0f; V2.Y = 3.0f; V2.Z = -0.5f;
 
+    LibUtil_Vector3DFAdd(&V3, &V1, &V2);
 
-    printf("%p\n", sizeof(LIBUTIL_NT_LDR_DATA_TABLE_ENTRY64));
-#endif
-
-    void                *Handle = GetModuleHandleA(NULL);
-    lu_nt_dosheader     *DOS = (lu_nt_dosheader *)(Handle);
-    lu_nt_ntheaders32   *NT = (lu_nt_ntheaders32 *)((libutil_size)(DOS) + DOS->e_lfanew);
-    LIBUTIL_NT_IMAGE_SECTION_HEADER *Hdr = (LIBUTIL_NT_IMAGE_SECTION_HEADER *)(LIBUTIL_NT_FIRST_SECTION_HEADER32(NT, NT->FileHeader.SizeOfOptionalHeader));
-    for(int Index = 0; Index < NT->FileHeader.NumberOfSections; ++Index, Hdr++)
-    {
-        printf("%s %p\n", Hdr->Name, Hdr->VirtualAddress);
-    }
-
-
+    printf("%f %f %f %f %f %f %f %f %f\n", V3.X, V3.Y, V3.Z, V1.X, V1.Y, V1.Z, V2.X, V2.Y, V2.Z);
+    printf("%f %f %f %f %d %f\n", LibUtil_FloorF(1.3f), LibUtil_CeilF(1.3f), LibUtil_SinF(10.0f), LibUtil_CosF(10.0f), LibUtil_FtoI(1.67f), LibUtil_ItoF(10));
+    printf("%f %f %f\n", LibUtil_SqrtF(45.0f * 45.0f), LibUtil_InvSqrtF(45.0f * 45.0f), LibUtil_PowF(2.0f, 3.0f));
 
     return 0;
 }
+
+#ifdef LIBUTIL_X86
+LIBUTIL_NAKED
+void CallProxy()
+{
+    __asm
+    {
+        ret
+    }
+}
+
+void __fastcall Stuff(void *ECX, void *, float X)
+{
+    printf("%p %p %p %p %p %f\n", _ReturnAddress(), ECX, &CallProxy, &Stuff, &main, X);
+}
+#endif

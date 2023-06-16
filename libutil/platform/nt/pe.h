@@ -8,9 +8,19 @@
 #endif
 
 #define LIBUTIL_NT_DOS_HEADER_MAGIC 0x5A4D
+#define LIBUTIL_NT_NT_HEADERS_SIGNATURE 0x4550
 
-#define LIBUTIL_NT_RVA_TO_ABS(Base, RVA) \
-    ((libutil_size)(Base) + (libutil_size)(RVA))
+#define LIBUTIL_NT_RVA_TO_ABS32(Base, RVA) \
+    ((libutil_u32)(Base) + (libutil_u32)(RVA))
+
+#define LIBUTIL_NT_RVA_TO_ABS64(Base, RVA) \
+    ((libutil_u64)(Base) + (libutil_u64)(RVA))
+
+#ifdef LIBUTIL_32_BITS
+    #define LIBUTIL_NT_RVA_TO_ABS(Base, RVA) LIBUTIL_NT_RVA_TO_ABS32(Base, RVA)
+#else
+    #define LIBUTIL_NT_RVA_TO_ABS(Base, RVA) LIBUTIL_NT_RVA_TO_ABS64(Base, RVA)
+#endif
 
 typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_DOS_HEADER
 {
@@ -66,7 +76,7 @@ typedef enum _LIBUTIL_NT_IMAGE_FILE_CHARACTERISTICS
     LIBUTIL_NT_IMAGE_FILE_LARGE_ADDRESS_AWARE = 0x20,
     LIBUTIL_NT_IMAGE_FILE_16BIT_MACHINE = 0x40,
     LIBUTIL_NT_IMAGE_FILE_BYTES_REVERSED_LO = 0x80,
-    LIBUTiL_NT_IMAGE_FILE_32BIT_MACHINE = 0x100,
+    LIBUTIL_NT_IMAGE_FILE_32BIT_MACHINE = 0x100,
     LIBUTIL_NT_IMAGE_FILE_DEBUG_STRIPPED = 0x200,
     LIBUTIL_NT_IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP = 0x400,
     LIBUTIL_NT_IMAGE_FILE_SYSTEM = 0x1000,
@@ -75,11 +85,17 @@ typedef enum _LIBUTIL_NT_IMAGE_FILE_CHARACTERISTICS
     LIBUTIL_NT_IMAGE_FILE_BYTES_REVERSED_HI = 0x8000
 } LIBUTIL_NT_IMAGE_FILE_CHARACTERISTICS;
 
-typedef enum _LIBUTIL_NT_IMAGE_FILE_MAGIC
+typedef enum _LIBUTIL_NT_IMAGE_FILE_MAGIC_NUMBERS
 {
     LIBUTIL_NT_IMAGE_FILE_MAGIC32 = 0x10B,
-    LIBUTIL_NT_IMAGE_FILE_MAGIC64 = 0x20B
-} LIBUTIL_NT_IMAGE_FILE_MAGIC;
+    LIBUTIL_NT_IMAGE_FILE_MAGIC64 = 0x20B,
+
+#ifdef LIBUTIL_32_BITS
+    LIBUTIL_NT_IMAGE_FILE_MAGIC = LIBUTIL_NT_IMAGE_FILE_MAGIC32
+#elif defined(LIBUTIL_64_BITS)
+    LIBUTIL_NT_IMAGE_FILE_MAGIC = LIBUTIL_NT_IMAGE_FILE_MAGIC64
+#endif
+} LIBUTIL_NT_IMAGE_FILE_MAGIC_NUMBERS;
 
 typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_IMAGE_FILE_HEADER
 {
@@ -392,13 +408,22 @@ typedef union LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_IMAGE_EXPORT_ADDRESS_T
 #pragma pack(pop)
 #endif
 
+LIBUTIL_API LIBUTIL_IMPORT
+libutil_bool LibUtil_Nt_IsValidImage(void *Image, libutil_bool Is64Bit);
+
+#ifdef LIBUTIL_32_BITS
+    typedef LIBUTIL_NT_IMAGE_NT_HEADERS32           LIBUTIL_NT_IMAGE_NT_HEADERS;
+#elif defined(LIBUTIL_64_BITS)
+    typedef LIBUTIL_NT_IMAGE_NT_HEADERS64           LIBUTIL_NT_IMAGE_NT_HEADERS;
+#endif
+
 #ifndef LIBUTIL_DISABLE_SHORT_NAMES
     typedef LIBUTIL_NT_DOS_HEADER                   lu_nt_dosheader;
     typedef LIBUTIL_NT_IMAGE_FILE_HEADER            lu_nt_fileheader;
 
     typedef LIBUTIL_NT_IMAGE_FILE_MACHINE           lu_nt_imagefilemachine;
     typedef LIBUTIL_NT_IMAGE_FILE_CHARACTERISTICS   lu_nt_imagefilecharacteristics;
-    typedef LIBUTIL_NT_IMAGE_FILE_MAGIC             lu_nt_imagefilemagic;
+    typedef LIBUTIL_NT_IMAGE_FILE_MAGIC_NUMBERS     lu_nt_imagefilemagic;
     typedef LIBUTIL_NT_IMAGE_SUBSYSTEM              lu_nt_imagesubsystem;
     typedef LIBUTIL_NT_IMAGE_DLLCHARACTERISTICS     lu_nt_imagedllcharacteristics;
 
@@ -410,6 +435,8 @@ typedef union LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_IMAGE_EXPORT_ADDRESS_T
 
     typedef LIBUTIL_NT_IMAGE_OPTIONAL_HEADER64      lu_nt_optionalheader64;
     typedef LIBUTIL_NT_IMAGE_NT_HEADERS64           lu_nt_ntheaders64;
+
+    typedef LIBUTIL_NT_IMAGE_NT_HEADERS             lu_nt_ntheaders;
 
     typedef LIBUTIL_NT_IMAGE_SECTION_CHARACTERISTICS lu_nt_imagesectioncharacteristics;
     typedef LIBUTIL_NT_IMAGE_SECTION_HEADER         lu_nt_imagesectionheader;
