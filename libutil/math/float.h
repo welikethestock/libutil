@@ -12,6 +12,9 @@ LIBUTIL_API LIBUTIL_IMPORT
 float       LibUtil_ItoF(libutil_i32 Value);
 
 LIBUTIL_API LIBUTIL_IMPORT
+float       LibUtil_AbsF(float Value);
+
+LIBUTIL_API LIBUTIL_IMPORT
 float       LibUtil_FloorF(float Value);
 
 LIBUTIL_API LIBUTIL_IMPORT

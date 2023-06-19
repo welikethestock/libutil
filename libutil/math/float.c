@@ -3,7 +3,7 @@
 LIBUTIL_API
 libutil_i32 LibUtil_FtoI(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE4_1
     __m128 In = _mm_load_ss(&Value);
     return _mm_cvt_ss2si(
         //_mm_floor_ss(In, In
@@ -17,7 +17,7 @@ libutil_i32 LibUtil_FtoI(float Value)
 LIBUTIL_API
 float LibUtil_ItoF(libutil_i32 Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -31,9 +31,17 @@ float LibUtil_ItoF(libutil_i32 Value)
 }
 
 LIBUTIL_API
+float LibUtil_AbsF(float Value)
+{
+    *(libutil_i32 *)(&Value) &= ~(0x80000000);
+
+    return Value;
+}
+
+LIBUTIL_API
 float LibUtil_FloorF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE4_1
     float Out;
     __m128 In = _mm_load_ss(&Value);
     _mm_store_ss(
@@ -51,7 +59,7 @@ float LibUtil_FloorF(float Value)
 LIBUTIL_API
 float LibUtil_CeilF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE4_1
     float Out;
     __m128 In = _mm_load_ss(&Value);
     _mm_store_ss(
@@ -69,7 +77,7 @@ float LibUtil_CeilF(float Value)
 LIBUTIL_API
 float LibUtil_SinF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -85,7 +93,7 @@ float LibUtil_SinF(float Value)
 LIBUTIL_API
 float LibUtil_AsinF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -101,7 +109,7 @@ float LibUtil_AsinF(float Value)
 LIBUTIL_API
 float LibUtil_SinhF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -117,7 +125,7 @@ float LibUtil_SinhF(float Value)
 LIBUTIL_API
 float LibUtil_AsinhF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -133,7 +141,7 @@ float LibUtil_AsinhF(float Value)
 LIBUTIL_API
 float LibUtil_CosF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -149,7 +157,7 @@ float LibUtil_CosF(float Value)
 LIBUTIL_API
 float LibUtil_AcosF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -165,7 +173,7 @@ float LibUtil_AcosF(float Value)
 LIBUTIL_API
 float LibUtil_CoshF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -181,7 +189,7 @@ float LibUtil_CoshF(float Value)
 LIBUTIL_API
 float LibUtil_AcoshF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -197,7 +205,7 @@ float LibUtil_AcoshF(float Value)
 LIBUTIL_API
 float LibUtil_TanF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -213,7 +221,7 @@ float LibUtil_TanF(float Value)
 LIBUTIL_API
 float LibUtil_AtanF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -229,7 +237,7 @@ float LibUtil_AtanF(float Value)
 LIBUTIL_API
 float LibUtil_Atan2F(float Value, float Dividor)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -245,7 +253,7 @@ float LibUtil_Atan2F(float Value, float Dividor)
 LIBUTIL_API
 float LibUtil_TanhF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -261,7 +269,7 @@ float LibUtil_TanhF(float Value)
 LIBUTIL_API
 float LibUtil_AtanhF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -277,7 +285,7 @@ float LibUtil_AtanhF(float Value)
 LIBUTIL_API
 float LibUtil_SqrtF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -293,7 +301,7 @@ float LibUtil_SqrtF(float Value)
 LIBUTIL_API
 float LibUtil_RsqrtF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -309,7 +317,7 @@ float LibUtil_RsqrtF(float Value)
 LIBUTIL_API
 float LibUtil_InvSqrtF(float Value)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,
@@ -325,7 +333,7 @@ float LibUtil_InvSqrtF(float Value)
 LIBUTIL_API
 float LibUtil_PowF(float Value, float Power)
 {
-#ifdef LIBUTIL_FEATURE_SSE2
+#ifdef LIBUTIL_FEATURE_SSE
     float Out;
     _mm_store_ss(
         &Out,

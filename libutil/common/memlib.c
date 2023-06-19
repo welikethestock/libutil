@@ -277,10 +277,10 @@ libutil_i32 LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Le
     const libutil_u8 *_Other = (const libutil_u8 *)(Other);
     while(Length != 0)
     {
-    #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
+    #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || (defined(LIBUTIL_FEATURE_AVX512F) && defined(LIBUTIL_FEATURE_AVX512BW))
         if(Length >= INTRIN_MIN_LEN)
         {
-        #if defined(LIBUTIL_FEATURE_AVX512F)
+        #if defined(LIBUTIL_FEATURE_AVX512F) && defined(LIBUTIL_FEATURE_AVX512BW)
             if(Length >= sizeof(__m512i))
             {
                 if(_mm512_movepi8_mask(_mm512_cmpeq_epi16(
@@ -315,7 +315,7 @@ libutil_i32 LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Le
                 Length -= sizeof(__m256i);
             }
         #endif
-        #if defined(LIBUTIL_FEATURE_SSE2) && (defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F))
+        #if defined(LIBUTIL_FEATURE_SSE2) && (defined(LIBUTIL_FEATURE_AVX) || (defined(LIBUTIL_FEATURE_AVX512F) && defined(LIBUTIL_FEATURE_AVX512BW)))
             else
         #endif
         #if defined(LIBUTIL_FEATURE_SSE2)
@@ -385,7 +385,7 @@ libutil_i32 LibUtil_Memcmp(const void *Block, const void *Other, libutil_size Le
                 Length -= Compared;
             }
         }
-    #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || defined(LIBUTIL_FEATURE_AVX512F)
+    #if defined(LIBUTIL_FEATURE_SSE2) || defined(LIBUTIL_FEATURE_AVX) || (defined(LIBUTIL_FEATURE_AVX512F) && defined(LIBUTIL_FEATURE_AVX512BW))
         }
     #endif
     }

@@ -8,6 +8,7 @@ project(util-internal)
 include_directories("./")
 
 set(PROJECT_SOURCES
+    ${PROJECT_SOURCE_DIR}/libutil/internal/security_check_cookie.c
     ${PROJECT_SOURCE_DIR}/libutil/internal/stack_chk_fail.c
     ${PROJECT_SOURCE_DIR}/libutil/internal/stack_chk_fail_local.c
 )
@@ -25,12 +26,17 @@ if(${CMAKE_C_COMPILER_FRONTEND_VARIANT} STREQUAL "MSVC")
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2 /arch:AVX2 /Oi /GL /Gw /GR- /Qspectre- ") # avx2, intrinsics, whole program optimization, disable RTTI, disable spectre mitigations
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2 /guard:cf- /guard:ehcont- /Gy") # disable control flow guard, disable EH continuation metadata, enable function-level linking
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:threadSafeInit- /Zc:throwingNew- /Zc:tlsGuards- ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:threadSafeInit- /Zc:throwingNew- /Zc:tlsGuards- /GS-") # disable tls, exceptions in new and buffer security
 
     add_definitions(/DLIBUTIL_HEAP_CALLBACKS)
-    add_definitions(/DLIBUTIL_FEATURE_SSE2)
+    add_definitions(/DLIBUTIL_WINE)
 
-    set(LINK_OPTIONS "/MAP /NODEFAULTLIB")
+    set(LINK_OPTIONS
+        /MAP
+        -nodefaultlib
+    )
+
+    #set(LINK_OPTIONS "/MAP /NODEFAULTLIB")
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -masm=intel")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -masm=intel")
@@ -161,6 +167,7 @@ set(PROJECT_SOURCES
     ${PROJECT_SOURCE_DIR}/libutil/platform/nt/pe.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/nt/peb.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/nt/teb.c
+    ${PROJECT_SOURCE_DIR}/libutil/platform/nt/wine.c
 
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_unix.c
     ${PROJECT_SOURCE_DIR}/libutil/platform/sys/syscall_win.c
@@ -183,6 +190,7 @@ target_link_options(${PROJECT_NAME} PRIVATE ${LINK_OPTIONS})
 #target_link_options(${PROJECT_NAME}_shared PRIVATE ${LINK_OPTIONS})
 
 target_link_libraries(${PROJECT_NAME} util-common)
+target_link_libraries(${PROJECT_NAME} util-internal)
 #target_link_libraries(${PROJECT_NAME}_shared util-common)
 
 # libutil-code
@@ -216,19 +224,19 @@ target_link_libraries(${PROJECT_NAME} util-platform)
 # tests
 project(tests-crt)
 
-add_executable(${PROJECT_NAME}
-    ${PROJECT_SOURCE_DIR}/tests/main.cpp
-)
+#add_executable(${PROJECT_NAME}
+#    ${PROJECT_SOURCE_DIR}/tests/main.cpp
+#)
 
-target_link_options(${PROJECT_NAME} PRIVATE ${LINK_OPTIONS})
+#target_link_options(${PROJECT_NAME} PRIVATE ${LINK_OPTIONS})
 
-target_link_libraries(${PROJECT_NAME} util-common)
-target_link_libraries(${PROJECT_NAME} util-math)
-target_link_libraries(${PROJECT_NAME} util-crypto)
-target_link_libraries(${PROJECT_NAME} util-containers)
-target_link_libraries(${PROJECT_NAME} util-code)
-target_link_libraries(${PROJECT_NAME} util-arch)
-target_link_libraries(${PROJECT_NAME} util-internal)
+#target_link_libraries(${PROJECT_NAME} util-common)
+#target_link_libraries(${PROJECT_NAME} util-math)
+#target_link_libraries(${PROJECT_NAME} util-crypto)
+#target_link_libraries(${PROJECT_NAME} util-containers)
+#target_link_libraries(${PROJECT_NAME} util-code)
+#target_link_libraries(${PROJECT_NAME} util-arch)
+#target_link_libraries(${PROJECT_NAME} util-internal)
 
 # tests-crtless
 #[[project(tests-crtless)

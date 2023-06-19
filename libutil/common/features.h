@@ -1,19 +1,12 @@
 #ifndef __LIBUTIL_COMMON_FEATURES__
 #define __LIBUTIL_COMMON_FEATURES__
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4005) // macro redefinition
+#endif
+
 #ifndef LIBUTIL_DISABLE_AUTODETECT_FEATURES
-    #ifdef __SSE2__
-        #define LIBUTIL_FEATURE_SSE2
-    #endif
-
-    #ifdef __AVX__
-        #define LIBUTIL_FEATURE_AVX
-    #endif
-
-    #ifdef __AVX512F__
-        #define LIBUTIL_FEATURE_AVX512F
-    #endif
-
     #if defined(_WIN32)
         #define LIBUTIL_WINDOWS
     #elif defined(__linux__)
@@ -43,6 +36,76 @@
 
         #define LIBUTIL_HAS_HARDWARE_RNG
     #endif
+
+    #ifdef __SSE__
+        #define LIBUTIL_FEATURE_SSE
+    #endif
+
+    #ifdef __SSE2__
+        #define LIBUTIL_FEATURE_SSE2
+    #endif
+
+    #ifdef __SSE3__
+        #define LIBUTIL_FEATURE_SSE3
+    #endif
+
+    #ifdef __SSE4_1__
+        #define LIBUTIL_FEATURE_SSE4_1
+    #endif
+
+    #ifdef __SSE4_2__
+        #define LIBUTIL_FEATURE_SSE4_2
+    #endif
+
+    #ifdef __AVX__
+        #define LIBUTIL_FEATURE_AVX
+        #ifdef LIBUTIL_MSVC
+            #define LIBUTIL_FEATURE_SSE
+            #define LIBUTIL_FEATURE_SSE2
+            #define LIBUTIL_FEATURE_SSE3
+            #define LIBUTIL_FEATURE_SSE4_1
+            #define LIBUTIL_FEATURE_SSE4_2
+        #endif
+    #endif
+
+    #ifdef __AVX2__
+        #define LIBUTIL_FEATURE_AVX2
+        #ifdef LIBUTIL_MSVC
+            #define LIBUTIL_FEATURE_SSE
+            #define LIBUTIL_FEATURE_SSE2
+            #define LIBUTIL_FEATURE_SSE3
+            #define LIBUTIL_FEATURE_SSE4_1
+            #define LIBUTIL_FEATURE_SSE4_2
+        #endif
+    #endif
+
+    #ifdef __AVX512F__
+        #define LIBUTIL_FEATURE_AVX512F
+
+        #ifdef LIBUTIL_MSVC
+            #define LIBUTIL_FEATURE_SSE
+            #define LIBUTIL_FEATURE_SSE2
+            #define LIBUTIL_FEATURE_SSE3
+            #define LIBUTIL_FEATURE_SSE4_1
+            #define LIBUTIL_FEATURE_SSE4_2
+        #endif
+    #endif
+
+    #ifdef __AVX512BW__
+        #define LIBUTIL_FEATURE_AVX512F
+
+        #ifdef LIBUTIL_MSVC
+            #define LIBUTIL_FEATURE_SSE
+            #define LIBUTIL_FEATURE_SSE2
+            #define LIBUTIL_FEATURE_SSE3
+            #define LIBUTIL_FEATURE_SSE4_1
+            #define LIBUTIL_FEATURE_SSE4_2
+        #endif
+    #endif
+#endif
+
+#ifdef _MSC_VER
+#pragma warning (pop)
 #endif
 
 #include "warnings.h"

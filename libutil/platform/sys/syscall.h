@@ -9,7 +9,9 @@ LIBUTIL_EXTERN_C_BLOCK_START
 #ifdef _WIN32
     typedef libutil_i32     libutil_syscallresult;
 
-    #ifdef LIBUTIL_X86_PURE32
+    #if defined(LIBUTIL_WINE) && defined(LIBUTIL_X86)
+        typedef libutil_size    libutil_syscallarg;
+    #elif defined(LIBUTIL_X86_PURE32)
         typedef libutil_u32     libutil_syscallarg;
     #else
         typedef libutil_u64     libutil_syscallarg;
@@ -70,11 +72,19 @@ libutil_syscallresult LibUtil_Syscall8(libutil_i32 ID, libutil_syscallarg Arg1, 
     #endif
 #endif
 
+#ifndef LIBUTIL_WINE
 #define LIBUTIL_INVALID_SYSCALL         (-1)
 #define LIBUTIL_SYSCALLID(Name)         g_LibUtil_##Name##_SyscallID
 #define LIBUTIL_DECLARE_SYSCALL(Name)   extern "C" libutil_i32 LIBUTIL_SYSCALLID(Name)
 #define LIBUTIL_DEFINE_SYSCALL(Name)    libutil_i32 LIBUTIL_SYSCALLID(Name) = LIBUTIL_INVALID_SYSCALL
 #define LIBUTIL_CHECK_SYSCALLID(Name)   ((LIBUTIL_SYSCALLID(Name)) >= 0)
+#else
+#define LIBUTIL_INVALID_SYSCALL         (NULL)
+#define LIBUTIL_SYSCALLID(Name)         g_LibUtil_##Name##_SyscallPtr
+#define LIBUTIL_DECLARE_SYSCALL(Name)   LIBUTIL_EXTERN_C_BLOCK_START extern void * LIBUTIL_SYSCALLID(Name) LIBUTIL_EXTERN_C_BLOCK_END
+#define LIBUTIL_DEFINE_SYSCALL(Name)    void *LIBUTIL_SYSCALLID(Name) = LIBUTIL_INVALID_SYSCALL
+#define LIBUTIL_CHECK_SYSCALLID(Name)   ((LIBUTIL_SYSCALLID(Name)) != LIBUTIL_INVALID_SYSCALL)
+#endif
 
 LIBUTIL_EXTERN_C_BLOCK_END
 

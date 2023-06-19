@@ -102,6 +102,7 @@ void *LibUtil_Nt_GetLdrModuleExport32(void *Module, libutil_u32 Hash)
     {
         const char *FunctionName    = (const char *)(LIBUTIL_NT_RVA_TO_ABS32(DOSHeader, NameRVAs[Index]));
         libutil_u32 NameHash        = LibUtil_LUHash(FunctionName, NULL, LibUtil_StringLength(FunctionName));
+
         if(Hash == NameHash)
         {
             return (void *)(LIBUTIL_NT_RVA_TO_ABS32(

@@ -286,17 +286,23 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
 
 #ifdef LIBUTIL_WINDOWS
     #ifdef LIBUTIL_32_BITS
-        #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData32
-        #define LibUtil_Nt_GetLdrDataEntry  LibUtil_Nt_GetLdrDataEntry32
+        #define LibUtil_Nt_GetLdrData           LibUtil_Nt_GetLdrData32
+        #define LibUtil_Nt_GetLdrDataEntry      LibUtil_Nt_GetLdrDataEntry32
+        #define LibUtil_Nt_GetLdrExport         LibUtil_Nt_GetLdrExport32
+        #define LibUtil_Nt_GetLdrModuleExport   LibUtil_Nt_GetLdrModuleExport64
     #else
-        #define LibUtil_Nt_GetLdrData       LibUtil_Nt_GetLdrData64
-        #define LibUtil_Nt_GetLdrDataEntry  LibUtil_Nt_GetLdrDataEntry64
+        #define LibUtil_Nt_GetLdrData           LibUtil_Nt_GetLdrData64
+        #define LibUtil_Nt_GetLdrDataEntry      LibUtil_Nt_GetLdrDataEntry64
+        #define LibUtil_Nt_GetLdrExport         LibUtil_Nt_GetLdrExport64
+        #define LibUtil_Nt_GetLdrModuleExport   LibUtil_Nt_GetLdrModuleExport64
     #endif
 
     #ifndef LIBUTIL_DISABLE_SHORT_NAMES
         #ifdef LIBUTIL_32_BITS
             #define lu_nt_getldrdata            LibUtil_Nt_GetLdrData32
             #define lu_nt_getldrdataentry       LibUtil_Nt_GetLdrDataEntry32
+            #define lu_nt_getldrexport          LibUtil_Nt_GetLdrExport32
+            #define lu_nt_getldrmodulexport     LibUtil_Nt_GetLdrModuleExport32
 
             #ifndef LIBUTIL_X86_PURE32
                 #define lu_nt_getldrdata64          LibUtil_Nt_GetLdrData64
@@ -309,6 +315,9 @@ typedef struct LIBUTIL_ALIGN(1) LIBUTIL_PACKED _LIBUTIL_NT_LDR_DATA_TABLE_ENTRY6
 
             #define lu_nt_getldrdataentry       LibUtil_Nt_GetLdrDataEntry64
             #define lu_nt_getldrdataentry64     LibUtil_Nt_GetLdrDataEntry64
+
+            #define lu_nt_getldrexport          LibUtil_Nt_GetLdrExport64
+            #define lu_nt_getldrmodulexport     LibUtil_Nt_GetLdrModuleExport64
         #endif
     #endif
 #endif

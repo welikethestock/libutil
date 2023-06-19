@@ -12,11 +12,10 @@
 #define MEM_RESERVE 0x2000
 
 LIBUTIL_DEFINE_SYSCALL(NtAllocateVirtualMemory);
+
 LIBUTIL_API
 libutil_bool LibUtil_Page_Allocate(libutil_syscallarg *BaseAddress, libutil_size Size, libutil_u32 Protection, libutil_u32 Flags)
 {
-    //LIBUTIL_SYSCALLID(NtAllocateVirtualMemory) = 0x17; // server 2012
-    LIBUTIL_SYSCALLID(NtAllocateVirtualMemory) = 0x18; // win11
     if(!LIBUTIL_CHECK_SYSCALLID(NtAllocateVirtualMemory))
     {
         return FALSE;
@@ -30,9 +29,10 @@ libutil_bool LibUtil_Page_Allocate(libutil_syscallarg *BaseAddress, libutil_size
 
     if(*BaseAddress != NULL)
     {
-        *BaseAddress = LibUtil_AlignDown(*BaseAddress, 0x1000);
+        *BaseAddress = (libutil_size)(LibUtil_AlignDown(*BaseAddress, 0x1000));
     }
 
+#ifndef LIBUTIL_WINE
     LIBUTIL_ALIGN(16) libutil_syscallarg AlignedSize = LibUtil_AlignUp(Size, 0x1000);
 
     LIBUTIL_NT_STATUS Status = lu_syscall6(
@@ -44,6 +44,16 @@ libutil_bool LibUtil_Page_Allocate(libutil_syscallarg *BaseAddress, libutil_size
         AllocationType,
         Protection
     );
+#else
+    LIBUTIL_NT_STATUS Status = ((LIBUTIL_NT_STATUS(LIBUTIL_MSABI *)(void *, libutil_size *, void *, libutil_size *, libutil_u32, libutil_u32))(LIBUTIL_SYSCALLID(NtAllocateVirtualMemory)))(
+        (void *)(-1),
+        (libutil_size *)(BaseAddress),
+        NULL,
+        (libutil_size *)(&Size),
+        AllocationType,
+        Protection
+    );
+#endif
 
     return LIBUTIL_NT_SUCCESS(Status);
 }
@@ -57,6 +67,7 @@ libutil_bool LibUtil_Page_Protect(libutil_syscallarg Address, libutil_size Size,
         return FALSE;
     }
 
+#ifndef LIBUTIL_WINE
     LIBUTIL_NT_STATUS Status = LibUtil_Syscall5(
         LIBUTIL_SYSCALLID(NtProtectVirtualMemory),
         -1,
@@ -65,22 +76,29 @@ libutil_bool LibUtil_Page_Protect(libutil_syscallarg Address, libutil_size Size,
         Protection,
         (libutil_syscallarg)(&OldProtection)
     );
+#else
+    LIBUTIL_NT_STATUS Status = ((LIBUTIL_NT_STATUS(LIBUTIL_MSABI *)(void *, libutil_size, libutil_size, libutil_u32, libutil_u32 *))(LIBUTIL_SYSCALLID(NtProtectVirtualMemory)))(
+        (void *)(-1),
+        (libutil_size)(LibUtil_AlignDown(Address, 0x1000)),
+        (libutil_size)(LibUtil_AlignUp(Size, 0x1000)),
+        Protection,
+        OldProtection
+    );
+#endif
 
     return LIBUTIL_NT_SUCCESS(Status);
 }
-
-#include <stdio.h>
 
 LIBUTIL_DEFINE_SYSCALL(NtQueryVirtualMemory);
 LIBUTIL_API
 libutil_bool LibUtil_Page_QueryProtection(libutil_syscallarg Address, libutil_u32* Protection)
 {
-    LIBUTIL_SYSCALLID(NtQueryVirtualMemory) = 0x23; // win11
     if(!LIBUTIL_CHECK_SYSCALLID(NtQueryVirtualMemory))
     {
         return FALSE;
     }
 
+#ifndef LIBUTIL_WINE
 #if defined(LIBUTIL_X86) && !defined(LIBUTIL_X86_PURE32)
     LIBUTIL_ALIGN(16) union
     {
@@ -108,14 +126,24 @@ libutil_bool LibUtil_Page_QueryProtection(libutil_syscallarg Address, libutil_u3
     #endif
         NULL
     );
+#else
+    LIBUTIL_NT_MEMORY_BASIC_INFORMATION MemoryInfo;
+    LIBUTIL_NT_STATUS Status = ((LIBUTIL_NT_STATUS(LIBUTIL_MSABI*)(void *, libutil_size, LIBUTIL_NT_MEMORY_BASIC_INFORMATION *, libutil_i32, libutil_size, void *))(LIBUTIL_SYSCALLID(NtQueryVirtualMemory)))(
+        (void *)(-1),
+        (libutil_size)(LibUtil_AlignDown(Address, 0x1000)),
+        &MemoryInfo,
+        LIBUTIL_NT_MemoryBasicInformation,
+        sizeof(MemoryInfo),
+        NULL
+    );
+#endif
 
     if(!LIBUTIL_NT_SUCCESS(Status))
     {
         return FALSE;
     }
 
-    printf("hi\n");
-
+#ifndef LIBUTIL_WINE
 #if defined(LIBUTIL_X86) && !defined(LIBUTIL_X86_PURE32)
     if(LibUtil_Nt_GetTeb64() == NULL)
     {
@@ -125,6 +153,9 @@ libutil_bool LibUtil_Page_QueryProtection(libutil_syscallarg Address, libutil_u3
     {
         *Protection = Memory.Info64.Protect;
     }
+#else
+    *Protection = MemoryInfo.Protect;
+#endif
 #else
     *Protection = MemoryInfo.Protect;
 #endif
