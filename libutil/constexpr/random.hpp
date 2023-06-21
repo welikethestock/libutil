@@ -8,7 +8,7 @@ namespace LibUtil
     template< typename _T, LibUtil::U32 Seed, LibUtil::U32 Counter >
     constexpr _T CompileTimeRandom()
     {
-        return (Seed + Counter) * 1664525 + 1013904223;
+        return (Seed + (Counter * Counter * Counter) + Counter) * 1664525 + 1013904223;
     }
 }
 
